@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Adm.Boot.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -13,9 +15,16 @@ namespace Adm.Boot.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            //如果配置文件根据环境变量来分开了，可以这样写
+            //Path = $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json";
+            Configuration = new ConfigurationBuilder()
+             .SetBasePath(env.ContentRootPath)
+            //ReloadOnChange = true 当appsettings.json被修改时重新加载   
+            .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
+            .Build();
+            AdmBootApp.Configuration = Configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -29,6 +38,7 @@ namespace Adm.Boot.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            AdmBootApp.ServiceProvider = app.ApplicationServices;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
