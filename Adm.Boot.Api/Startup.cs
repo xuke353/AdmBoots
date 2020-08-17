@@ -24,7 +24,7 @@ namespace Adm.Boot.Api
             //ReloadOnChange = true 当appsettings.json被修改时重新加载   
             .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
             .Build();
-            AdmBootApp.Configuration = Configuration;
+            AdmApp.Configuration = Configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -38,7 +38,7 @@ namespace Adm.Boot.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            AdmBootApp.ServiceProvider = app.ApplicationServices;
+            AdmApp.ServiceProvider = app.ApplicationServices;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Adm.Boot.Infrastructure
 {
-    public class AdmBootApp
+    public class AdmApp
     {
         /// <summary>
         /// 读取配置文件
