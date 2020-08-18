@@ -1,4 +1,4 @@
-﻿using Adm.Boot.Domain.IRepositorys;
+﻿using Adm.Boot.Domain.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Adm.Boot.Infrastructure.Extensions;
 using Adm.Boot.Infrastructure.CustomExceptions;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Adm.Boot.Data.EntityFrameworkCore
 {
@@ -112,132 +113,163 @@ namespace Adm.Boot.Data.EntityFrameworkCore
 
         public TEntity Insert(TEntity entity)
         {
-            throw new NotImplementedException();
+            return Table.Add(entity).Entity;
         }
 
         public Task<TEntity> InsertAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Insert(entity));
         }
 
         public TPrimaryKey InsertAndGetId(TEntity entity)
         {
-            throw new NotImplementedException();
+            entity = Insert(entity);
+            if (entity.IsTransient())
+            {
+                Context.SaveChanges();
+            }
+            return entity.Id;
         }
 
-        public Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        public async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            entity = await InsertOrUpdateAsync(entity);
+
+            if (entity.IsTransient())
+            {
+                await Context.SaveChangesAsync();
+            }
+
+            return entity.Id;
         }
 
         public TEntity InsertOrUpdate(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (!entity.IsTransient())
+            {
+                return Update(entity);
+            }
+            return Insert(entity);
         }
 
-        public Task<TEntity> InsertOrUpdateAsync(TEntity entity)
+        public async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            return (!entity.IsTransient()) ? (await UpdateAsync(entity)) : (await InsertAsync(entity));
         }
 
         public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
-            throw new NotImplementedException();
+            return InsertOrUpdate(entity).Id;
         }
 
-        public Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        public async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            entity = await InsertOrUpdateAsync(entity);
+
+            if (entity.IsTransient())
+            {
+                await Context.SaveChangesAsync();
+            }
+
+            return entity.Id;
         }
 
         public TEntity Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            AttachIfNot(entity);
+            Context.Entry(entity).State = EntityState.Modified;
+            return entity;
         }
 
         public Task<TEntity> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            entity = Update(entity);
+            return Task.FromResult(entity);
         }
 
         public TEntity Update(TPrimaryKey id, Action<TEntity> updateAction)
         {
-            throw new NotImplementedException();
+            TEntity val = Get(id);
+            updateAction(val);
+            return val;
         }
 
-        public Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction)
+        public async Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction)
         {
-            throw new NotImplementedException();
+            TEntity entity = await GetAsync(id);
+            await updateAction(entity);
+            return entity;
         }
 
         public void Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            AttachIfNot(entity);
+            Table.Remove(entity);
         }
 
         public Task DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            Delete(entity);
+            return Task.FromResult(0);
         }
 
         public void Delete(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            TEntity fromChangeTrackerOrNull = GetFromChangeTrackerOrNull(id);
+            if (fromChangeTrackerOrNull != null)
+            {
+                Delete(fromChangeTrackerOrNull);
+                return;
+            }
+            fromChangeTrackerOrNull = FirstOrDefault(id);
+            if (fromChangeTrackerOrNull != null)
+            {
+                Delete(fromChangeTrackerOrNull);
+            }
         }
 
         public Task DeleteAsync(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            Delete(id);
+            return Task.CompletedTask;
         }
 
         public void Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            foreach (var entity in GetAllList(predicate))
+            {
+                Delete(entity);
+            }
         }
 
-        public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var entities = await GetAllListAsync(predicate);
+
+            foreach (var entity in entities)
+            {
+                await DeleteAsync(entity);
+            }
         }
 
         public int Count()
         {
-            throw new NotImplementedException();
+            return GetAll().Count();
         }
 
-        public Task<int> CountAsync()
+        public async Task<int> CountAsync()
         {
-            throw new NotImplementedException();
+            return await GetAll().CountAsync();
         }
 
         public int Count(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return GetAll().Count(predicate);
         }
 
         public Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
-        }
-
-        public long LongCount()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<long> LongCountAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public long LongCount(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
+            return Task.FromResult(Count(predicate));
         }
 
         public Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
@@ -247,6 +279,30 @@ namespace Adm.Boot.Data.EntityFrameworkCore
             {
                 parameterExpression
             });
+        }
+
+
+        protected void AttachIfNot(TEntity entity)
+        {
+            var entry = Context.ChangeTracker.Entries().FirstOrDefault(ent => ent.Entity == entity);
+            if (entry != null)
+            {
+                return;
+            }
+
+            Table.Attach(entity);
+        }
+
+        private TEntity GetFromChangeTrackerOrNull(TPrimaryKey id)
+        {
+            return Context.ChangeTracker.Entries().FirstOrDefault(delegate (EntityEntry ent)
+            {
+                if (ent.Entity is TEntity)
+                {
+                    return EqualityComparer<TPrimaryKey>.Default.Equals(id, (ent.Entity as TEntity).Id);
+                }
+                return false;
+            })?.Entity as TEntity;
         }
     }
 }

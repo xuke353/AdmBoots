@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Adm.Boot.Application;
 using Adm.Boot.Data.EntityFrameworkCore;
-using Adm.Boot.Domain.IRepositorys;
+using Adm.Boot.Domain.IRepositories;
 using Adm.Boot.Infrastructure;
 using Adm.Boot.Infrastructure.Interceptors;
 using Autofac;
@@ -20,6 +20,11 @@ using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Adm.Boot.Infrastructure.Extensions;
+using Adm.Boot.Api.StartupExtensions;
+using Newtonsoft.Json;
+using Adm.Boot.Api.Filters;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using AutoMapper;
 
 namespace Adm.Boot.Api
 {
@@ -52,9 +57,9 @@ namespace Adm.Boot.Api
             //builder.RegisterType<AdminSession>().As<IAdminSession>();
             try
             {
-                //AdminSoa.Application是继承接口的实现方法类库名称
+                //Adm.Boot.Application是继承接口的实现方法类库名称
                 var assemblys = Assembly.Load("Adm.Boot.Application");
-                //ITransientDependency 是一个接口（所有要实现依赖注入的借口都要继承该接口）
+                //ITransientDependency 是一个接口（所有Application层要实现依赖注入的借口都要继承该接口）
                 var baseType = typeof(ITransientDependency);
                 builder.RegisterAssemblyTypes(assemblys)
                     .Where(m => baseType.IsAssignableFrom(m) && m != baseType && !m.IsAbstract)
@@ -80,24 +85,29 @@ namespace Adm.Boot.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddSwaggerSetup();
+            services.AddAutoMapper(Assembly.Load("Adm.Boot.Application"));
+            services.AddApiVersioning(option => option.ReportApiVersions = true);
+            services.AddControllers(o =>
+            {
+                o.Filters.Add(typeof(GlobalExceptionFilter));
+            }).AddNewtonsoftJson(options =>
+            {
+                //忽略循环引用
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             AdmApp.ServiceProvider = app.ApplicationServices;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
+            //↓↓↓↓注意以下中间件顺序↓↓↓↓
+
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -106,10 +116,24 @@ namespace Adm.Boot.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
+
+            #region Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    c.SwaggerEndpoint(
+                        $"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant());
+                }
+                //c.IndexStream = () => Assembly.GetExecutingAssembly()
+                //   .GetManifestResourceStream("Adm.Boot.Api.wwwroot.swagger.index.html");
+                c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8081 代替 localhost:8001/swagger               
+            });
+            #endregion
         }
     }
 }

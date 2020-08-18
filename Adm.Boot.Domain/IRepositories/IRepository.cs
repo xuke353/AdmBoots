@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Adm.Boot.Domain.IRepositorys
+namespace Adm.Boot.Domain.IRepositories
 {
     public interface IRepository<TEntity, TPrimaryKey> where TEntity : class
     {
@@ -422,51 +422,5 @@ namespace Adm.Boot.Domain.IRepositorys
         // 返回结果:
         //     Count of entities
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
-
-        //
-        // 摘要:
-        //     /// Gets count of all entities in this repository (use if expected return value
-        //     is greather than System.Int32.MaxValue. ///
-        //
-        // 返回结果:
-        //     Count of entities
-        long LongCount();
-
-        //
-        // 摘要:
-        //     /// Gets count of all entities in this repository (use if expected return value
-        //     is greather than System.Int32.MaxValue. ///
-        //
-        // 返回结果:
-        //     Count of entities
-        Task<long> LongCountAsync();
-
-        //
-        // 摘要:
-        //     /// Gets count of all entities in this repository based on given predicate ///
-        //     (use this overload if expected return value is greather than System.Int32.MaxValue).
-        //     ///
-        //
-        // 参数:
-        //   predicate:
-        //     A method to filter count
-        //
-        // 返回结果:
-        //     Count of entities
-        long LongCount(Expression<Func<TEntity, bool>> predicate);
-
-        //
-        // 摘要:
-        //     /// Gets count of all entities in this repository based on given predicate ///
-        //     (use this overload if expected return value is greather than System.Int32.MaxValue).
-        //     ///
-        //
-        // 参数:
-        //   predicate:
-        //     A method to filter count
-        //
-        // 返回结果:
-        //     Count of entities
-        Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }
