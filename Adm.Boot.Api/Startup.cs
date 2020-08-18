@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,48 +25,45 @@ using Newtonsoft.Json;
 using Adm.Boot.Api.Filters;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Adm.Boot.Infrastructure.Config;
 
-namespace Adm.Boot.Api
-{
-    public class Startup
-    {
+namespace Adm.Boot.Api {
+    public class Startup {
         public IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
-        {
-            //Èç¹ûÅäÖÃÎÄ¼ş¸ù¾İ»·¾³±äÁ¿À´·Ö¿ªÁË£¬¿ÉÒÔÕâÑùĞ´
+        public Startup(IConfiguration configuration, IWebHostEnvironment env) {
+            //å¦‚æœé…ç½®æ–‡ä»¶æ ¹æ®ç¯å¢ƒå˜é‡æ¥åˆ†å¼€äº†ï¼Œå¯ä»¥è¿™æ ·å†™
             //Path = $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json";
             Configuration = new ConfigurationBuilder()
              .SetBasePath(env.ContentRootPath)
-            //ReloadOnChange = true µ±appsettings.json±»ĞŞ¸ÄÊ±ÖØĞÂ¼ÓÔØ
+            //ReloadOnChange = true å½“appsettings.jsonè¢«ä¿®æ”¹æ—¶é‡æ–°åŠ è½½
             .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
             .Build();
             AdmApp.Configuration = Configuration;
         }
 
         /// <summary>
-        /// AutoFacÈİÆ÷
+        /// AutoFacå®¹å™¨
         /// </summary>
         /// <param name="builder"></param>
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            //×¢²áÀ¹½ØÆ÷
+        public void ConfigureContainer(ContainerBuilder builder) {
+            //æ³¨å†Œæ‹¦æˆªå™¨
             // builder.RegisterType<TransactionInterceptor>().AsSelf();
             // builder.RegisterType<TransactionAsyncInterceptor>().AsSelf();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             //builder.RegisterType<AdminSession>().As<IAdminSession>();
-            try
-            {
-                //Adm.Boot.ApplicationÊÇ¼Ì³Ğ½Ó¿ÚµÄÊµÏÖ·½·¨Àà¿âÃû³Æ
+            try {
+                //Adm.Boot.Applicationæ˜¯ç»§æ‰¿æ¥å£çš„å®ç°æ–¹æ³•ç±»åº“åç§°
                 var assemblys = Assembly.Load("Adm.Boot.Application");
-                //ITransientDependency ÊÇÒ»¸ö½Ó¿Ú£¨ËùÓĞApplication²ãÒªÊµÏÖÒÀÀµ×¢ÈëµÄ½è¿Ú¶¼Òª¼Ì³Ğ¸Ã½Ó¿Ú£©
+                //ITransientDependency æ˜¯ä¸€ä¸ªæ¥å£ï¼ˆæ‰€æœ‰Applicationå±‚è¦å®ç°ä¾èµ–æ³¨å…¥çš„å€Ÿå£éƒ½è¦ç»§æ‰¿è¯¥æ¥å£ï¼‰
                 var baseType = typeof(ITransientDependency);
                 builder.RegisterAssemblyTypes(assemblys)
                     .Where(m => baseType.IsAssignableFrom(m) && m != baseType && !m.IsAbstract)
                 .AsImplementedInterfaces()
-                .PropertiesAutowired()                      //Ö§³ÖÊôĞÔ×¢Èë
-                .EnableInterfaceInterceptors()               //ÆôÓÃ½Ó¿ÚÀ¹½Ø
-                .InterceptedBy(typeof(TransactionInterceptor));
+                .PropertiesAutowired();                      //æ”¯æŒå±æ€§æ³¨å…¥
+                //.EnableInterfaceInterceptors()               //å¯ç”¨æ¥å£æ‹¦æˆª
+                //.InterceptedBy(typeof(TransactionInterceptor));
 
                 var basePath = AppContext.BaseDirectory;
                 var repositoryDllFile = Path.Combine(basePath, "Adm.Boot.Data.dll");
@@ -75,38 +72,32 @@ namespace Adm.Boot.Api
                     .AsImplementedInterfaces();
 
                 builder.RegisterGeneric(typeof(AdmRepositoryBase<,>)).As(typeof(IRepository<,>)).InstancePerDependency();
-            }
-            catch (Exception ex)
-            {
-                ("Adm.Boot.Data.dll ¶ªÊ§£¬ÇëÏÈ±àÒëÔÙÔËĞĞ¡£\n" + ex.Message).WriteErrorLine();
+            } catch (Exception ex) {
+                ("Adm.Boot.Data.dll ä¸¢å¤±ï¼Œè¯·å…ˆç¼–è¯‘å†è¿è¡Œã€‚\n" + ex.Message).WriteErrorLine();
                 throw;
             }
         }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
+        public void ConfigureServices(IServiceCollection services) {
             services.AddSwaggerSetup();
             services.AddAutoMapper(Assembly.Load("Adm.Boot.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
-            services.AddControllers(o =>
-            {
+            services.AddDbContext<AdmDbContext>(option => option.UseMySql(DatabaseConfig.ConnectionString));
+            services.AddControllers(o => {
                 o.Filters.Add(typeof(GlobalExceptionFilter));
-            }).AddNewtonsoftJson(options =>
-            {
-                //ºöÂÔÑ­»·ÒıÓÃ
+            }).AddNewtonsoftJson(options => {
+                //å¿½ç•¥å¾ªç¯å¼•ç”¨
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
-        {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider) {
             AdmApp.ServiceProvider = app.ApplicationServices;
 
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
-            //¡ı¡ı¡ı¡ı×¢ÒâÒÔÏÂÖĞ¼ä¼şË³Ğò¡ı¡ı¡ı¡ı
+            //â†“â†“â†“â†“æ³¨æ„ä»¥ä¸‹ä¸­é—´ä»¶é¡ºåºâ†“â†“â†“â†“
 
             app.UseStaticFiles();
 
@@ -114,24 +105,21 @@ namespace Adm.Boot.Api
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
+            app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
 
             #region Swagger
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                foreach (var description in provider.ApiVersionDescriptions)
-                {
+            app.UseSwaggerUI(c => {
+                foreach (var description in provider.ApiVersionDescriptions) {
                     c.SwaggerEndpoint(
                         $"/swagger/{description.GroupName}/swagger.json",
                         description.GroupName.ToUpperInvariant());
                 }
                 //c.IndexStream = () => Assembly.GetExecutingAssembly()
                 //   .GetManifestResourceStream("Adm.Boot.Api.wwwroot.swagger.index.html");
-                c.RoutePrefix = "";//ÉèÖÃÎª¿Õ£¬launchSettings.json°ÑlaunchUrlÈ¥µô,localhost:8081 ´úÌæ localhost:8001/swagger               
+                c.RoutePrefix = "";//è®¾ç½®ä¸ºç©ºï¼ŒlaunchSettings.jsonæŠŠlaunchUrlå»æ‰,localhost:8081 ä»£æ›¿ localhost:8001/swagger               
             });
             #endregion
         }

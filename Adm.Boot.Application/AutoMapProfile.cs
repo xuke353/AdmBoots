@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Adm.Boot.Application.Users.Dto;
+using Adm.Boot.Domain.Models;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +14,7 @@ namespace Adm.Boot.Application
         /// </summary>
         public AutoMapProfile()
         {
-            // CreateMap<AddJobInput, ScheduleInfo>(MemberList.Source);
+            CreateMap<User, GetUserOutput>(MemberList.Source);
         }
     }
 }

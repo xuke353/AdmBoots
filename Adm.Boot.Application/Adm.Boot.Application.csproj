@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -11,6 +11,11 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Adm.Boot.Domain\Adm.Boot.Domain.csproj" />
+    <ProjectReference Include="..\Adm.Boot.Infrastructure\Adm.Boot.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

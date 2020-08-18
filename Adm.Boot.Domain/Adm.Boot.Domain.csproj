@@ -5,7 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Compile Remove="Adm.Boot.Enums.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Adm.Boot.Enums.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Adm.Boot.Infrastructure\Adm.Boot.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
