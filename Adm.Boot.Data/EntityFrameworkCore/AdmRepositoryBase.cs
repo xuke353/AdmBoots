@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CollectionExtensions = Adm.Boot.Infrastructure.Extensions.CollectionExtensions;
 using Adm.Boot.Infrastructure.Extensions;
+using Adm.Boot.Infrastructure.CustomExceptions;
 
 namespace Adm.Boot.Data.EntityFrameworkCore
 {
     public class AdmRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
     {
-
         public AdmDbContext Context { get; }
         public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
+
         public AdmRepositoryBase(AdmDbContext context)
         {
             Context = context;
@@ -24,13 +24,12 @@ namespace Adm.Boot.Data.EntityFrameworkCore
 
         public IQueryable<TEntity> GetAll()
         {
-            return GetAllIncluding(Array.Empty<Expression<Func<TEntity, object>>>());
+            return GetAllIncluding();
         }
 
         public IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             IQueryable<TEntity> queryable = Table.AsQueryable();
-            //if (!CollectionExtensions.IsNullOrEmpty<Expression<Func<TEntity, object>>>((ICollection<Expression<Func<TEntity, object>>>)propertySelectors))
             if (!propertySelectors.IsNullOrEmpty())
             {
                 foreach (Expression<Func<TEntity, object>> navigationPropertyPath in propertySelectors)
@@ -43,72 +42,72 @@ namespace Adm.Boot.Data.EntityFrameworkCore
 
         public List<TEntity> GetAllList()
         {
-            throw new NotImplementedException();
+            return GetAll().ToList();
         }
 
-        public Task<List<TEntity>> GetAllListAsync()
+        public async Task<List<TEntity>> GetAllListAsync()
         {
-            throw new NotImplementedException();
+            return await GetAll().ToListAsync();
         }
 
         public List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return GetAll().ToList();
         }
 
-        public Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await GetAll().Where(predicate).ToListAsync();
         }
 
         public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
         {
-            throw new NotImplementedException();
+            return queryMethod(GetAll());
         }
 
         public TEntity Get(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            return FirstOrDefault(id) ?? throw new EntityNotFoundException(typeof(TEntity), id);
         }
 
-        public Task<TEntity> GetAsync(TPrimaryKey id)
+        public async Task<TEntity> GetAsync(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            return (await FirstOrDefaultAsync(id)) ?? throw new EntityNotFoundException(typeof(TEntity), id);
         }
 
         public TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return GetAll().Single(predicate);
         }
 
-        public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await GetAll().SingleAsync(predicate);
         }
 
         public TEntity FirstOrDefault(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
         }
 
-        public Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
+        public async Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            return await GetAll().FirstOrDefaultAsync(CreateEqualityExpressionForId(id));
         }
 
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return GetAll().FirstOrDefault(predicate);
         }
 
         public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(FirstOrDefault(predicate));
         }
 
         public TEntity Load(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            return Get(id);
         }
 
         public TEntity Insert(TEntity entity)
@@ -239,6 +238,15 @@ namespace Adm.Boot.Data.EntityFrameworkCore
         public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
+        }
+
+        public Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
+        {
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity));
+            return Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(Expression.PropertyOrField(parameterExpression, "Id"), Expression.Constant(id, typeof(TPrimaryKey))), new ParameterExpression[1]
+            {
+                parameterExpression
+            });
         }
     }
 }
