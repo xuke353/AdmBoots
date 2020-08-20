@@ -8,7 +8,6 @@ using Adm.Boot.Application;
 using Adm.Boot.Data.EntityFrameworkCore;
 using Adm.Boot.Domain.IRepositories;
 using Adm.Boot.Infrastructure;
-using Adm.Boot.Infrastructure.Interceptors;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Microsoft.AspNetCore.Builder;
