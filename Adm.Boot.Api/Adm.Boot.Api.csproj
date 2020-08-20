@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Adm.Boot.Application\Adm.Boot.Application.csproj" />
-    <ProjectReference Include="..\Adm.Boot.Data\Adm.Boot.Data.csproj" />
     <ProjectReference Include="..\Adm.Boot.Infrastructure\Adm.Boot.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

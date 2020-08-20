@@ -24,21 +24,22 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Adm.Boot.Infrastructure.Config;
 using Adm.Boot.Data.EntityFrameworkCore.Uow;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Adm.Boot.Api {
 
     public class Startup {
-        public IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env) {
-            //如果配置文件根据环境变量来分开了，可以这样写
-            //Path = $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json";
-            Configuration = new ConfigurationBuilder()
+        public static readonly ILoggerFactory EFLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
+        public Startup(IWebHostEnvironment env) {
+            AdmApp.Configuration = new ConfigurationBuilder()
              .SetBasePath(env.ContentRootPath)
-            //ReloadOnChange = true 当appsettings.json被修改时重新加载
+            //optional: true配置文件不存在时抛异常 ReloadOnChange= true 热更新
+            //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
             .Build();
-            AdmApp.Configuration = Configuration;
         }
 
         /// <summary>
@@ -50,42 +51,45 @@ namespace Adm.Boot.Api {
             builder.RegisterType<UnitOfWorkInterceptor>().AsSelf();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             //builder.RegisterType<AdminSession>().As<IAdminSession>();
-            try {
-                //Adm.Boot.Application是继承接口的实现方法类库名称
-                var assemblys = Assembly.Load("Adm.Boot.Application");
-                //ITransientDependency 是一个接口（所有Application层要实现依赖注入的借口都要继承该接口）
-                var baseType = typeof(ITransientDependency);
-                builder.RegisterAssemblyTypes(assemblys)
-                    .Where(m => baseType.IsAssignableFrom(m) && m != baseType && !m.IsAbstract)
-                .AsImplementedInterfaces()
-                .PropertiesAutowired()                       //支持属性注入
-                .EnableInterfaceInterceptors()               //启用接口拦截
-                .InterceptedBy(typeof(UnitOfWorkInterceptor));
 
-                //Data层按接口方式实现的都注入
-                var basePath = AppContext.BaseDirectory;
-                var repositoryDllFile = Path.Combine(basePath, "Adm.Boot.Data.dll");
-                var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
-                builder.RegisterAssemblyTypes(assemblysRepository)
-                    .AsImplementedInterfaces();
+            #region Application层注入
+            //Adm.Boot.Application是继承接口的实现方法类库名称
+            var assemblys = Assembly.Load("Adm.Boot.Application");
+            //ITransientDependency 是一个接口（所有Application层要实现依赖注入的接口都要继承该接口）
+            var baseType = typeof(ITransientDependency);
+            builder.RegisterAssemblyTypes(assemblys)
+                .Where(m => baseType.IsAssignableFrom(m) && m != baseType && !m.IsAbstract)
+            .AsImplementedInterfaces()
+            .PropertiesAutowired()                       //支持属性注入
+            .EnableInterfaceInterceptors()               //启用接口拦截
+            .InterceptedBy(typeof(UnitOfWorkInterceptor));
+            #endregion
 
-                builder.RegisterGeneric(typeof(AdmRepositoryBase<,>)).As(typeof(IRepository<,>)).InstancePerDependency();
-            } catch (Exception ex) {
-                ("Adm.Boot.Data.dll 丢失，请先编译再运行。\n" + ex.Message).WriteErrorLine();
-                throw;
-            }
+            #region Data层注入
+            //Data层实现接口得类自动依赖注入
+            var basePath = AppContext.BaseDirectory;
+            var repositoryDllFile = Path.Combine(basePath, "Adm.Boot.Data.dll");
+            var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
+            builder.RegisterAssemblyTypes(assemblysRepository)
+                .AsImplementedInterfaces();
+            #endregion
+
+            builder.RegisterGeneric(typeof(AdmRepositoryBase<,>)).As(typeof(IRepository<,>)).InstancePerDependency();
+
         }
 
         public void ConfigureServices(IServiceCollection services) {
             services.AddSwaggerSetup();
             services.AddAutoMapper(Assembly.Load("Adm.Boot.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
-            services.AddDbContext<AdmDbContext>(option => option.UseMySql(DatabaseConfig.ConnectionString));
-            services.AddControllers(o => {
-                o.Filters.Add(typeof(GlobalExceptionFilter));
-            }).AddNewtonsoftJson(options => {
+            services.AddDbContext<AdmDbContext>(option => option
+                .UseMySql(DatabaseConfig.ConnectionString)
+                .UseLoggerFactory(EFLoggerFactory));
+            services.AddControllers(option => {
+                option.Filters.Add(typeof(GlobalExceptionFilter));
+            }).AddNewtonsoftJson(option => {
                 //忽略循环引用
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                option.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
         }
 
@@ -107,8 +111,6 @@ namespace Adm.Boot.Api {
                 endpoints.MapControllers();
             });
 
-            #region Swagger
-
             app.UseSwagger();
             app.UseSwaggerUI(c => {
                 foreach (var description in provider.ApiVersionDescriptions) {
@@ -121,7 +123,6 @@ namespace Adm.Boot.Api {
                 c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8081 代替 localhost:8001/swagger
             });
 
-            #endregion Swagger
         }
     }
 }

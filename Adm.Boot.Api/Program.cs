@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,31 +10,23 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace Adm.Boot.Api
-{
-    public class Program
-    {
-        public static int Main(string[] args)
-        {
+namespace Adm.Boot.Api {
+    public class Program {
+        public static int Main(string[] args) {
             Log.Logger = new LoggerConfiguration()
              .ReadFrom.Configuration(new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())
              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
              .Build())
              .CreateLogger();
-            try
-            {
-                Log.Information("Starting web host");
+            try {
+                Log.Information("å¯åŠ¨ web host");
                 CreateHostBuilder(args).Build().Run();
                 return 0;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Log.Fatal(ex, "Host terminated unexpectedly");
                 return 1;
-            }
-            finally
-            {
+            } finally {
                 Log.CloseAndFlush();
             }
         }
@@ -42,13 +34,11 @@ namespace Adm.Boot.Api
         public static IHostBuilder CreateHostBuilder(string[] args) =>
              Host.CreateDefaultBuilder(args)
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
+            .ConfigureWebHostDefaults(webBuilder => {
                 webBuilder
                 .UseSerilog()
-                .ConfigureKestrel(serverOptions =>
-                {
-                    serverOptions.AllowSynchronousIO = true;//ÆôÓÃÍ¬²½ IO
+                .ConfigureKestrel(serverOptions => {
+                    serverOptions.AllowSynchronousIO = true;//å¯ç”¨åŒæ­¥ IO
                 })
                 .UseStartup<Startup>()
                 .UseUrls("http://localhost:8082");

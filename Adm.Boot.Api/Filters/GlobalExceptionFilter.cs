@@ -47,7 +47,7 @@ namespace Adm.Boot.Api.Filters {
         /// </summary>
         /// <param name="ex"></param>
         /// <returns></returns>
-        public string WriteLog(Exception ex) {
+        private string WriteLog(Exception ex) {
             return string.Format("【异常信息】：{0} \r\n【异常类型】：{1} \r\n【堆栈调用】：{2}", new object[] { ex.Message,
                 ex.GetType().Name, ex.StackTrace });
         }
