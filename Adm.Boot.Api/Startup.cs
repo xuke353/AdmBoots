@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Adm.Boot.Application;
 using Adm.Boot.Data.EntityFrameworkCore;
 using Adm.Boot.Domain.IRepositories;
 using Adm.Boot.Infrastructure;
-using Adm.Boot.Infrastructure.Interceptors;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +23,10 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Adm.Boot.Infrastructure.Config;
+using Adm.Boot.Data.EntityFrameworkCore.Uow;
 
 namespace Adm.Boot.Api {
+
     public class Startup {
         public IConfiguration Configuration { get; }
 
@@ -49,8 +47,7 @@ namespace Adm.Boot.Api {
         /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder) {
             //注册拦截器
-            // builder.RegisterType<TransactionInterceptor>().AsSelf();
-            // builder.RegisterType<TransactionAsyncInterceptor>().AsSelf();
+            builder.RegisterType<UnitOfWorkInterceptor>().AsSelf();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             //builder.RegisterType<AdminSession>().As<IAdminSession>();
             try {
@@ -61,10 +58,11 @@ namespace Adm.Boot.Api {
                 builder.RegisterAssemblyTypes(assemblys)
                     .Where(m => baseType.IsAssignableFrom(m) && m != baseType && !m.IsAbstract)
                 .AsImplementedInterfaces()
-                .PropertiesAutowired();                      //支持属性注入
-                //.EnableInterfaceInterceptors()               //启用接口拦截
-                //.InterceptedBy(typeof(TransactionInterceptor));
+                .PropertiesAutowired()                       //支持属性注入
+                .EnableInterfaceInterceptors()               //启用接口拦截
+                .InterceptedBy(typeof(UnitOfWorkInterceptor));
 
+                //Data层按接口方式实现的都注入
                 var basePath = AppContext.BaseDirectory;
                 var repositoryDllFile = Path.Combine(basePath, "Adm.Boot.Data.dll");
                 var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
@@ -110,6 +108,7 @@ namespace Adm.Boot.Api {
             });
 
             #region Swagger
+
             app.UseSwagger();
             app.UseSwaggerUI(c => {
                 foreach (var description in provider.ApiVersionDescriptions) {
@@ -119,9 +118,10 @@ namespace Adm.Boot.Api {
                 }
                 //c.IndexStream = () => Assembly.GetExecutingAssembly()
                 //   .GetManifestResourceStream("Adm.Boot.Api.wwwroot.swagger.index.html");
-                c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8081 代替 localhost:8001/swagger               
+                c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8081 代替 localhost:8001/swagger
             });
-            #endregion
+
+            #endregion Swagger
         }
     }
 }

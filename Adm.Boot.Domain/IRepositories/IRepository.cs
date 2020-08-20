@@ -4,11 +4,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Adm.Boot.Domain.IRepositories
-{
-    public interface IRepository<TEntity, TPrimaryKey> where TEntity : class
-    {
+namespace Adm.Boot.Domain.IRepositories {
+
+    public interface IRepository<TEntity, TPrimaryKey> where TEntity : class {
+
+        DbContext GetDbContext();
+
         //
         // 摘要:
         //     /// Used to get a IQueryable that is used to retrieve entities from entire table.
