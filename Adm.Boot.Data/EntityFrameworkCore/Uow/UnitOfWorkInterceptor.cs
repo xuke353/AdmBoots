@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Adm.Boot.Data.EntityFrameworkCore.Uow {
                 method = invocation.GetConcreteMethod();
             }
 
-            var unitOfWorkAttr = _admUnitOfWork.GetUnitOfWorkAttributeOrNull(method);
+            var unitOfWorkAttr = GetUnitOfWorkAttributeOrNull(method);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled) {
                 //No need to a uow
                 invocation.Proceed();
@@ -76,6 +77,19 @@ namespace Adm.Boot.Data.EntityFrameworkCore.Uow {
                     exception => uow.Dispose()
                 );
             }
+        }
+
+        private UnitOfWorkAttribute GetUnitOfWorkAttributeOrNull(MethodInfo methodInfo) {
+            var attrs = methodInfo.GetCustomAttributes(true).OfType<UnitOfWorkAttribute>().ToArray();
+            if (attrs.Length > 0) {
+                return attrs[0];
+            }
+
+            attrs = methodInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(true).OfType<UnitOfWorkAttribute>().ToArray();
+            if (attrs.Length > 0) {
+                return attrs[0];
+            }
+            return null;
         }
     }
 }
