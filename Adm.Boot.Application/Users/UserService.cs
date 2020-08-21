@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Adm.Boot.Infrastructure.CustomExceptions;
 using Adm.Boot.Data.EntityFrameworkCore.Uow;
+using Adm.Boot.Domain;
 
 namespace Adm.Boot.Application.Users {
 
@@ -23,7 +24,7 @@ namespace Adm.Boot.Application.Users {
 
         public void AddUser() {
             var u = new User {
-                Status = 1,
+                Status = SysStatus.有效,
                 CreateTime = DateTime.Now,
                 Email = "xkry353@163.com",
                 IsMaster = true,
@@ -36,7 +37,7 @@ namespace Adm.Boot.Application.Users {
 
         public async Task AddUserAsync() {
             var u = new User {
-                Status = 1,
+                Status = SysStatus.有效,
                 CreateTime = DateTime.Now,
                 Email = "xkry353@163.com",
                 IsMaster = true,
@@ -48,7 +49,7 @@ namespace Adm.Boot.Application.Users {
             CurrentUnitOfWork.SaveChanges();
             //saveChanges后才能获取b
             var u2 = new User {
-                Status = 1,
+                Status = SysStatus.有效,
                 CreateTime = DateTime.Now,
                 Email = "xkry353@163.com",
                 IsMaster = true,

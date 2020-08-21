@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Framework.Abstractions
-{
+namespace Adm.Boot.Infrastructure.Framework.Abstractions {
     [Serializable]
-    public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
-    {
+    public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey> {
 
         /// <summary>
         /// EFCore 主键设置
@@ -18,18 +16,14 @@ namespace Adm.Boot.Infrastructure.Framework.Abstractions
         [Key]
         public virtual TPrimaryKey Id { get; set; }
 
-        public virtual bool IsTransient()
-        {
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(Id, default(TPrimaryKey)))
-            {
+        public virtual bool IsTransient() {
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(Id, default(TPrimaryKey))) {
                 return true;
             }
-            if (typeof(TPrimaryKey) == typeof(int))
-            {
+            if (typeof(TPrimaryKey) == typeof(int)) {
                 return Convert.ToInt32(Id) <= 0;
             }
-            if (typeof(TPrimaryKey) == typeof(long))
-            {
+            if (typeof(TPrimaryKey) == typeof(long)) {
                 return Convert.ToInt64(Id) <= 0;
             }
             return false;
@@ -37,5 +31,10 @@ namespace Adm.Boot.Infrastructure.Framework.Abstractions
 
     }
 
+    /// <summary>
+    /// 定义默认主键类型为int的实体基类
+    /// </summary>
+    public abstract class Entity : Entity<int> {
 
+    }
 }
