@@ -15,6 +15,9 @@ namespace Adm.Boot.Data.EntityFrameworkCore.Uow {
             _dbContext = dbContext;
         }
 
+        public DbContext GetDbContext() {
+            return _dbContext;
+        }
         //开启事务
         public IDbContextTransaction Begin() {
             var scope = _dbContext.Database.BeginTransaction();

@@ -20,10 +20,6 @@ namespace Adm.Boot.Data.EntityFrameworkCore {
             Context = context;
         }
 
-        public DbContext GetDbContext() {
-            return Context;
-        }
-
         public IQueryable<TEntity> GetAll() {
             return GetAllIncluding();
         }

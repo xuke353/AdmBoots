@@ -10,8 +10,6 @@ namespace Adm.Boot.Domain.IRepositories {
 
     public interface IRepository<TEntity, TPrimaryKey> where TEntity : class {
 
-        DbContext GetDbContext();
-
         //
         // 摘要:
         //     /// Used to get a IQueryable that is used to retrieve entities from entire table.

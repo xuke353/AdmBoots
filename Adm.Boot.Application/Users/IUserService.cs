@@ -13,5 +13,9 @@ namespace Adm.Boot.Application.Users {
         void AddUser();
 
         Task AddUserAsync();
+
+        Task<LoginUserInfo> LonginAsync(LoginInput input);
+
+        Task<LoginUserInfo> GetLoginUserAsync(int id);
     }
 }

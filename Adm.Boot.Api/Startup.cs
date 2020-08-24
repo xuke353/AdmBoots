@@ -15,7 +15,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Adm.Boot.Infrastructure.Extensions;
 using Adm.Boot.Api.StartupExtensions;
 using Newtonsoft.Json;
 using Adm.Boot.Api.Filters;
@@ -25,7 +24,6 @@ using Microsoft.EntityFrameworkCore;
 using Adm.Boot.Infrastructure.Config;
 using Adm.Boot.Data.EntityFrameworkCore.Uow;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Adm.Boot.Api {
 
@@ -80,6 +78,7 @@ namespace Adm.Boot.Api {
 
         public void ConfigureServices(IServiceCollection services) {
             services.AddSwaggerSetup();
+            services.AddCacheSetup();
             services.AddAutoMapper(Assembly.Load("Adm.Boot.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
             services.AddDbContext<AdmDbContext>(option => option
@@ -104,9 +103,10 @@ namespace Adm.Boot.Api {
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            //认证
+            app.UseAuthentication();
+            //授权
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
@@ -118,9 +118,9 @@ namespace Adm.Boot.Api {
                         $"/swagger/{description.GroupName}/swagger.json",
                         description.GroupName.ToUpperInvariant());
                 }
-                //c.IndexStream = () => Assembly.GetExecutingAssembly()
-                //   .GetManifestResourceStream("Adm.Boot.Api.wwwroot.swagger.index.html");
-                c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8081 代替 localhost:8001/swagger
+                c.IndexStream = () => Assembly.GetExecutingAssembly()
+                   .GetManifestResourceStream("Adm.Boot.Api.wwwroot.swagger.index.html");
+                c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8082 代替 localhost:8002/swagger
             });
 
         }
