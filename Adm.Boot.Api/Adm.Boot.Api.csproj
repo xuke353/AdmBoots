@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Content Remove="wwwroot\swagger\abp.js" />
+    <Content Remove="wwwroot\swagger\abp.swagger.js" />
+    <Content Remove="wwwroot\swagger\index.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,5 +51,17 @@
   <ItemGroup>
     <ProjectReference Include="..\Adm.Boot.Application\Adm.Boot.Application.csproj" />
     <ProjectReference Include="..\Adm.Boot.Infrastructure\Adm.Boot.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\swagger\abp.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="wwwroot\swagger\abp.swagger.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="wwwroot\swagger\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
