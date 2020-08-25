@@ -24,6 +24,8 @@ using Microsoft.EntityFrameworkCore;
 using Adm.Boot.Infrastructure.Config;
 using Adm.Boot.Data.EntityFrameworkCore.Uow;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 namespace Adm.Boot.Api {
 
@@ -79,6 +81,8 @@ namespace Adm.Boot.Api {
         public void ConfigureServices(IServiceCollection services) {
             services.AddSwaggerSetup();
             services.AddCacheSetup();
+            services.AddAuthorizationSetup();
+            services.AddHealthChecksSetup();
             services.AddAutoMapper(Assembly.Load("Adm.Boot.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
             services.AddDbContext<AdmDbContext>(option => option
@@ -107,8 +111,15 @@ namespace Adm.Boot.Api {
             app.UseAuthentication();
             //授权
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
+                //健康检查 输出描述信息
+                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
             });
 
             app.UseSwagger();
@@ -122,6 +133,10 @@ namespace Adm.Boot.Api {
                    .GetManifestResourceStream("Adm.Boot.Api.wwwroot.swagger.index.html");
                 c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8082 代替 localhost:8002/swagger
             });
+
+
+
+
 
         }
     }
