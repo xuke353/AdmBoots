@@ -66,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Adm.Boot.Application\AdmBoots.Application.csproj" />
-    <ProjectReference Include="..\Adm.Boot.Infrastructure\AdmBoots.Infrastructure.csproj" />
+    <ProjectReference Include="..\AdmBoots.Application\AdmBoots.Application.csproj" />
+    <ProjectReference Include="..\AdmBoots.Infrastructure\AdmBoots.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

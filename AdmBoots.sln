@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Api", "Adm.Boot.Api\AdmBoots.Api.csproj", "{2935B8F4-B1A0-4454-82E1-971584078C38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Api", "AdmBoots.Api\AdmBoots.Api.csproj", "{2935B8F4-B1A0-4454-82E1-971584078C38}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9B3910A4-196B-46C1-BBFE-8DC29C7B0663}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Application", "Adm.Boot.Application\AdmBoots.Application.csproj", "{F109962D-84FF-4C18-BE3C-F2CA0FC1326A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Application", "AdmBoots.Application\AdmBoots.Application.csproj", "{F109962D-84FF-4C18-BE3C-F2CA0FC1326A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Data", "Adm.Boot.Data\AdmBoots.Data.csproj", "{2D170524-DB20-480C-BD65-CF29CB6F4131}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Data", "AdmBoots.Data\AdmBoots.Data.csproj", "{2D170524-DB20-480C-BD65-CF29CB6F4131}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Domain", "Adm.Boot.Domain\AdmBoots.Domain.csproj", "{3DB26BAC-B41E-4647-90A7-1150D2540764}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Domain", "AdmBoots.Domain\AdmBoots.Domain.csproj", "{3DB26BAC-B41E-4647-90A7-1150D2540764}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Infrastructure", "Adm.Boot.Infrastructure\AdmBoots.Infrastructure.csproj", "{3CA42A2D-6A31-4495-882A-D28108651843}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmBoots.Infrastructure", "AdmBoots.Infrastructure\AdmBoots.Infrastructure.csproj", "{3CA42A2D-6A31-4495-882A-D28108651843}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FF2652A-19D7-4684-933F-B01CEBF7414B}"
 	ProjectSection(SolutionItems) = preProject
