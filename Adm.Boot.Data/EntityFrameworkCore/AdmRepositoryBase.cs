@@ -1,17 +1,17 @@
-﻿using Adm.Boot.Domain.IRepositories;
+﻿using AdmBoots.Domain.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Adm.Boot.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Adm.Boot.Infrastructure.Extensions;
-using Adm.Boot.Infrastructure.CustomExceptions;
+using AdmBoots.Infrastructure.Extensions;
+using AdmBoots.Infrastructure.CustomExceptions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Adm.Boot.Data.EntityFrameworkCore {
+namespace AdmBoots.Data.EntityFrameworkCore {
     public class AdmRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey> {
         public AdmDbContext Context { get; }
         public virtual DbSet<TEntity> Table => Context.Set<TEntity>();

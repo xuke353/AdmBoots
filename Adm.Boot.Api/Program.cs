@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace Adm.Boot.Api {
+namespace AdmBoots.Api {
     public class Program {
         public static int Main(string[] args) {
             Log.Logger = new LoggerConfiguration()

@@ -1,4 +1,4 @@
-﻿using Adm.Boot.Infrastructure;
+﻿using AdmBoots.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Adm.Boot.Api.StartupExtensions
+namespace AdmBoots.Api.StartupExtensions
 {
     /// <summary>
     /// Swagger服务
@@ -21,7 +21,7 @@ namespace Adm.Boot.Api.StartupExtensions
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             var basePath = AppContext.BaseDirectory;
-            var apiName = AdmApp.Configuration["Startup:ApiName"];
+            var apiName = AdmBootsApp.Configuration["Startup:ApiName"];
             services.AddSwaggerGen(c =>
             {
                 var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
@@ -36,8 +36,8 @@ namespace Adm.Boot.Api.StartupExtensions
                     c.OrderActionsBy(o => o.RelativePath);
                 }
 
-                c.IncludeXmlComments(Path.Combine(basePath, "Adm.Boot.Api.xml"), true);//true controller的注释
-                c.IncludeXmlComments(Path.Combine(basePath, "Adm.Boot.Application.xml"));
+                c.IncludeXmlComments(Path.Combine(basePath, "AdmBoots.Api.xml"), true);//true controller的注释
+                c.IncludeXmlComments(Path.Combine(basePath, "AdmBoots.Application.xml"));
 
                 // 开启加权小锁
                 c.OperationFilter<AddResponseHeadersFilter>();

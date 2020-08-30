@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Adm.Boot.Infrastructure.Domain;
-using Adm.Boot.Infrastructure.Extensions;
+using AdmBoots.Infrastructure.Domain;
+using AdmBoots.Infrastructure.Extensions;
 
-namespace Adm.Boot.Infrastructure.Framework.Abstractions {
+namespace AdmBoots.Infrastructure.Framework.Abstractions {
 
     public class CreationEntity : CreationEntity<int> { }
 

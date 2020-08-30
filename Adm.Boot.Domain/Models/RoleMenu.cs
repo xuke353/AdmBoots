@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Adm.Boot.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 
-namespace Adm.Boot.Domain.Models {
+namespace AdmBoots.Domain.Models {
     [Table("role_menu")]
     public class RoleMenu : Entity {
         /// <summary>

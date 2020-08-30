@@ -1,9 +1,9 @@
-﻿using Adm.Boot.Domain.Models;
+﻿using AdmBoots.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Application.Users.Dto
+namespace AdmBoots.Application.Users.Dto
 {
     public class GetUserOutput : User
     {

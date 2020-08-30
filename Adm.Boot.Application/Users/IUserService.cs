@@ -1,21 +1,27 @@
-﻿using Adm.Boot.Application.Users.Dto;
+﻿using AdmBoots.Application.Users.Dto;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Adm.Boot.Application.Users {
+namespace AdmBoots.Application.Users {
 
     public interface IUserService : ITransientDependency {
 
-        IList<GetUserOutput> GetUserList();
-
-        void AddUser();
-
-        Task AddUserAsync();
 
         Task<LoginUserInfo> LonginAsync(LoginInput input);
 
         Task<LoginUserInfo> GetLoginUserAsync(int id);
+
+        Page<GetUserOutput> GetUserList(GetUserInput input);
+
+        Task AddOrUpdateUser(int? id, AddOrUpdateUserInput input);
+
+        Task DeleteUser(int[] ids);
+
+        Task ResetPassword(int id);
+
+        Task ModifyPassword(ModifyPasswordInput input);
     }
 }

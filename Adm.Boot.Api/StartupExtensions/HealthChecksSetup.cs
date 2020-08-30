@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Adm.Boot.Infrastructure;
+using AdmBoots.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Adm.Boot.Api.StartupExtensions {
+namespace AdmBoots.Api.StartupExtensions {
     /// <summary>
     /// 健康检查
     /// </summary>
@@ -14,7 +14,7 @@ namespace Adm.Boot.Api.StartupExtensions {
             //https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks            
             services.AddHealthChecks()
              //检查数据库连接
-             .AddMySql(AdmApp.Configuration["Database:ConnectionString"]);
+             .AddMySql(AdmBootsApp.Configuration["Database:ConnectionString"]);
             //检查Rdis
             //.AddRedis(AdmApp.Configuration["Redis:Configuration"]);
             services.AddHealthChecksUI(setupSettings: setup => {

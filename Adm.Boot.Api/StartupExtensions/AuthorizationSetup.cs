@@ -3,26 +3,26 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Adm.Boot.Api.Authorization;
-using Adm.Boot.Infrastructure;
-using Adm.Boot.Infrastructure.Authorization;
-using Adm.Boot.Infrastructure.Domain;
+using AdmBoots.Api.Authorization;
+using AdmBoots.Infrastructure;
+using AdmBoots.Infrastructure.Authorization;
+using AdmBoots.Infrastructure.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Adm.Boot.Api.StartupExtensions {
+namespace AdmBoots.Api.StartupExtensions {
     public static class AuthorizationSetup {
         public static void AddAuthorizationSetup(this IServiceCollection services) {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            var secretKey = AdmApp.Configuration["Authentication:JwtBearer:SecurityKey"];
+            var secretKey = AdmBootsApp.Configuration["Authentication:JwtBearer:SecurityKey"];
             var keyByteArray = Encoding.ASCII.GetBytes(secretKey);
             var signingKey = new SymmetricSecurityKey(keyByteArray);
-            var issuer = AdmApp.Configuration["Authentication:JwtBearer:Issuer"];
-            var audience = AdmApp.Configuration["Authentication:JwtBearer:Audience"];
+            var issuer = AdmBootsApp.Configuration["Authentication:JwtBearer:Issuer"];
+            var audience = AdmBootsApp.Configuration["Authentication:JwtBearer:Audience"];
 
             var admPolicyRequirement = new AdmPolicyRequirement(
                                 ClaimTypes.Role,//基于角色的授权

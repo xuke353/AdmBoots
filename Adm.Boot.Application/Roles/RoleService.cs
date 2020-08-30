@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Adm.Boot.Application.Roles.Dto;
-using Adm.Boot.Domain.IRepositories;
-using Adm.Boot.Domain.Models;
-using Adm.Boot.Infrastructure.Extensions;
+using AdmBoots.Application.Roles.Dto;
+using AdmBoots.Domain.IRepositories;
+using AdmBoots.Domain.Models;
+using AdmBoots.Infrastructure.Extensions;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Linq;
-using Adm.Boot.Domain;
+using AdmBoots.Domain;
+using AdmBoots.Data.EntityFrameworkCore.Uow;
 
-namespace Adm.Boot.Application.Roles {
+namespace AdmBoots.Application.Roles {
     public class RoleService : AppServiceBase, IRoleService {
         private readonly IRepository<Role, int> _roleRepository;
         private readonly IRepository<RoleMenu, int> _roleMenuRepository;
@@ -29,6 +30,7 @@ namespace Adm.Boot.Application.Roles {
         /// 获取角色与资源标识（鉴权用）
         /// </summary>
         /// <returns></returns>
+        [UnitOfWork(IsDisabled = true)]
         public IList<GetRoleUriOutput> GetRoleUriMaps() {
             var cacheKey = "ROLE_URI";
             var cachObj = _cache.GetObject<List<GetRoleUriOutput>>(cacheKey);
@@ -49,6 +51,13 @@ namespace Adm.Boot.Application.Roles {
                 _cache.SetObject(cacheKey, roleUris, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(30) });
                 return roleUris;
             }
+        }
+        [UnitOfWork(IsDisabled = true)]
+        public IEnumerable<GetTransferRoleOutput> GetTransferRoles() {
+            var roles = _roleRepository.GetAll().Where(t => t.Status == SysStatus.有效)
+             .Select(r => new GetTransferRoleOutput { RoleId = r.Id, RoleName = r.Name })
+             .ToList();
+            return roles;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Framework.Abstractions {
+namespace AdmBoots.Infrastructure.Framework.Abstractions {
     /// <summary>
     /// 约定的 HTTP Response 结构
     /// </summary>

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Adm.Boot.Domain.IRepositories {
+namespace AdmBoots.Domain.IRepositories {
 
     public interface IRepository<TEntity, TPrimaryKey> where TEntity : class {
 

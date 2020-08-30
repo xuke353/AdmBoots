@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Config
+namespace AdmBoots.Infrastructure.Config
 {
     public class DatabaseConfig
     {
@@ -13,8 +13,8 @@ namespace Adm.Boot.Infrastructure.Config
 
         private static string InitConn()
         {
-            var dbTypeStr = AdmApp.Configuration["Database:DbProviderName"];
-            var connectString = AdmApp.Configuration["Database:ConnectionString"];
+            var dbTypeStr = AdmBootsApp.Configuration["Database:DbProviderName"];
+            var connectString = AdmBootsApp.Configuration["Database:ConnectionString"];
             switch (dbTypeStr)
             {
                 case "MySql":

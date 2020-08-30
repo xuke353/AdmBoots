@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Adm.Boot.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 
-namespace Adm.Boot.Domain.Models {
+namespace AdmBoots.Domain.Models {
     [Table("user_role")]
     public class UserRole : Entity {
 
@@ -18,5 +18,8 @@ namespace Adm.Boot.Domain.Models {
         /// </summary>
         public int RoleId { get; set; }
 
+
+        public User User { get; set; }
+        public Role Role { get; set; }
     }
 }

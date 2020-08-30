@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Domain {
+namespace AdmBoots.Domain {
     public enum SysStatus {
         作废 = 0,
         有效 = 1,

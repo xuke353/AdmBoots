@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Adm.Boot.Infrastructure.Domain;
-using Adm.Boot.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Domain;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 
-namespace Adm.Boot.Domain.Models {
+namespace AdmBoots.Domain.Models {
     [Table("menu")]
     public class Menu : AuditEntity {
         /// <summary>

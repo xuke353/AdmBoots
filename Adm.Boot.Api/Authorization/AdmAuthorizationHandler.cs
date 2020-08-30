@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Adm.Boot.Application.Roles;
+using AdmBoots.Application.Roles;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Adm.Boot.Infrastructure.Authorization {
+namespace AdmBoots.Infrastructure.Authorization {
     public class AdmAuthorizationHandler : AuthorizationHandler<AdmPolicyRequirement> {
         private readonly IAuthenticationSchemeProvider _schemes;
         private readonly IHttpContextAccessor _accessor;

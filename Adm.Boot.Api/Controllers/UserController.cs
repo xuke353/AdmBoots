@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Adm.Boot.Application.Users;
+using AdmBoots.Application.Users;
+using AdmBoots.Application.Users.Dto;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Adm.Boot.Api.Controllers {
+namespace AdmBoots.Api.Controllers {
 
     [ApiController]
     [ApiVersion("1.0")]
@@ -17,22 +19,10 @@ namespace Adm.Boot.Api.Controllers {
             _userService = userService;
         }
 
-        [HttpGet]
-        public IActionResult GetUserList() {
-            var users = _userService.GetUserList();
-            return Ok(users);
-        }
-
-        [HttpPost]
-        public IActionResult AddUser() {
-            _userService.AddUser();
-            return Ok("插入成功");
-        }
-
-        [HttpPost("async")]
-        public async Task<IActionResult> AddUserAsync() {
-            await _userService.AddUserAsync();
-            return Ok("插入成功");
+        [HttpGet("getList")]
+        public IActionResult GetUserList([FromQuery]GetUserInput input) {
+            var users = _userService.GetUserList(input);
+            return Ok(ResponseBody.From(users));
         }
     }
 }

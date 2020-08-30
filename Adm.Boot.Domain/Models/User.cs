@@ -1,16 +1,19 @@
-﻿using Adm.Boot.Infrastructure.Domain;
-using Adm.Boot.Infrastructure.Framework.Abstractions;
+﻿using AdmBoots.Infrastructure.Domain;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Adm.Boot.Domain;
+using AdmBoots.Domain;
 
-namespace Adm.Boot.Domain.Models {
+namespace AdmBoots.Domain.Models {
     [Table("user")]
     public class User : Entity {
+        public User() {
+            UserRoleList = new List<UserRole>();
+        }
         /// <summary>
         /// 用户名
         /// </summary>
@@ -52,5 +55,8 @@ namespace Adm.Boot.Domain.Models {
         /// </summary>
         [MaxLength(EntityDefault.FieldsLength50)]
         public string Email { get; set; }
+
+        //多对多映射
+        public List<UserRole> UserRoleList { get; set; }
     }
 }

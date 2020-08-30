@@ -1,11 +1,11 @@
-﻿using Adm.Boot.Application.Users.Dto;
-using Adm.Boot.Domain.Models;
+﻿using AdmBoots.Application.Users.Dto;
+using AdmBoots.Domain.Models;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Application
+namespace AdmBoots.Application
 {
     public class AutoMapProfile : Profile
     {

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp3.1\Adm.Boot.Application.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp3.1\AdmBoots.Application.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Adm.Boot.Data\Adm.Boot.Data.csproj" />
-    <ProjectReference Include="..\Adm.Boot.Domain\Adm.Boot.Domain.csproj" />
-    <ProjectReference Include="..\Adm.Boot.Infrastructure\Adm.Boot.Infrastructure.csproj" />
+    <ProjectReference Include="..\Adm.Boot.Data\AdmBoots.Data.csproj" />
+    <ProjectReference Include="..\Adm.Boot.Domain\AdmBoots.Domain.csproj" />
+    <ProjectReference Include="..\Adm.Boot.Infrastructure\AdmBoots.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

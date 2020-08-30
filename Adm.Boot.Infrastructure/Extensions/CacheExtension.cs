@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Adm.Boot.Infrastructure.Helper;
+using AdmBoots.Infrastructure.Helper;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Adm.Boot.Infrastructure.Extensions {
+namespace AdmBoots.Infrastructure.Extensions {
     public static class CacheExtension {
         public static void SetObject(this IDistributedCache cache, string key, object value) {
             cache.Set(key, SerializeHelper.Serialize(value));

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
-namespace Adm.Boot.Infrastructure {
+namespace AdmBoots.Infrastructure {
 
-    public class AdmApp {
+    public class AdmBootsApp {
 
         /// <summary>
         /// 读取配置文件

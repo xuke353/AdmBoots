@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Domain {
+namespace AdmBoots.Infrastructure.Domain {
     public sealed class AdmConsts {
         /// <summary>
         /// 权限变量配置

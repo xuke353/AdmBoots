@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Framework.Abstractions {
+namespace AdmBoots.Infrastructure.Framework.Abstractions {
     [Serializable]
     public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey> {
 

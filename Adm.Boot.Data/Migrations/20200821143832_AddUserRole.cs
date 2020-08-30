@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Adm.Boot.Data.Migrations
+namespace AdmBoots.Data.Migrations
 {
     public partial class AddUserRole : Migration
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.CustomExceptions
+namespace AdmBoots.Infrastructure.CustomExceptions
 {
     /// <summary>
     /// 业务异常类

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Adm.Boot.Infrastructure.Helper;
+using AdmBoots.Infrastructure.Helper;
 using Castle.DynamicProxy;
 
-namespace Adm.Boot.Data.EntityFrameworkCore.Uow {
+namespace AdmBoots.Data.EntityFrameworkCore.Uow {
 
     public class UnitOfWorkInterceptor : IInterceptor {
         private readonly IAdmUnitOfWork _admUnitOfWork;

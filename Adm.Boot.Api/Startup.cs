@@ -2,10 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Adm.Boot.Application;
-using Adm.Boot.Data.EntityFrameworkCore;
-using Adm.Boot.Domain.IRepositories;
-using Adm.Boot.Infrastructure;
+using AdmBoots.Application;
+using AdmBoots.Data.EntityFrameworkCore;
+using AdmBoots.Domain.IRepositories;
+using AdmBoots.Infrastructure;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Microsoft.AspNetCore.Builder;
@@ -15,26 +15,26 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Adm.Boot.Api.StartupExtensions;
+using AdmBoots.Api.StartupExtensions;
 using Newtonsoft.Json;
-using Adm.Boot.Api.Filters;
+using AdmBoots.Api.Filters;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Adm.Boot.Infrastructure.Config;
-using Adm.Boot.Data.EntityFrameworkCore.Uow;
+using AdmBoots.Infrastructure.Config;
+using AdmBoots.Data.EntityFrameworkCore.Uow;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 
-namespace Adm.Boot.Api {
+namespace AdmBoots.Api {
 
     public class Startup {
 
         public static readonly ILoggerFactory EFLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
         public Startup(IWebHostEnvironment env) {
-            AdmApp.Configuration = new ConfigurationBuilder()
+            AdmBootsApp.Configuration = new ConfigurationBuilder()
              .SetBasePath(env.ContentRootPath)
             //optional: true配置文件不存在时抛异常 ReloadOnChange= true 热更新
             //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
@@ -53,8 +53,8 @@ namespace Adm.Boot.Api {
             //builder.RegisterType<AdminSession>().As<IAdminSession>();
 
             #region Application层注入
-            //Adm.Boot.Application是继承接口的实现方法类库名称
-            var assemblys = Assembly.Load("Adm.Boot.Application");
+            //AdmBoots.Application是继承接口的实现方法类库名称
+            var assemblys = Assembly.Load("AdmBoots.Application");
             //ITransientDependency 是一个接口（所有Application层要实现依赖注入的接口都要继承该接口）
             var baseType = typeof(ITransientDependency);
             builder.RegisterAssemblyTypes(assemblys)
@@ -68,7 +68,7 @@ namespace Adm.Boot.Api {
             #region Data层注入
             //Data层实现接口得类自动依赖注入
             var basePath = AppContext.BaseDirectory;
-            var repositoryDllFile = Path.Combine(basePath, "Adm.Boot.Data.dll");
+            var repositoryDllFile = Path.Combine(basePath, "AdmBoots.Data.dll");
             var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
             builder.RegisterAssemblyTypes(assemblysRepository)
                 .AsImplementedInterfaces();
@@ -83,7 +83,7 @@ namespace Adm.Boot.Api {
             services.AddCacheSetup();
             services.AddAuthorizationSetup();
             services.AddHealthChecksSetup();
-            services.AddAutoMapper(Assembly.Load("Adm.Boot.Application"));
+            services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
             services.AddDbContext<AdmDbContext>(option => option
                 .UseMySql(DatabaseConfig.ConnectionString)
@@ -97,7 +97,7 @@ namespace Adm.Boot.Api {
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider) {
-            AdmApp.ServiceProvider = app.ApplicationServices;
+            AdmBootsApp.ServiceProvider = app.ApplicationServices;
 
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
@@ -130,7 +130,7 @@ namespace Adm.Boot.Api {
                         description.GroupName.ToUpperInvariant());
                 }
                 c.IndexStream = () => Assembly.GetExecutingAssembly()
-                   .GetManifestResourceStream("Adm.Boot.Api.wwwroot.swagger.index.html");
+                   .GetManifestResourceStream("AdmBoots.Api.wwwroot.swagger.index.html");
                 c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8082 代替 localhost:8002/swagger
             });
 

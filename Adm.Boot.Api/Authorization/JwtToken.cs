@@ -4,9 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Adm.Boot.Infrastructure.Authorization;
+using AdmBoots.Infrastructure.Authorization;
 
-namespace Adm.Boot.Api.Authorization {
+namespace AdmBoots.Api.Authorization {
     public class JwtToken {
         /// <summary>
         /// 获取基于JWT的Token

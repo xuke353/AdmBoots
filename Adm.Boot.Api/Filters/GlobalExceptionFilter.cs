@@ -1,4 +1,4 @@
-﻿using Adm.Boot.Infrastructure.CustomExceptions;
+﻿using AdmBoots.Infrastructure.CustomExceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Adm.Boot.Api.Filters {
+namespace AdmBoots.Api.Filters {
 
     /// <summary>
     /// 全局异常错误日志

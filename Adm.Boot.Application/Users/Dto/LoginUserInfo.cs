@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Adm.Boot.Domain;
+using AdmBoots.Domain;
 
-namespace Adm.Boot.Application.Users.Dto {
+namespace AdmBoots.Application.Users.Dto {
     public class LoginUserInfo {
         public int Id { get; set; }
         /// <summary>

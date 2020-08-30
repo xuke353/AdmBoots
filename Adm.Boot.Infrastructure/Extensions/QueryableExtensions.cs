@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Adm.Boot.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 using System.Linq.Dynamic.Core;
-namespace Adm.Boot.Infrastructure.Extensions {
+namespace AdmBoots.Infrastructure.Extensions {
     public static class QueryableExtensions {
 
 

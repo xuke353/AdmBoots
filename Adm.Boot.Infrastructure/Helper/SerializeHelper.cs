@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Adm.Boot.Infrastructure.Helper {
+namespace AdmBoots.Infrastructure.Helper {
     public class SerializeHelper {
         /// <summary>
         /// 序列化

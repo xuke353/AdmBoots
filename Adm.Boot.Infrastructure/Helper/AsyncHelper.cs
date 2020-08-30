@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 
-namespace Adm.Boot.Infrastructure.Helper {
+namespace AdmBoots.Infrastructure.Helper {
 
     /// <summary>
     /// Provides some helper methods to work with async methods.

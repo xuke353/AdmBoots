@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Helper {
+namespace AdmBoots.Infrastructure.Helper {
     public class MD5Helper {
         /// <summary>
         /// 16位MD5加密

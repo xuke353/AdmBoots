@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Domain {
+namespace AdmBoots.Infrastructure.Domain {
     /// <summary>
     /// 约定的 Entity 常用属性的默认值（如字符长度）
     /// </summary>

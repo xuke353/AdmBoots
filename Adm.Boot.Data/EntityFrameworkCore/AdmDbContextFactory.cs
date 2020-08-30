@@ -1,12 +1,12 @@
 ﻿
-using Adm.Boot.Infrastructure.Config;
+using AdmBoots.Infrastructure.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Data.EntityFrameworkCore {
+namespace AdmBoots.Data.EntityFrameworkCore {
     /* This class is needed to run EF Core PMC commands. Not used anywhere else */
 
     public class AdmDbContextFactory //: IDesignTimeDbContextFactory<AdmDbContext>

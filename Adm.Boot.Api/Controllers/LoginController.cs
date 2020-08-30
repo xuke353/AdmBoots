@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
-using Adm.Boot.Api.Authorization;
-using Adm.Boot.Application.Users;
-using Adm.Boot.Application.Users.Dto;
-using Adm.Boot.Infrastructure.Authorization;
-using Adm.Boot.Infrastructure.Framework.Abstractions;
+using AdmBoots.Api.Authorization;
+using AdmBoots.Application.Users;
+using AdmBoots.Application.Users.Dto;
+using AdmBoots.Infrastructure.Authorization;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Adm.Boot.Api.Controllers {
+namespace AdmBoots.Api.Controllers {
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/users")]

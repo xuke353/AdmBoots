@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Adm.Boot.Infrastructure.Framework.Abstractions {
+namespace AdmBoots.Infrastructure.Framework.Abstractions {
     /// <summary>
     /// 排序条件
     /// </summary>

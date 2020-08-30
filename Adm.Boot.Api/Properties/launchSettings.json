@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Adm.Boot.Api": {
+    "AdmBoots.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "http://localhost:8082",

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Application
+namespace AdmBoots.Application
 {
     /// <summary>
     /// 依赖注入继承接口，继承此接口可将Application层注入到容器

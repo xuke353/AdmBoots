@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Framework.Abstractions {
+namespace AdmBoots.Infrastructure.Framework.Abstractions {
     /// <summary>
     /// 分页查询请求
     /// </summary>

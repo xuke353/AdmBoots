@@ -4,12 +4,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Adm.Boot.Application.Users.Dto;
-using Adm.Boot.Infrastructure.Authorization;
+using AdmBoots.Application.Users.Dto;
+using AdmBoots.Infrastructure.Authorization;
 using IdentityModel;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Adm.Boot.Api.Authorization {
+namespace AdmBoots.Api.Authorization {
     public class AuthenticateResult {
         public static AuthenticateInfo Get(LoginUserInfo user, AdmPolicyRequirement requirement, IDistributedCache cache = null) {
             var expirationSeconds = requirement.Expiration.TotalSeconds;

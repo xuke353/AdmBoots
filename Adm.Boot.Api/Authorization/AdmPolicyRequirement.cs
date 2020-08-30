@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Adm.Boot.Infrastructure.Authorization {
+namespace AdmBoots.Infrastructure.Authorization {
     /// <summary>
     /// 角色与接口的权限要求参数
     /// 继承 IAuthorizationRequirement，用于设计自定义权限处理器PermissionHandler

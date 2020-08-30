@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adm.Boot.Infrastructure.Extensions
+namespace AdmBoots.Infrastructure.Extensions
 {
     public static class CollectionExtensions
     {

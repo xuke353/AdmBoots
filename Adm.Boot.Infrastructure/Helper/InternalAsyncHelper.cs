@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Adm.Boot.Infrastructure.Helper {
+namespace AdmBoots.Infrastructure.Helper {
 
     public static class InternalAsyncHelper {
 

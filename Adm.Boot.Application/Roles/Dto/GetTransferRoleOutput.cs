@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace AdmBoots.Application.Roles.Dto {
-    public class GetRoleUriOutput {
+    public class GetTransferRoleOutput {
         public int RoleId { get; set; }
-        public string Uri { get; set; }
+        public string RoleName { get; set; }
     }
 }

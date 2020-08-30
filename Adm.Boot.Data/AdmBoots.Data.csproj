@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Adm.Boot.Domain\Adm.Boot.Domain.csproj" />
-    <ProjectReference Include="..\Adm.Boot.Infrastructure\Adm.Boot.Infrastructure.csproj" />
+    <ProjectReference Include="..\Adm.Boot.Domain\AdmBoots.Domain.csproj" />
+    <ProjectReference Include="..\Adm.Boot.Infrastructure\AdmBoots.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

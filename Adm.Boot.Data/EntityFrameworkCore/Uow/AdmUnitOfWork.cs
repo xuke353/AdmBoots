@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Adm.Boot.Data.EntityFrameworkCore.Uow {
+namespace AdmBoots.Data.EntityFrameworkCore.Uow {
 
     public class AdmUnitOfWork : IAdmUnitOfWork {
         private readonly AdmDbContext _dbContext;
