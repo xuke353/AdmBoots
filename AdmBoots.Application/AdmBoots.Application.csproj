@@ -19,4 +19,8 @@
     <ProjectReference Include="..\AdmBoots.Infrastructure\AdmBoots.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Menus\Dto\" />
+  </ItemGroup>
+
 </Project>

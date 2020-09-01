@@ -32,7 +32,7 @@ namespace AdmBoots.Api.Controllers {
             foreach (var name in tbNames) {
                 var className = name.Substring(0, 1).ToUpper() + name.Substring(1);
                 //输出路径
-                var outputPath = Path.Combine(_env.ContentRootPath + @"AdmBoots.Api", "Controllers");
+                var outputPath = Path.Combine(_env.ContentRootPath, "Controllers");
                 //命名空间
                 var nameSpace = $"AdmBoots.Api.Controllers";
                 //文件名
@@ -44,11 +44,11 @@ namespace AdmBoots.Api.Controllers {
                 var content = @$"
 using AdmBoots.Application.{className}s;
 using AdmBoots.Application.{className}s.Dto;
-using AdmBoots.Domain.Framework.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using AdmBoots.Common;
+using AdmBoots.Infrastructure.Domain;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 
 namespace {nameSpace}" + @"
 {	
@@ -58,7 +58,7 @@ namespace {nameSpace}" + @"
     [ApiController]" + @$"
     [ApiVersion({version})]" + @$"
     [Route({route})]
-    [Authorize(GlobalVars.Permissions)]
+    [Authorize(AdmConsts.Policy)]
     public class " + $"{fileName} : ControllerBase" + @"
 	{
         private readonly " + @$"I{className}Service _{lowerClassName}Service;

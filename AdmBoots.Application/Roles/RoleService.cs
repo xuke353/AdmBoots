@@ -9,6 +9,10 @@ using Microsoft.Extensions.Caching.Distributed;
 using System.Linq;
 using AdmBoots.Domain;
 using AdmBoots.Data.EntityFrameworkCore.Uow;
+using System.Threading.Tasks;
+using AdmBoots.Infrastructure.Framework.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using AdmBoots.Infrastructure.CustomExceptions;
 
 namespace AdmBoots.Application.Roles {
     public class RoleService : AppServiceBase, IRoleService {
@@ -16,7 +20,7 @@ namespace AdmBoots.Application.Roles {
         private readonly IRepository<RoleMenu, int> _roleMenuRepository;
         private readonly IRepository<Menu, int> _menuRepository;
         private readonly IDistributedCache _cache;
-
+        private const string ROLE_URI_CACHE = "ROLE_URI";
         public RoleService(IRepository<Role, int> roleRepository,
             IRepository<RoleMenu, int> roleMenuRepository,
             IRepository<Menu, int> menuRepository,
@@ -26,14 +30,15 @@ namespace AdmBoots.Application.Roles {
             _menuRepository = menuRepository;
             _cache = cache;
         }
+
+
         /// <summary>
         /// 获取角色与资源标识（鉴权用）
         /// </summary>
         /// <returns></returns>
         [UnitOfWork(IsDisabled = true)]
         public IList<GetRoleUriOutput> GetRoleUriMaps() {
-            var cacheKey = "ROLE_URI";
-            var cachObj = _cache.GetObject<List<GetRoleUriOutput>>(cacheKey);
+            var cachObj = _cache.GetObject<List<GetRoleUriOutput>>(ROLE_URI_CACHE);
             if (cachObj != null) {
                 return cachObj;
             } else {
@@ -48,7 +53,7 @@ namespace AdmBoots.Application.Roles {
                                     Uri = m.Uri
                                 }).ToList();
 
-                _cache.SetObject(cacheKey, roleUris, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(30) });
+                _cache.SetObject(ROLE_URI_CACHE, roleUris, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(30) });
                 return roleUris;
             }
         }
@@ -58,6 +63,67 @@ namespace AdmBoots.Application.Roles {
              .Select(r => new GetTransferRoleOutput { RoleId = r.Id, RoleName = r.Name })
              .ToList();
             return roles;
+        }
+
+        [UnitOfWork(IsDisabled = true)]
+        public Page<GetRoleOutput> GetRoleList(GetRoleInput input) {
+            var result = _roleRepository.GetAll()
+                .Include(u => u.RoleMenuList);
+            var pageResult = result.PageAndOrderBy(input);
+            var output = new List<GetRoleOutput>();
+            foreach (var r in pageResult) {
+                var userOutput = ObjectMapper.Map<GetRoleOutput>(r);
+                foreach (var rm in r.RoleMenuList) {
+                    userOutput.MenuIds.Add(rm.MenuId);
+                }
+                output.Add(userOutput);
+            }
+            return new Page<GetRoleOutput>(input, result.Count(), output);
+        }
+
+        public async Task AddOrUpdateRole(int? id, AddOrUpdateRoleInput input) {
+            if (id.HasValue) {
+                var checkRole = _roleRepository.GetAll().Where(t => t.Id != id && (t.Name == input.Name || t.Code == input.Code));
+                if (checkRole.Any()) {
+                    throw new BusinessException($"角色编号或角色名称已存在");
+                }
+                var role = _roleRepository.GetAll().Where(t => t.Id == id).FirstOrDefault();
+                if (role == null)
+                    throw new BusinessException($"找不到待更新的数据 ID：{id}");
+
+                role.Name = input.Name;
+                role.Code = input.Code;
+                role.Description = input.Description;
+                await _roleRepository.UpdateAsync(role);
+            } else {
+                var checkUserName = _roleRepository.GetAll().Where(t => t.Name == input.Name || t.Code == input.Code);
+                if (checkUserName.Any()) {
+                    throw new BusinessException($"角色编号或角色名称已存在");
+                }
+                var user = new Role {
+                    Name = input.Name,
+                    Code = input.Code,
+                    Status = SysStatus.有效,
+                    Description = input.Description,
+                };
+            }
+        }
+
+        public async Task DeleteRole(int[] ids) {
+            var updateRoles = await _roleRepository.GetAll().Where(t => ids.Contains(t.Id)).ToListAsync();
+            foreach (var role in updateRoles) {
+                role.Status = SysStatus.作废;
+            }
+        }
+
+        public async Task UpdateRoleMenu(UpdateRoleMenuInput input) {
+            var roleId = input.RoleId;
+            _roleMenuRepository.Delete(t => t.RoleId == roleId);
+            var roleMenus = new List<RoleMenu>();
+            foreach (var menuId in input.MenuIds) {
+                await _roleMenuRepository.InsertAsync(new RoleMenu { RoleId = roleId, MenuId = menuId });
+            }
+            _cache.Remove(ROLE_URI_CACHE);
         }
     }
 }

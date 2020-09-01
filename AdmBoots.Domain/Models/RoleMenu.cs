@@ -16,5 +16,8 @@ namespace AdmBoots.Domain.Models {
         /// 菜单ID
         /// </summary>
         public int MenuId { get; set; }
+
+        public Role Role { get; set; }
+        public Menu Menu { get; set; }
     }
 }

@@ -11,9 +11,7 @@ using AdmBoots.Domain;
 namespace AdmBoots.Domain.Models {
     [Table("user")]
     public class User : Entity {
-        public User() {
-            UserRoleList = new List<UserRole>();
-        }
+
         /// <summary>
         /// 用户名
         /// </summary>
@@ -57,6 +55,6 @@ namespace AdmBoots.Domain.Models {
         public string Email { get; set; }
 
         //多对多映射
-        public List<UserRole> UserRoleList { get; set; }
+        public List<UserRole> UserRoleList { get; set; } = new List<UserRole>();
     }
 }

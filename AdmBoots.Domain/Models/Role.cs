@@ -7,9 +7,6 @@ using AdmBoots.Infrastructure.Framework.Abstractions;
 namespace AdmBoots.Domain.Models {
     [Table("role")]
     public class Role : AuditEntity {
-        public Role() {
-            UserRoleList = new List<UserRole>();
-        }
 
         public string Name { get; set; }
 
@@ -20,6 +17,8 @@ namespace AdmBoots.Domain.Models {
         public SysStatus Status { get; set; }
 
         //多对多映射
-        public List<UserRole> UserRoleList { get; set; }
+        public List<UserRole> UserRoleList { get; set; } = new List<UserRole>();
+        public List<RoleMenu> RoleMenuList { get; set; } = new List<RoleMenu>();
+
     }
 }

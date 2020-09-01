@@ -80,9 +80,14 @@ namespace AdmBoots.Application.Users {
                 .Include(u => u.UserRoleList)
                 .ThenInclude(ur => ur.Role);
             var pageResult = result.PageAndOrderBy(input);
-
-            var output = ObjectMapper.Map<List<GetUserOutput>>(pageResult.ToList());
-
+            var output = new List<GetUserOutput>();
+            foreach (var r in pageResult) {
+                var userOutput = ObjectMapper.Map<GetUserOutput>(r);
+                foreach (var ur in r.UserRoleList) {
+                    userOutput.Roles.Add(new URole { Id = ur.RoleId, Name = ur.Role.Name });
+                }
+                output.Add(userOutput);
+            }
             return new Page<GetUserOutput>(input, result.Count(), output);
         }
 
@@ -92,7 +97,7 @@ namespace AdmBoots.Application.Users {
                 if (checkUserName.Any()) {
                     throw new BusinessException($"用户名已存在");
                 }
-                var user = _userRepository.GetAll().Where(t => t.Id == id).First();
+                var user = _userRepository.GetAll().Where(t => t.Id == id).FirstOrDefault();
                 if (user == null)
                     throw new BusinessException($"找不到待更新的数据 ID：{id}");
 

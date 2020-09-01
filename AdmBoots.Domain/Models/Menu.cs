@@ -65,5 +65,6 @@ namespace AdmBoots.Domain.Models {
         /// </summary>
         public int Sort { get; set; }
 
+        public List<RoleMenu> RoleMenuList { get; set; } = new List<RoleMenu>();
     }
 }
