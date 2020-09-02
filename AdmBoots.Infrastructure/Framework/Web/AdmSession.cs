@@ -7,12 +7,12 @@ using IdentityModel;
 using Microsoft.AspNetCore.Http;
 
 namespace AdmBoots.Infrastructure.Framework.Web {
-    public class AdmSession {
+    public class AdmSession : IAdmSession {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly ClaimsPrincipal _user;
 
-        private int _userId = 0;
+        private int? _userId;
         private string _name;
 
         public AdmSession(IHttpContextAccessor httpContextAccessor) {
@@ -20,7 +20,7 @@ namespace AdmBoots.Infrastructure.Framework.Web {
             _user = _httpContextAccessor.HttpContext.User;
         }
 
-        public int UserId {
+        public int? UserId {
             get {
                 var nameIdentifier = _user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 if (nameIdentifier == null)

@@ -75,6 +75,9 @@ namespace AdmBoots.Infrastructure.Authorization {
                         context.Fail();
                         return;
                     }
+                } else {
+                    context.Fail();
+                    return;
                 }
             }
 

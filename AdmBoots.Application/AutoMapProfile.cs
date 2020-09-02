@@ -9,6 +9,8 @@ namespace AdmBoots.Application {
         /// 配置构造函数，用来创建关系映射
         /// </summary>
         public AutoMapProfile() {
+
+            CreateMap<User, LoginUserInfo>(MemberList.Source);
             CreateMap<User, GetUserOutput>(MemberList.Source);
             CreateMap<Role, GetRoleOutput>(MemberList.Source);
         }

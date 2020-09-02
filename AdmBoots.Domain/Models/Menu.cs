@@ -53,7 +53,7 @@ namespace AdmBoots.Domain.Models {
         /// <summary>
         /// 是否激活
         /// </summary>
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         /// <summary>
         /// 状态

@@ -11,16 +11,13 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AdmBoots.Data\AdmBoots.Data.csproj" />
     <ProjectReference Include="..\AdmBoots.Domain\AdmBoots.Domain.csproj" />
     <ProjectReference Include="..\AdmBoots.Infrastructure\AdmBoots.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Menus\Dto\" />
   </ItemGroup>
 
 </Project>

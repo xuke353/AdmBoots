@@ -34,7 +34,7 @@ namespace AdmBoots.Api.StartupExtensions {
 
             //复杂的策略授权
             services.AddAuthorization(options => {
-                options.AddPolicy(AdmConsts.Policy,
+                options.AddPolicy(AdmConsts.POLICY,
                          policy => policy.Requirements.Add(admPolicyRequirement));
 
             });

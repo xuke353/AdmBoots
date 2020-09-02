@@ -76,7 +76,7 @@ namespace AdmBoots.Application.Users {
 
         [UnitOfWork(IsDisabled = true)]
         public Page<GetUserOutput> GetUserList(GetUserInput input) {
-            var result = _userRepository.GetAll()
+            var result = _userRepository.GetAll().WhereIf(string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .Include(u => u.UserRoleList)
                 .ThenInclude(ur => ur.Role);
             var pageResult = result.PageAndOrderBy(input);

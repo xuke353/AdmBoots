@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using AdmBoots.Infrastructure.CustomExceptions;
+using AdmBoots.Infrastructure.Domain;
 
 namespace AdmBoots.Application.Roles {
     public class RoleService : AppServiceBase, IRoleService {
@@ -20,7 +21,7 @@ namespace AdmBoots.Application.Roles {
         private readonly IRepository<RoleMenu, int> _roleMenuRepository;
         private readonly IRepository<Menu, int> _menuRepository;
         private readonly IDistributedCache _cache;
-        private const string ROLE_URI_CACHE = "ROLE_URI";
+
         public RoleService(IRepository<Role, int> roleRepository,
             IRepository<RoleMenu, int> roleMenuRepository,
             IRepository<Menu, int> menuRepository,
@@ -38,7 +39,7 @@ namespace AdmBoots.Application.Roles {
         /// <returns></returns>
         [UnitOfWork(IsDisabled = true)]
         public IList<GetRoleUriOutput> GetRoleUriMaps() {
-            var cachObj = _cache.GetObject<List<GetRoleUriOutput>>(ROLE_URI_CACHE);
+            var cachObj = _cache.GetObject<List<GetRoleUriOutput>>(AdmConsts.ROLE_URI_CACHE);
             if (cachObj != null) {
                 return cachObj;
             } else {
@@ -53,7 +54,7 @@ namespace AdmBoots.Application.Roles {
                                     Uri = m.Uri
                                 }).ToList();
 
-                _cache.SetObject(ROLE_URI_CACHE, roleUris, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(30) });
+                _cache.SetObject(AdmConsts.ROLE_URI_CACHE, roleUris, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(30) });
                 return roleUris;
             }
         }
@@ -123,7 +124,7 @@ namespace AdmBoots.Application.Roles {
             foreach (var menuId in input.MenuIds) {
                 await _roleMenuRepository.InsertAsync(new RoleMenu { RoleId = roleId, MenuId = menuId });
             }
-            _cache.Remove(ROLE_URI_CACHE);
+            _cache.Remove(AdmConsts.ROLE_URI_CACHE);
         }
     }
 }

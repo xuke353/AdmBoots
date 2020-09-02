@@ -26,6 +26,6 @@ namespace AdmBoots.Infrastructure.Framework.Web {
         bool IsAuthenticated { get; }
     }
 
-    public interface IAdmSession : IAdmSession<int> {
+    public interface IAdmSession : IAdmSession<int?> {
     }
 }

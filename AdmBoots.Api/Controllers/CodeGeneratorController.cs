@@ -39,7 +39,7 @@ namespace AdmBoots.Api.Controllers {
                 var fileName = $"{className}Controller";
                 //小写类名
                 var lowerClassName = name.Substring(0, 1).ToLower() + name.Substring(1);
-                var route = "\"api/v{version:apiVersion}/[controller]/[action]\"";
+                var route = "\"api/v{version:apiVersion}/" + $"{lowerClassName}s\"";
                 var version = "\"1.0\"";
                 var content = @$"
 using AdmBoots.Application.{className}s;
@@ -58,7 +58,7 @@ namespace {nameSpace}" + @"
     [ApiController]" + @$"
     [ApiVersion({version})]" + @$"
     [Route({route})]
-    [Authorize(AdmConsts.Policy)]
+    [Authorize(AdmConsts.POLICY)]
     public class " + $"{fileName} : ControllerBase" + @"
 	{
         private readonly " + @$"I{className}Service _{lowerClassName}Service;
