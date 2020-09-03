@@ -10,9 +10,9 @@ using AdmBoots.Infrastructure.CustomExceptions;
 using AdmBoots.Infrastructure.Domain;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Linq.Dynamic.Core;
+using AdmBoots.Data.EntityFrameworkCore.Uow;
 
 namespace AdmBoots.Application.Menus {
-
     public class MenuService : AppServiceBase, IMenuService {
         private readonly IRepository<Menu, int> _menuRepository;
         private readonly IRepository<UserRole, int> _userRoleRepository;
@@ -70,7 +70,6 @@ namespace AdmBoots.Application.Menus {
                 DeleteMenuChild(menus, menu.Id);
             }
         }
-
         private void DeleteMenuChild(List<Menu> menus, int id) {
             var chidMenus = menus.Where(m => m.ParentId == id);
             foreach (var menu in chidMenus) {
@@ -79,7 +78,7 @@ namespace AdmBoots.Application.Menus {
                 DeleteMenuChild(menus, menu.Id);
             }
         }
-
+        [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetActiveMenus() {
             var menus = _menuRepository.GetAll()
                 .Where(t => t.IsActive && t.Status == SysStatus.有效).OrderBy(t => t.Sort).ToList();
@@ -91,7 +90,7 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput;
         }
-
+        [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetAllMenus(GetMenuInput input) {
             var menus = _menuRepository.GetAll()
                 .Where(t => t.Status == SysStatus.有效)
@@ -116,7 +115,7 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput.Count < 1 ? null : menusOutput;
         }
-
+        [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetCascadeMenus() {
             var menus = _menuRepository.GetAll().Where(t => t.MenuType == MenuType.菜单
                         && t.IsActive
@@ -138,7 +137,7 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput;
         }
-
+        [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetMenusByRole() {
             var menus = (from u in _userRepository.GetAll()
                          join ur in _userRoleRepository.GetAll()
@@ -175,6 +174,7 @@ namespace AdmBoots.Application.Menus {
         }
 
         private void GetParentId(IList<Menu> menus, Menu child, List<int> parentIdList) {
+
             var menu = menus.FirstOrDefault(t => t.Id == child.ParentId);
             if (menu != null) {
                 parentIdList.Insert(0, menu.Id);
@@ -183,6 +183,7 @@ namespace AdmBoots.Application.Menus {
                 if (child.ParentId.HasValue)
                     parentIdList.Insert(0, (int)child.ParentId);
             }
+
         }
     }
 }
