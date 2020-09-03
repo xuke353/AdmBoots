@@ -59,6 +59,10 @@ namespace AdmBoots.Api.Controllers {
                 //小写类名
                 var lowerClassName = name.Substring(0, 1).ToLower() + name.Substring(1);
                 var route = "\"api/v{version:apiVersion}/" + $"{lowerClassName}s\"";
+                var addOkMsg = "\"保存成功\"";
+                var updateOkMsg = "\"修改成功\"";
+                var deleteOkMsg = "\"删除成功\"";
+                var urlId = "\"{id}\"";
                 var version = "\"1.0\"";
                 var content = @$"
 using AdmBoots.Application.{className}s;
@@ -85,7 +89,30 @@ namespace {nameSpace}" + @"
         {
             " + @$"_{lowerClassName}Service = {lowerClassName}Service;" + @"
         }
-    }
+
+        [HttpGet]
+        " + $"public IActionResult Get{className}List([FromQuery]Get{className}Input input)" + "{" + @"
+        " + $"            var result = _{lowerClassName}Service.Get{className}List(input);" + @"
+                    return Ok(ResponseBody.From(result));
+                }
+        [HttpPost]
+        " + $"public async Task<IActionResult> Add{className}([FromBody]AddOrUpdate{className}Input input)" + "{" + @$"
+            await _{lowerClassName}Service.AddOrUpdate{className}(null, input);
+            return Ok(ResponseBody.From({addOkMsg}));
+        " + "}" + @$"
+
+        [HttpPut({urlId})]
+        public async Task<IActionResult> Update{className}(int id, [FromBody]AddOrUpdate{className}Input input) " + "{" + @$"
+            await _{lowerClassName}Service.AddOrUpdate{className}(id, input);
+            return Ok(ResponseBody.From({updateOkMsg}));
+         " + "}" + @$"
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete{className}(int[] ids) " + "{" + @$"
+            await _{lowerClassName}Service.Delete{className}(ids);
+            return Ok(ResponseBody.From({deleteOkMsg}));
+        " + "}" + @"
+    " + "}" + @"
 }";
                 FileHelper.OutCode2File(outputPath, fileName, content);
             }
@@ -101,16 +128,16 @@ namespace {nameSpace}" + @"
                 var info = new DirectoryInfo(_env.ContentRootPath);
                 var path = info.Parent.FullName;
                 //输出路径
-                string outputPath = Path.Combine(path, @"AdmRoots.Application", $"{className}s");
+                string outputPath = Path.Combine(path, @"AdmBoots.Application", $"{className}s");
                 //命名空间
-                string nameSpace = $"AdmRoots.Application.{className}s";
+                string nameSpace = $"AdmBoots.Application.{className}s";
                 //文件名
                 string fileName = $"I{className}Service";
                 var content = @$"
 using AdmBoots.Infrastructure.Framework.Abstractions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using AdmBoots.Application.{className}s.Dto;
 namespace {nameSpace}" + @"
 {
 	/// <summary>
@@ -118,6 +145,11 @@ namespace {nameSpace}" + @"
 	/// </summary>
     public interface " + $"{fileName} :ITransientDependency" + @"
 	{
+        " + $"Task<Page<Get{className}Output>> Get{className}List(Get{className}Input input);" + @"
+
+        " + $"Task AddOrUpdate{className}(int? id, AddOrUpdate{className}Input input);" + @"
+
+        " + $"Task Delete{className}(int[] ids);" + @"
     }
 }
                     ";
@@ -137,24 +169,24 @@ namespace {nameSpace}" + @"
                 //输出路径
                 string outputPath = Path.Combine(path, "AdmBoots.Application", $"{className}s");
                 //命名空间
-                string nameSpace = $"AdmRoots.Application.{className}s";
+                string nameSpace = $"AdmBoots.Application.{className}s";
                 //文件名
                 string fileName = $"{className}Service";
                 //小写类名
                 string lowerclassName = name.Substring(0, 1).ToLower() + name.Substring(1);
                 var content = @$"
-using AdmRoots.Application.{className}s.Dto;
-using AdmRoots.Domain.IRepositorys;
-using AdmRoots.Domain.Models;
+using AdmBoots.Application.{className}s.Dto;
+using AdmBoots.Domain.IRepositories;
+using AdmBoots.Domain.Models;
 using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using AdmBoots.Infrastructure.Framework.Abstractions;
 namespace {nameSpace}" + @"
 {
 	/// <summary>
-	///
+	///                                                                                                                                                                                                                                  
 	/// </summary>
     public class " + $"{fileName} : AppServiceBase, I{fileName}" + @"
 	{
@@ -162,6 +194,17 @@ namespace {nameSpace}" + @"
         public " + @$"{fileName}(IRepository<{className}, int> {lowerclassName}Repository)" + @"
         {
             " + @$"_{lowerclassName}Repository = {lowerclassName}Repository;" + @"
+        }
+        " + $"public  Task AddOrUpdate{className}(int? id, AddOrUpdate{className}Input input)" + "{" + @"
+            throw new System.NotImplementedException();
+        }
+
+        " + $"public Task Delete{className}(int[] ids)" + "{" + @"
+            throw new System.NotImplementedException();
+        }
+
+        " + $"public  Task<Page<Get{className}Output>> Get{className}List(Get{className}Input input) " + "{" + @"
+            throw new System.NotImplementedException();
         }
     }
 }
@@ -180,9 +223,9 @@ namespace {nameSpace}" + @"
                 var info = new DirectoryInfo(_env.ContentRootPath);
                 var path = info.Parent.FullName;
                 //输出路径
-                string outputPath = Path.Combine(path, @"AdmRoots.Application", @$"{className}s\Dto");
+                string outputPath = Path.Combine(path, @"AdmBoots.Application", @$"{className}s\Dto");
                 //命名空间
-                string nameSpace = $"AdmRoots.Application.{className}s.Dto";
+                string nameSpace = $"AdmBoots.Application.{className}s.Dto";
                 //文件名
                 string addUpdateInputName = $"AddOrUpdate{className}Input";
                 string getInputName = $"Get{className}Input";
