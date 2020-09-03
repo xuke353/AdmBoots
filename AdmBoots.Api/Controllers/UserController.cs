@@ -24,5 +24,34 @@ namespace AdmBoots.Api.Controllers {
             var users = _userService.GetUserList(input);
             return Ok(ResponseBody.From(users));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUser([FromBody]AddOrUpdateUserInput input) {
+            await _userService.AddOrUpdateUser(null, input);
+            return Ok(ResponseBody.From("保存成功"));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody]AddOrUpdateUserInput input) {
+            await _userService.AddOrUpdateUser(id, input);
+            return Ok(ResponseBody.From("修改成功"));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(int[] ids) {
+            await _userService.DeleteUser(ids);
+            return Ok(ResponseBody.From("删除成功"));
+        }
+
+        [HttpPut("{id}/pwd")]
+        public async Task<IActionResult> ResetPassword(int id) {
+            await _userService.ResetPassword(id);
+            return Ok(ResponseBody.From("密码已重置为 123456"));
+        }
+        [HttpPut("modifyPwd")]
+        public async Task<IActionResult> ModifyPassword(ModifyPasswordInput input) {
+            await _userService.ModifyPassword(input);
+            return Ok(ResponseBody.From("密码修改成功"));
+        }
     }
 }

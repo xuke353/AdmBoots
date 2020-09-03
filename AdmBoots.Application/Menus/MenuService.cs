@@ -80,6 +80,11 @@ namespace AdmBoots.Application.Menus {
                 DeleteMenuChild(menus, menu.Id);
             }
         }
+        /// <summary>
+        /// 获取激活的菜单与按钮（给角色授权时）
+        /// </summary>
+        /// <returns></returns>
+        [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetActiveMenus() {
             var menus = _menuRepository.GetAll()
                 .Where(t => t.IsActive && t.Status == SysStatus.有效).OrderBy(t => t.Sort).ToList();
@@ -91,6 +96,11 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput;
         }
+        /// <summary>
+        /// 获取所有菜单与按钮（菜单管理）
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetAllMenus(GetMenuInput input) {
             var menus = _menuRepository.GetAll()
@@ -114,8 +124,12 @@ namespace AdmBoots.Application.Menus {
                     menusOutput.Add(menuMap);
                 }
             }
-            return menusOutput.Count < 1 ? null : menusOutput;
+            return menusOutput;
         }
+        /// <summary>
+        /// 获取级联形式的菜单（菜单管理编辑时，选取父菜单）
+        /// </summary>
+        /// <returns></returns>
         [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetCascadeMenus() {
             var menus = _menuRepository.GetAll().Where(t => t.MenuType == MenuType.菜单
@@ -138,6 +152,10 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput;
         }
+        /// <summary>
+        /// 根据当前用户角色获取系统左侧菜单
+        /// </summary>
+        /// <returns></returns>
         [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTreeMenuOutput> GetMenusByRole() {
             var menus = (from u in _userRepository.GetAll()

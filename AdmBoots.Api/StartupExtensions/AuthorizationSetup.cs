@@ -68,15 +68,15 @@ namespace AdmBoots.Api.StartupExtensions {
                          }
                          return Task.CompletedTask;
                      },
-                     OnTokenValidated = context => {
-                         var token = ((JwtSecurityToken)context.SecurityToken).RawData;
-                         var uid = JwtToken.ReadJwtToken<int>(token);
-                         var cache = context.HttpContext.RequestServices.GetRequiredService<IDistributedCache>();
-                         if (cache.GetString(uid.ToString()) != token) {
-                             context.Fail("token不在白名单中");//返回401
-                         }
-                         return Task.CompletedTask;
-                     },
+                     //OnTokenValidated = context => {
+                     //    var token = ((JwtSecurityToken)context.SecurityToken).RawData;
+                     //    var uid = JwtToken.ReadJwtToken<int>(token);
+                     //    var cache = context.HttpContext.RequestServices.GetRequiredService<IDistributedCache>();
+                     //    if (cache.GetString(uid.ToString()) != token) {
+                     //        context.Fail("token不在白名单中");//返回401
+                     //    }
+                     //    return Task.CompletedTask;
+                     //},
                      OnMessageReceived = context => {
                          if (!context.HttpContext.Request.Path.HasValue) {
                              return Task.CompletedTask;

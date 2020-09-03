@@ -14,7 +14,7 @@ namespace AdmBoots.Api.Controllers {
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/roles")]
-    //[Authorize(AdmConsts.Policy)]
+    [Authorize(AdmConsts.POLICY)]
     public class RoleController : ControllerBase {
         private readonly IRoleService _roleService;
 
@@ -45,5 +45,11 @@ namespace AdmBoots.Api.Controllers {
             await _roleService.DeleteRole(ids);
             return Ok(ResponseBody.From("删除成功"));
         }
+        [HttpGet("transferRoles")]
+        public IActionResult GetTransferRoles() {
+            var roles = _roleService.GetTransferRoles();
+            return Ok(ResponseBody.From(roles));
+        }
+
     }
 }

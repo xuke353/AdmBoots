@@ -60,7 +60,7 @@ namespace AdmBoots.Infrastructure.Authorization {
                                             select Convert.ToInt32(item.Value)).ToList();
                     // 获取权限列表（role-uri）
                     var roleUris = _roleService.GetRoleUriMaps();
-                    if (roleUris.Any(roleUri => currentUserRoles.Contains(roleUri.RoleId))) {
+                    if (!roleUris.Any(roleUri => currentUserRoles.Contains(roleUri.RoleId))) {
                         context.Fail();
                         return;
                     }
