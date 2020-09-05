@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AdmBoots.Api.Authorization;
 using AdmBoots.Application.Roles;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -34,10 +36,15 @@ namespace AdmBoots.Infrastructure.Authorization {
             var routContext = (context.Resource as RouteEndpoint);
             var descriptor = routContext.Metadata.OfType<ControllerActionDescriptor>().FirstOrDefault();
             var currentURI = string.Empty;
-            if (descriptor != null) {
-                currentURI = $"{descriptor.ControllerName}:{descriptor.ActionName}";
+            //如果有自定义资源标识，取自定义的标识。没有自定义的，取默认ControllerName:ActionName
+            var admAuthorizeFilterAttr = GetAdmAuthorizeFilterAttributeOrNull(descriptor.MethodInfo);
+            if (string.IsNullOrEmpty(admAuthorizeFilterAttr.FilterName)) {
+                if (descriptor != null) {
+                    currentURI = $"{descriptor.ControllerName}:{descriptor.ActionName}";
+                }
+            } else {
+                currentURI = admAuthorizeFilterAttr.FilterName;
             }
-
             //判断请求是否停止
             var handlers = httpContext.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
             foreach (var scheme in await _schemes.GetRequestHandlerSchemesAsync()) {
@@ -60,7 +67,8 @@ namespace AdmBoots.Infrastructure.Authorization {
                                             select Convert.ToInt32(item.Value)).ToList();
                     // 获取权限列表（role-uri）
                     var roleUris = _roleService.GetRoleUriMaps();
-                    if (!roleUris.Any(roleUri => currentUserRoles.Contains(roleUri.RoleId))) {
+                    var permisssionRoles = roleUris.Where(ru => currentUserRoles.Contains(ru.RoleId));
+                    if (!permisssionRoles.Any(pr => currentURI == pr.Uri)) {
                         context.Fail();
                         return;
                     }
@@ -82,6 +90,17 @@ namespace AdmBoots.Infrastructure.Authorization {
             }
 
             context.Succeed(requirement);
+        }
+
+
+        private AdmAuthorizeFilterAttribute GetAdmAuthorizeFilterAttributeOrNull(MethodInfo methodInfo) {
+            var attrs = methodInfo.GetCustomAttributes(true).OfType<AdmAuthorizeFilterAttribute>().ToArray();
+            if (attrs.Length > 0) {
+                return attrs[0];
+            }
+
+            attrs = methodInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(true).OfType<AdmAuthorizeFilterAttribute>().ToArray();
+            return attrs.Length > 0 ? attrs[0] : null;
         }
     }
 }

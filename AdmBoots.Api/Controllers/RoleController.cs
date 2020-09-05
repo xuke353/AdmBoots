@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using AdmBoots.Infrastructure.Domain;
 using AdmBoots.Infrastructure.Framework.Abstractions;
+using AdmBoots.Api.Authorization;
 
 namespace AdmBoots.Api.Controllers {
 
@@ -23,6 +24,7 @@ namespace AdmBoots.Api.Controllers {
         }
 
         [HttpGet]
+        [AdmAuthorizeFilter("ABC:DF")]
         public IActionResult GetUserList([FromQuery]GetRoleInput input) {
             var roles = _roleService.GetRoleList(input);
             return Ok(ResponseBody.From(roles));
