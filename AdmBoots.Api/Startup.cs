@@ -27,6 +27,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using AdmBoots.Infrastructure.Framework.Web;
+using AdmBoots.Quartz;
 
 namespace AdmBoots.Api {
 
@@ -86,6 +87,7 @@ namespace AdmBoots.Api {
             services.AddCacheSetup();
             services.AddAuthorizationSetup();
             services.AddHealthChecksSetup();
+            services.AddQuartzStartup();
             services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
             services.AddDbContext<AdmDbContext>(option => option
@@ -114,6 +116,8 @@ namespace AdmBoots.Api {
             app.UseAuthentication();
             //授权
             app.UseAuthorization();
+            //开启任务调度
+            app.ApplicationServices.GetService<ISchedulerCenter>().Start();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();

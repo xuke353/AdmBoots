@@ -38,6 +38,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.7" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+    <PackageReference Include="Quartz" Version="3.1.0" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
@@ -68,5 +69,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AdmBoots.Application\AdmBoots.Application.csproj" />
     <ProjectReference Include="..\AdmBoots.Infrastructure\AdmBoots.Infrastructure.csproj" />
+    <ProjectReference Include="..\AdmBoots.Quartz\AdmBoots.Quartz.csproj" />
   </ItemGroup>
 </Project>

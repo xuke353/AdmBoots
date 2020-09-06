@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmBoots.Quartz", "AdmBoots.Quartz\AdmBoots.Quartz.csproj", "{DDB5B51B-3084-4020-ABBD-9E2F2906EE34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{3CA42A2D-6A31-4495-882A-D28108651843}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CA42A2D-6A31-4495-882A-D28108651843}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CA42A2D-6A31-4495-882A-D28108651843}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB5B51B-3084-4020-ABBD-9E2F2906EE34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB5B51B-3084-4020-ABBD-9E2F2906EE34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB5B51B-3084-4020-ABBD-9E2F2906EE34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB5B51B-3084-4020-ABBD-9E2F2906EE34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{2D170524-DB20-480C-BD65-CF29CB6F4131} = {9B3910A4-196B-46C1-BBFE-8DC29C7B0663}
 		{3DB26BAC-B41E-4647-90A7-1150D2540764} = {9B3910A4-196B-46C1-BBFE-8DC29C7B0663}
 		{3CA42A2D-6A31-4495-882A-D28108651843} = {9B3910A4-196B-46C1-BBFE-8DC29C7B0663}
+		{DDB5B51B-3084-4020-ABBD-9E2F2906EE34} = {9B3910A4-196B-46C1-BBFE-8DC29C7B0663}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45A40EA1-1476-4A8D-8CE6-D62430D6D1C3}
