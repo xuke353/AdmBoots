@@ -16,6 +16,7 @@ using AdmBoots.Infrastructure.CustomExceptions;
 using AdmBoots.Infrastructure.Domain;
 
 namespace AdmBoots.Application.Roles {
+
     public class RoleService : AppServiceBase, IRoleService {
         private readonly IRepository<Role, int> _roleRepository;
         private readonly IRepository<RoleMenu, int> _roleMenuRepository;
@@ -31,7 +32,6 @@ namespace AdmBoots.Application.Roles {
             _menuRepository = menuRepository;
             _cache = cache;
         }
-
 
         /// <summary>
         /// 获取角色与资源标识（鉴权用）
@@ -58,6 +58,7 @@ namespace AdmBoots.Application.Roles {
                 return roleUris;
             }
         }
+
         [UnitOfWork(IsDisabled = true)]
         public IEnumerable<GetTransferRoleOutput> GetTransferRoles() {
             var roles = _roleRepository.GetAll().Where(t => t.Status == SysStatus.有效)
@@ -101,12 +102,13 @@ namespace AdmBoots.Application.Roles {
                 if (checkUserName.Any()) {
                     throw new BusinessException($"角色编号或角色名称已存在");
                 }
-                var user = new Role {
+                var role = new Role {
                     Name = input.Name,
                     Code = input.Code,
                     Status = SysStatus.有效,
                     Description = input.Description,
                 };
+                await _roleRepository.InsertAsync(role);
             }
         }
 

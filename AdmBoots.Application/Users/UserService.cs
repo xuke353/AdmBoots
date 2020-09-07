@@ -25,6 +25,7 @@ namespace AdmBoots.Application.Users {
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
         }
+
         /// <summary>
         /// 登录
         /// </summary>
@@ -44,6 +45,7 @@ namespace AdmBoots.Application.Users {
             }
             return null;
         }
+
         [UnitOfWork(IsDisabled = true)]
         public async Task<LoginUserInfo> GetLoginUserAsync(int id) {
             var user = await _userRepository.FirstOrDefaultAsync(t => t.Id == id);
@@ -54,6 +56,7 @@ namespace AdmBoots.Application.Users {
             }
             return null;
         }
+
         /// <summary>
         /// 获取用户的角色集合
         /// </summary>
@@ -76,7 +79,7 @@ namespace AdmBoots.Application.Users {
 
         [UnitOfWork(IsDisabled = true)]
         public Page<GetUserOutput> GetUserList(GetUserInput input) {
-            var result = _userRepository.GetAll().WhereIf(string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
+            var result = _userRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .Include(u => u.UserRoleList)
                 .ThenInclude(ur => ur.Role);
             var pageResult = result.PageAndOrderBy(input);

@@ -12,6 +12,7 @@ using AdmBoots.Infrastructure.CustomExceptions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AdmBoots.Data.EntityFrameworkCore {
+
     public class AdmRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey> {
         public AdmDbContext Context { get; }
         public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
@@ -43,7 +44,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         }
 
         public List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate) {
-            return GetAll().ToList();
+            return GetAll().Where(predicate).ToList();
         }
 
         public async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate) {
@@ -228,7 +229,6 @@ namespace AdmBoots.Data.EntityFrameworkCore {
                 parameterExpression
             });
         }
-
 
         protected void AttachIfNot(TEntity entity) {
             var entry = Context.ChangeTracker.Entries().FirstOrDefault(ent => ent.Entity == entity);

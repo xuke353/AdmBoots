@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AdmBoots.Infrastructure.Authorization {
+
     public class AdmAuthorizationHandler : AuthorizationHandler<AdmPolicyRequirement> {
         private readonly IAuthenticationSchemeProvider _schemes;
         private readonly IHttpContextAccessor _accessor;
@@ -25,6 +26,7 @@ namespace AdmBoots.Infrastructure.Authorization {
             _accessor = accessor;
             _roleService = roleService;
         }
+
         /// <summary>
         /// 重载异步处理程序
         /// </summary>
@@ -38,7 +40,7 @@ namespace AdmBoots.Infrastructure.Authorization {
             var currentURI = string.Empty;
             //如果有自定义资源标识，取自定义的标识。没有自定义的，取默认ControllerName:ActionName
             var admAuthorizeFilterAttr = GetAdmAuthorizeFilterAttributeOrNull(descriptor.MethodInfo);
-            if (string.IsNullOrEmpty(admAuthorizeFilterAttr.FilterName)) {
+            if (admAuthorizeFilterAttr == null || string.IsNullOrEmpty(admAuthorizeFilterAttr.FilterName)) {
                 if (descriptor != null) {
                     currentURI = $"{descriptor.ControllerName}:{descriptor.ActionName}";
                 }
@@ -91,7 +93,6 @@ namespace AdmBoots.Infrastructure.Authorization {
 
             context.Succeed(requirement);
         }
-
 
         private AdmAuthorizeFilterAttribute GetAdmAuthorizeFilterAttributeOrNull(MethodInfo methodInfo) {
             var attrs = methodInfo.GetCustomAttributes(true).OfType<AdmAuthorizeFilterAttribute>().ToArray();

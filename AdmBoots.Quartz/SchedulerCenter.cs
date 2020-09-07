@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AdmBoots.Data.EntityFrameworkCore;
+using AdmBoots.Domain.Models;
+using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.CustomExceptions;
+using AdmBoots.Infrastructure.Extensions;
+using AdmBoots.Infrastructure.Framework.Abstractions;
 using AdmBoots.Quartz.Common;
 using AdmBoots.Quartz.Dto;
+using Microsoft.EntityFrameworkCore;
 using Quartz;
 using Quartz.Impl.Matchers;
 using Quartz.Impl.Triggers;
 
 namespace AdmBoots.Quartz {
+
     public class SchedulerCenter : ISchedulerCenter {
         private readonly IScheduler _scheduler;
+
         public SchedulerCenter(ISchedulerFactory schedulerFactory) {
             _scheduler = schedulerFactory.GetScheduler().Result;
         }
@@ -31,7 +39,7 @@ namespace AdmBoots.Quartz {
                     { QuartzConstant.REQUESTTYPE, ((int)scheduleInput.RequestType).ToString()},
                     { QuartzConstant.HEADERS, scheduleInput.Headers},
             };
-            // 定义这个工作，并将其绑定到我们的IJob实现类                
+            // 定义这个工作，并将其绑定到我们的IJob实现类
             IJobDetail job = JobBuilder.Create<HttpJob>()
                 .SetJobData(new JobDataMap(httpDir))
                 .WithDescription(scheduleInput.Describe)
@@ -100,11 +108,16 @@ namespace AdmBoots.Quartz {
             return list;
         }
 
-        public async Task<List<string>> GetJobLogsAsync(string jobName, string groupName) {
-            var jobDetail = await _scheduler.GetJobDetail(new JobKey(jobName, groupName));
-            var data = jobDetail.JobDataMap[QuartzConstant.LOGLIST] as List<string>;
-            return data;
+        public async Task<Page<JobLog>> GetJobLogsAsync(GetLogInput input) {
+            if (string.IsNullOrEmpty(input.JobName) || string.IsNullOrEmpty(input.GroupName))
+                throw new BusinessException($"任务名或组名不能为空");
+            var jobKeyStr = JobKey.Create(input.JobName, input.GroupName).ToString();
+            var dbContext = AdmBootsApp.ServiceProvider.GetService(typeof(AdmDbContext)) as AdmDbContext;
+            var result = dbContext.JobLogs.AsQueryable().Where(t => t.JobName == jobKeyStr);
+            var pageResult = result.PageAndOrderBy(input);
+            return new Page<JobLog>(input, result.Count(), await pageResult.ToListAsync());
         }
+
         public async Task<bool> Start() {
             //开启调度器
             if (_scheduler.InStandbyMode) {
@@ -112,6 +125,7 @@ namespace AdmBoots.Quartz {
             }
             return _scheduler.InStandbyMode;
         }
+
         /// <summary>
         /// 触发新增、删除、修改、暂停、启用、立即执行事件
         /// </summary>
@@ -122,6 +136,8 @@ namespace AdmBoots.Quartz {
         /// <param name="taskOptions"></param>
         /// <returns></returns>
         public async Task TriggerAction(string taskName, string groupName, JobAction action, AddScheduleInput scheduleInput = null) {
+            if (string.IsNullOrEmpty(taskName) || string.IsNullOrEmpty(groupName))
+                throw new BusinessException($"任务名或组名不能为空");
             var scheduler = _scheduler;
             var jobKey = new JobKey(taskName, groupName);
             var triggerKey = new TriggerKey(taskName, groupName);
@@ -139,21 +155,25 @@ namespace AdmBoots.Quartz {
                     if (action == JobAction.修改)
                         await AddJobAsync(scheduleInput);
                     break;
+
                 case JobAction.暂停:
                     await scheduler.PauseTrigger(triggerKey);
                     break;
+
                 case JobAction.停止:
                     await scheduler.Shutdown();
                     break;
+
                 case JobAction.开启:
                     await scheduler.ResumeTrigger(triggerKey);
                     break;
+
                 case JobAction.立即执行:
                     await scheduler.TriggerJob(jobKey);
                     break;
-
             }
         }
+
         private bool IsValidExpression(string cronExpression) {
             try {
                 CronTriggerImpl trigger = new CronTriggerImpl();
@@ -164,7 +184,5 @@ namespace AdmBoots.Quartz {
                 throw new BusinessException($"请确认表达式{cronExpression}是否正确!{e.Message}");
             }
         }
-
-
     }
 }

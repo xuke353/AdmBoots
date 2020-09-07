@@ -10,17 +10,15 @@ using Microsoft.EntityFrameworkCore;
 namespace AdmBoots.Data.EntityFrameworkCore {
 
     public class AdmDbContext : DbContext {
-        private readonly IAdmSession _admSession;
-
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Menu> Menus { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<RoleMenu> RoleMenus { get; set; }
+        public virtual DbSet<JobLog> JobLogs { get; set; }
 
-        public AdmDbContext(DbContextOptions<AdmDbContext> options, IAdmSession admSession)
+        public AdmDbContext(DbContextOptions<AdmDbContext> options)
          : base(options) {
-            _admSession = admSession;
         }
 
         public override int SaveChanges() {
@@ -44,16 +42,14 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         }
 
         private void ApplyAdmConcepts() {
-            var userId = _admSession.UserId;
-            var userName = _admSession.UserName;
             foreach (var entry in ChangeTracker.Entries().ToList()) {
                 switch (entry.State) {
                     case EntityState.Added:
-                        AdmEntityAuditingHelper.SetCreationAuditProperties(entry.Entity, userId, userName);
+                        AdmEntityAuditingHelper.SetCreationAuditProperties(entry.Entity);
                         break;
 
                     case EntityState.Modified:
-                        AdmEntityAuditingHelper.SetModificationAuditProperties(entry.Entity, userId, userName);
+                        AdmEntityAuditingHelper.SetModificationAuditProperties(entry.Entity);
                         break;
                         //case EntityState.Deleted:
                         //    SetDeletionAuditProperties(entry.Entity);

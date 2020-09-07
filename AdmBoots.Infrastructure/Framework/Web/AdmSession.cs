@@ -7,6 +7,7 @@ using IdentityModel;
 using Microsoft.AspNetCore.Http;
 
 namespace AdmBoots.Infrastructure.Framework.Web {
+
     public class AdmSession : IAdmSession {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -17,7 +18,7 @@ namespace AdmBoots.Infrastructure.Framework.Web {
 
         public AdmSession(IHttpContextAccessor httpContextAccessor) {
             _httpContextAccessor = httpContextAccessor;
-            _user = _httpContextAccessor.HttpContext.User;
+            _user = _httpContextAccessor.HttpContext?.User;
         }
 
         public int? UserId {
@@ -28,7 +29,6 @@ namespace AdmBoots.Infrastructure.Framework.Web {
                 return _userId = Convert.ToInt32(nameIdentifier.Value);
             }
         }
-
 
         public bool IsAuthenticated => _user.Identity.IsAuthenticated;
 
@@ -41,7 +41,5 @@ namespace AdmBoots.Infrastructure.Framework.Web {
                 return _name = _user.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.Name)?.Value;
             }
         }
-
-
     }
 }
