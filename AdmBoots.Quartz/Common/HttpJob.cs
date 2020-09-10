@@ -10,6 +10,7 @@ using AdmBoots.Domain.Models;
 using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.Extensions;
 using AdmBoots.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Mail;
 using AdmBoots.Quartz.Dto;
 using Newtonsoft.Json;
 using Quartz;
@@ -92,6 +93,7 @@ namespace AdmBoots.Quartz.Common {
                 var seconds = stopwatch.Elapsed.TotalSeconds;  //总秒数
                 if (seconds >= warnTime)//如果请求超过20秒，记录警告日志
                 {
+                    loginfo.Level = "警告";
                     loginfo.ErrorMsg = $"耗时过长 - {seconds}s";
                 }
                 await WriteLog(loginfo);
@@ -108,21 +110,33 @@ namespace AdmBoots.Quartz.Common {
                 ErrorMsg = info.ErrorMsg,
                 Level = info.Level
             };
-            //输出log到控制台
-            if (string.IsNullOrEmpty(log.Result)) {
-                $"--------------【{log.JobName} 出错】--------------".WriteErrorLine();
-                log.ErrorMsg.WriteErrorLine();
-                "--------------------------------------------------".WriteErrorLine();
-            } else {
-                $"--------------【{log.JobName} 执行成功】--------------".WriteSuccessLine();
-                $"开始时间：{log.BeginTime}".WriteInfoLine();
-                $"结束时间：{log.EndTime}".WriteInfoLine();
-                $"耗    时：{log.Seconds}秒".WriteInfoLine();
-                "-----------------------------------------------------".WriteSuccessLine();
-            }
+
             var dbContext = AdmBootsApp.ServiceProvider.GetService(typeof(AdmDbContext)) as AdmDbContext;
             dbContext.JobLogs.Add(log);
             await dbContext.SaveChangesAsync();
+
+            //输出log到控制台
+            if (log.Level == "错误") {
+                var msg = string.Format("--------------【{0} Job执行出错】-------------- \r\n开始时间：{1}\r\n结束时间：{2}\r\n耗    时：{3}\r\n错误消息：\r\n{4}\r\n -------------------------------------------",
+                 log.JobName, log.BeginTime, log.EndTime, log.Seconds, log.ErrorMsg);
+                msg.WriteSuccessLine();
+                //发送邮件
+                //此处可以读取配置文件，也可以读取数据库
+                //var config = new MailConfig {
+                //    Code = "******",
+                //    Fr = "*****@qq.com",
+                //    FrHost = "smtp.qq.com",
+                //    ToArry = new string[] { "*******" }
+                //};
+                //var mail = new MailModel {
+                //    Title = $"【Job[{log.JobName}]执行出错】",
+                //    Body = msg
+                //};
+                //EmailService.PostEmail(config, mail);
+            } else {
+                string.Format("--------------【{0} 执行成功】-------------- \r\n开始时间：{1}\r\n结束时间：{2}\r\n耗    时：{3} \r\n----------------------------------------------",
+                    log.JobName, log.BeginTime, log.EndTime, log.Seconds).WriteSuccessLine();
+            }
         }
     }
 
