@@ -19,11 +19,19 @@ namespace AdmBoots.Application.Users {
         private readonly IRepository<User, int> _userRepository;
         private readonly IRepository<Role, int> _roleRepository;
         private readonly IRepository<UserRole, int> _userRoleRepository;
+        private readonly IRepository<Menu, int> _menuRepository;
+        private readonly IRepository<RoleMenu, int> _roleMenuRepository;
 
-        public UserService(IRepository<User, int> userRepository, IRepository<Role, int> roleRepository, IRepository<UserRole, int> userRoleRepository) {
+        public UserService(IRepository<User, int> userRepository,
+            IRepository<Role, int> roleRepository,
+            IRepository<UserRole, int> userRoleRepository,
+            IRepository<Menu, int> menuRepository,
+            IRepository<RoleMenu, int> roleMenuRepository) {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _menuRepository = menuRepository;
+            _roleMenuRepository = roleMenuRepository;
         }
 
         /// <summary>
@@ -174,6 +182,35 @@ namespace AdmBoots.Application.Users {
 
             user.Password = MD5Helper.MD5Encrypt32(input.Password);
             await _userRepository.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// 获取用户按钮权限
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetUserAuthorizedOutput>> GetPermissions() {
+            var authMenu = await (from u in _userRepository.GetAll()
+                                  join ur in _userRoleRepository.GetAll()
+                                  on u.Id equals ur.UserId
+                                  join r in _roleRepository.GetAll()
+                                  on ur.RoleId equals r.Id
+                                  join rm in _roleMenuRepository.GetAll()
+                                  on r.Id equals rm.RoleId
+                                  join m in _menuRepository.GetAll()
+                                  on rm.MenuId equals m.Id
+                                  where r.Status == SysStatus.有效 && m.Status == SysStatus.有效
+                                  && u.Id == AdmSession.UserId
+                                  select m).ToListAsync();
+
+            var authBtn = from m in authMenu
+                          join b in authMenu on m.Id equals b.ParentId
+                          where m.MenuType == MenuType.菜单 && b.MenuType == MenuType.按钮
+                          select new GetUserAuthorizedOutput {
+                              Uri = m.Uri,
+                              Code = b.Code,
+                              Name = b.Name
+                          };
+            return authBtn.ToList();
         }
     }
 }

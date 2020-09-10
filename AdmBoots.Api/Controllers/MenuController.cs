@@ -27,7 +27,7 @@ namespace AdmBoots.Api.Controllers {
             return Ok(ResponseBody.From(result));
         }
 
-        [HttpGet("roleMenus")]
+        [HttpPost("roleMenus")]
         public IActionResult GetMenusByRole() {
             var result = _menuService.GetMenusByRole();
             return Ok(ResponseBody.From(result));

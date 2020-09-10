@@ -23,5 +23,7 @@ namespace AdmBoots.Application.Users {
         Task ResetPassword(int id);
 
         Task ModifyPassword(ModifyPasswordInput input);
+
+        Task<List<GetUserAuthorizedOutput>> GetPermissions();
     }
 }

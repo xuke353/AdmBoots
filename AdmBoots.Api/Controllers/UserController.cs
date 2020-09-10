@@ -53,5 +53,11 @@ namespace AdmBoots.Api.Controllers {
             await _userService.ModifyPassword(input);
             return Ok(ResponseBody.From("密码修改成功"));
         }
+
+        [HttpGet("permission")]
+        public async Task<IActionResult> GetPermissions() {
+            var permissions = await _userService.GetPermissions();
+            return Ok(ResponseBody.From(permissions));
+        }
     }
 }
