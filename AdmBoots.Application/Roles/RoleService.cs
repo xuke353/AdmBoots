@@ -69,7 +69,8 @@ namespace AdmBoots.Application.Roles {
 
         [UnitOfWork(IsDisabled = true)]
         public Page<GetRoleOutput> GetRoleList(GetRoleInput input) {
-            var result = _roleRepository.GetAll()
+            var result = _roleRepository.GetAll().Where(t => t.Status == SysStatus.有效)
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name) || t.Code.Contains(input.Name))
                 .Include(u => u.RoleMenuList);
             var pageResult = result.PageAndOrderBy(input);
             var output = new List<GetRoleOutput>();
@@ -85,7 +86,7 @@ namespace AdmBoots.Application.Roles {
 
         public async Task AddOrUpdateRole(int? id, AddOrUpdateRoleInput input) {
             if (id.HasValue) {
-                var checkRole = _roleRepository.GetAll().Where(t => t.Id != id && (t.Name == input.Name || t.Code == input.Code));
+                var checkRole = _roleRepository.GetAll().Where(t => t.Id != id && (t.Name == input.Name || t.Code == input.Code) && t.Status == SysStatus.有效);
                 if (checkRole.Any()) {
                     throw new BusinessException($"角色编号或角色名称已存在");
                 }
@@ -98,7 +99,7 @@ namespace AdmBoots.Application.Roles {
                 role.Description = input.Description;
                 await _roleRepository.UpdateAsync(role);
             } else {
-                var checkUserName = _roleRepository.GetAll().Where(t => t.Name == input.Name || t.Code == input.Code);
+                var checkUserName = _roleRepository.GetAll().Where(t => (t.Name == input.Name || t.Code == input.Code) && t.Status == SysStatus.有效);
                 if (checkUserName.Any()) {
                     throw new BusinessException($"角色编号或角色名称已存在");
                 }

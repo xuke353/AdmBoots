@@ -1,5 +1,4 @@
-﻿
-using AdmBoots.Application.Menus;
+﻿using AdmBoots.Application.Menus;
 using AdmBoots.Application.Menus.Dto;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,15 +7,17 @@ using AdmBoots.Infrastructure.Domain;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 
 namespace AdmBoots.Api.Controllers {
+
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/menus")]
-    [Authorize(AdmConsts.POLICY)]
+    [Authorize]
     public class MenuController : ControllerBase {
         private readonly IMenuService _menuService;
+
         public MenuController(IMenuService menuService) {
             _menuService = menuService;
         }

@@ -80,6 +80,7 @@ namespace AdmBoots.Application.Menus {
                 DeleteMenuChild(menus, menu.Id);
             }
         }
+
         /// <summary>
         /// 获取激活的菜单与按钮（给角色授权时）
         /// </summary>
@@ -96,6 +97,7 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput;
         }
+
         /// <summary>
         /// 获取所有菜单与按钮（菜单管理）
         /// </summary>
@@ -126,6 +128,7 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput;
         }
+
         /// <summary>
         /// 获取级联形式的菜单（菜单管理编辑时，选取父菜单）
         /// </summary>
@@ -152,6 +155,7 @@ namespace AdmBoots.Application.Menus {
             }
             return menusOutput;
         }
+
         /// <summary>
         /// 根据当前用户角色获取系统左侧菜单
         /// </summary>
@@ -167,16 +171,14 @@ namespace AdmBoots.Application.Menus {
                          on r.Id equals rm.RoleId
                          join m in _menuRepository.GetAll()
                          on rm.MenuId equals m.Id
-                         where r.Status == SysStatus.有效 && m.Status == SysStatus.有效 && m.MenuType == MenuType.菜单 && u.Id == AdmSession.UserId
-                         select m).ToList();
+                         where r.Status == SysStatus.有效 && m.Status == SysStatus.有效 && m.MenuType == MenuType.菜单 && u.Id == AdmSession.UserId && m.IsActive == true
+                         select m).OrderBy(t => t.Sort).ToList();
             var menusOutput = new List<GetTreeMenuOutput>();
             foreach (var menu in menus.Where(t => t.ParentId == -1)) {
                 var menuMap = ObjectMapper.Map<GetTreeMenuOutput>(menu);
                 menuMap.Children = GetChildrens(menus, menuMap);
                 menusOutput.Add(menuMap);
             }
-            menusOutput = menusOutput.OrderBy(t => t.Sort).ToList();
-
             return menusOutput;
         }
 

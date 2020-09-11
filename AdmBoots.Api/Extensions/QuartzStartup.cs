@@ -11,10 +11,11 @@ using Quartz.Impl;
 using Quartz.Impl.AdoJobStore;
 using Quartz.Impl.AdoJobStore.Common;
 
-namespace AdmBoots.Api.StartupExtensions {
-    public static class QuartzStartup {
-        public static void AddQuartzStartup(this IServiceCollection services) {
+namespace AdmBoots.Api.Extensions {
 
+    public static class QuartzStartup {
+
+        public static void AddQuartzStartup(this IServiceCollection services) {
             if (services == null) throw new ArgumentNullException(nameof(services));
             NameValueCollection props = new NameValueCollection
             {

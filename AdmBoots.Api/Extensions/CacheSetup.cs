@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
-namespace AdmBoots.Api.StartupExtensions {
+namespace AdmBoots.Api.Extensions {
+
     public static class CacheSetup {
+
         /// <summary>
         /// 分布式缓存 注入接口IDistributedCache
         /// </summary>
         /// <param name="services"></param>
         public static void AddCacheSetup(this IServiceCollection services) {
-
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             var connection = AdmBootsApp.Configuration["Redis:Configuration"];

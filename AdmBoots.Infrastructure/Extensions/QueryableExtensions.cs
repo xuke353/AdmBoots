@@ -3,9 +3,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 using System.Linq.Dynamic.Core;
-namespace AdmBoots.Infrastructure.Extensions {
-    public static class QueryableExtensions {
 
+namespace AdmBoots.Infrastructure.Extensions {
+
+    public static class QueryableExtensions {
 
         /// <summary>
         /// 排序
@@ -64,7 +65,7 @@ namespace AdmBoots.Infrastructure.Extensions {
             var pageSize = pageRequest.PageSize;
             // 为了优化 dotConnect for Oracle 生成的分页查询 SQL，针对首页不做 Skip(0)
             if (pageIndex > 0) {
-                result = result.Skip(pageIndex * pageSize);
+                result = result.Skip((pageIndex - 1) * pageSize);
             }
             return result.Take(pageSize);
         }

@@ -53,5 +53,11 @@ namespace AdmBoots.Api.Controllers {
             var roles = _roleService.GetTransferRoles();
             return Ok(ResponseBody.From(roles));
         }
+
+        [HttpPut("updateRoleMenu")]
+        public async Task<IActionResult> UpdateRoleMenu([FromBody]UpdateRoleMenuInput input) {
+            await _roleService.UpdateRoleMenu(input);
+            return Ok(new { Status = true, Message = "更新成功" });
+        }
     }
 }

@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 using AdmBoots.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AdmBoots.Api.StartupExtensions {
+namespace AdmBoots.Api.Extensions {
+
     /// <summary>
     /// 健康检查
     /// </summary>
     public static class HealthChecksSetup {
+
         public static void AddHealthChecksSetup(this IServiceCollection services) {
-            //https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks            
+            //https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
             services.AddHealthChecks()
              //检查数据库连接
              .AddMySql(AdmBootsApp.Configuration["Database:ConnectionString"]);

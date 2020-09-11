@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace AdmBoots.Infrastructure.Framework.Abstractions {
+
     /// <summary>
     /// 分页查询结果
     /// </summary>
@@ -15,7 +16,7 @@ namespace AdmBoots.Infrastructure.Framework.Abstractions {
         public int PageSize { get; private set; }
 
         /// <summary>
-        /// 当前为第几页，以 0 开始
+        /// 当前为第几页，以 1 开始
         /// </summary>
         public int PageIndex { get; private set; }
 
@@ -65,7 +66,7 @@ namespace AdmBoots.Infrastructure.Framework.Abstractions {
         /// </summary>
         /// <returns></returns>
         public static Page<T> Empty() {
-            return new Page<T>(0, 0, 0, new List<T>());
+            return new Page<T>(0, 1, 0, new List<T>());
         }
     }
 }

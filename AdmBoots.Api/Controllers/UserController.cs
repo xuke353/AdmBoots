@@ -19,7 +19,7 @@ namespace AdmBoots.Api.Controllers {
             _userService = userService;
         }
 
-        [HttpGet("getList")]
+        [HttpGet]
         public IActionResult GetUserList([FromQuery]GetUserInput input) {
             var users = _userService.GetUserList(input);
             return Ok(ResponseBody.From(users));
@@ -48,6 +48,7 @@ namespace AdmBoots.Api.Controllers {
             await _userService.ResetPassword(id);
             return Ok(ResponseBody.From("密码已重置为 123456"));
         }
+
         [HttpPut("modifyPwd")]
         public async Task<IActionResult> ModifyPassword(ModifyPasswordInput input) {
             await _userService.ModifyPassword(input);

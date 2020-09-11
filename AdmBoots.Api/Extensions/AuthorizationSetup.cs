@@ -13,8 +13,10 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AdmBoots.Api.StartupExtensions {
+namespace AdmBoots.Api.Extensions {
+
     public static class AuthorizationSetup {
+
         public static void AddAuthorizationSetup(this IServiceCollection services) {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
@@ -29,14 +31,13 @@ namespace AdmBoots.Api.StartupExtensions {
                                 issuer,//发行人
                                 audience,//订阅人
                                 new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),//签名凭据
-                                expiration: TimeSpan.FromDays(1)//接口的过期时间 总的Token有效时间 = 接口的过期时间 + ClockSkew 
+                                expiration: TimeSpan.FromDays(1)//接口的过期时间 总的Token有效时间 = 接口的过期时间 + ClockSkew
                              );
 
             //复杂的策略授权
             services.AddAuthorization(options => {
                 options.AddPolicy(AdmConsts.POLICY,
                          policy => policy.Requirements.Add(admPolicyRequirement));
-
             });
 
             //官方JWT认证
@@ -90,7 +91,6 @@ namespace AdmBoots.Api.StartupExtensions {
                          }
                          return Task.CompletedTask;
                      }
-
                  };
              });
             // 注入权限处理器

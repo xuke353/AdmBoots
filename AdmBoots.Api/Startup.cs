@@ -15,7 +15,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AdmBoots.Api.StartupExtensions;
 using Newtonsoft.Json;
 using AdmBoots.Api.Filters;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -28,11 +27,13 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using AdmBoots.Infrastructure.Framework.Web;
 using AdmBoots.Quartz;
+using AdmBoots.Api.Extensions;
 
 namespace AdmBoots.Api {
 
     public class Startup {
         public static readonly ILoggerFactory EFLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+        private readonly IWebHostEnvironment _env;
 
         public Startup(IWebHostEnvironment env) {
             AdmBootsApp.Configuration = new ConfigurationBuilder()
@@ -41,6 +42,7 @@ namespace AdmBoots.Api {
             //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
             .Build();
+            _env = env;
         }
 
         /// <summary>
@@ -90,9 +92,14 @@ namespace AdmBoots.Api {
             services.AddQuartzStartup();
             services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
-            services.AddDbContext<AdmDbContext>(option => option
-                .UseMySql(DatabaseConfig.ConnectionString)
-                .UseLoggerFactory(EFLoggerFactory));
+            services.AddDbContext<AdmDbContext>(option => {
+                option.UseMySql(DatabaseConfig.ConnectionString);
+                if (_env.IsDevelopment()) {
+                    option.UseLoggerFactory(EFLoggerFactory);
+                    option.EnableSensitiveDataLogging(true);//显示sql参数
+                }
+            });
+
             services.AddControllers(option => {
                 option.Filters.Add(typeof(GlobalExceptionFilter));
             }).AddNewtonsoftJson(option => {
@@ -117,7 +124,7 @@ namespace AdmBoots.Api {
             //授权
             app.UseAuthorization();
             //开启任务调度
-            app.ApplicationServices.GetService<ISchedulerCenter>().Start();
+            //app.ApplicationServices.GetService<ISchedulerCenter>().Start();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
