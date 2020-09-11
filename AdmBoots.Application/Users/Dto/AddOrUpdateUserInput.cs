@@ -12,6 +12,10 @@ namespace AdmBoots.Application.Users.Dto {
 
         public SysStatus Status { get; set; }
 
-        public List<int> RoleIds { get; set; }
+        public string Email { get; set; }
+        /// <summary>
+        /// roleId
+        /// </summary>
+        public List<int> Roles { get; set; }
     }
 }

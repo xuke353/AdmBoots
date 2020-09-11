@@ -47,7 +47,7 @@ namespace AdmBoots.Domain.Models {
         /// <summary>
         /// 描述
         /// </summary>
-        [Required, MaxLength(EntityDefault.FieldsLength500)]
+        [MaxLength(EntityDefault.FieldsLength500)]
         public string Description { get; set; }
 
         /// <summary>

@@ -87,7 +87,8 @@ namespace AdmBoots.Application.Users {
 
         [UnitOfWork(IsDisabled = true)]
         public Page<GetUserOutput> GetUserList(GetUserInput input) {
-            var result = _userRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
+            var result = _userRepository.GetAll()
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name) || t.UserName.Contains(input.Name))
                 .Include(u => u.UserRoleList)
                 .ThenInclude(ur => ur.Role);
             var pageResult = result.PageAndOrderBy(input);
@@ -115,11 +116,12 @@ namespace AdmBoots.Application.Users {
                 user.Name = input.Name;
                 user.UserName = input.UserName;
                 user.Status = input.Status;
+                user.Email = input.Email;
 
                 await _userRepository.UpdateAsync(user);
 
                 _userRoleRepository.Delete(t => t.UserId == id);
-                foreach (var roleId in input.RoleIds) {
+                foreach (var roleId in input.Roles) {
                     var userRole = new UserRole {
                         UserId = (int)id,
                         RoleId = roleId
@@ -135,12 +137,13 @@ namespace AdmBoots.Application.Users {
                     Name = input.Name,
                     UserName = input.UserName,
                     Status = input.Status,
+                    Email = input.Email,
                     Password = MD5Helper.MD5Encrypt32("123456"),//初始密码
                     CreateTime = DateTime.Now,
                 };
                 var newId = await _userRepository.InsertAndGetIdAsync(user);
                 if (newId > 0) {
-                    foreach (var roleId in input.RoleIds) {
+                    foreach (var roleId in input.Roles) {
                         var userRole = new UserRole {
                             UserId = newId,
                             RoleId = roleId
