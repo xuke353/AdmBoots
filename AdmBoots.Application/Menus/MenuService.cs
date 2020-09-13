@@ -171,7 +171,7 @@ namespace AdmBoots.Application.Menus {
                          on r.Id equals rm.RoleId
                          join m in _menuRepository.GetAll()
                          on rm.MenuId equals m.Id
-                         where r.Status == SysStatus.有效 && m.Status == SysStatus.有效 && m.MenuType == MenuType.菜单 && u.Id == AdmSession.UserId && m.IsActive == true
+                         where r.Status == SysStatus.有效 && m.Status == SysStatus.有效 && m.MenuType == MenuType.菜单 && u.Id == AdmSession.UserId && m.IsActive
                          select m).OrderBy(t => t.Sort).ToList();
             var menusOutput = new List<GetTreeMenuOutput>();
             foreach (var menu in menus.Where(t => t.ParentId == -1)) {
@@ -191,7 +191,7 @@ namespace AdmBoots.Application.Menus {
                 menuMap.Children = GetChildrens(menus, menuMap);
                 menusOutput.Add(menuMap);
             }
-            return menusOutput;
+            return menusOutput.Count > 0 ? menusOutput : null;
         }
 
         private void GetParentId(IList<Menu> menus, Menu child, List<int> parentIdList) {

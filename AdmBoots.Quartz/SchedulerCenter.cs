@@ -11,18 +11,22 @@ using AdmBoots.Infrastructure.Extensions;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 using AdmBoots.Quartz.Common;
 using AdmBoots.Quartz.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl.Matchers;
 using Quartz.Impl.Triggers;
+using Quartz.Spi;
 
 namespace AdmBoots.Quartz {
 
     public class SchedulerCenter : ISchedulerCenter {
         private readonly IScheduler _scheduler;
 
-        public SchedulerCenter(ISchedulerFactory schedulerFactory) {
+        public SchedulerCenter(ISchedulerFactory schedulerFactory, IJobFactory jobFactory) {
             _scheduler = schedulerFactory.GetScheduler().Result;
+            _scheduler.JobFactory = jobFactory;
         }
 
         public async Task AddJobAsync(AddScheduleInput scheduleInput) {
@@ -31,6 +35,7 @@ namespace AdmBoots.Quartz {
             var validExpression = IsValidExpression(scheduleInput.Cron);
             if (!validExpression)
                 throw new BusinessException($"请确认表达式{scheduleInput.Cron}是否正确!");
+            scheduleInput.Status = (int)TriggerState.Normal;
             //http请求配置
             var httpDir = new Dictionary<string, string>()
             {
@@ -38,6 +43,7 @@ namespace AdmBoots.Quartz {
                     { QuartzConstant.REQUESTPARAMS,scheduleInput.RequestParams},
                     { QuartzConstant.REQUESTTYPE, ((int)scheduleInput.RequestType).ToString()},
                     { QuartzConstant.HEADERS, scheduleInput.Headers},
+                    { QuartzConstant.CREATETIME, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},
             };
             // 定义这个工作，并将其绑定到我们的IJob实现类
             IJobDetail job = JobBuilder.Create<HttpJob>()
@@ -79,7 +85,7 @@ namespace AdmBoots.Quartz {
         }
 
         public async Task RunJobAsync(string jobName, string groupName) {
-            await TriggerAction(jobName, groupName, JobAction.开启);
+            await TriggerAction(jobName, groupName, JobAction.立即执行);
         }
 
         public async Task<List<GetScheduleOutput>> GetJobListAsync() {
@@ -90,6 +96,7 @@ namespace AdmBoots.Quartz {
                     var triggers = await _scheduler.GetTriggersOfJob(jobKey);
                     var trigger = triggers.AsEnumerable().FirstOrDefault();
                     var jobDetail = await _scheduler.GetJobDetail(jobKey);
+                    var createTimeStr = jobDetail.JobDataMap.GetString(QuartzConstant.CREATETIME);
                     list.Add(new GetScheduleOutput {
                         JobName = jobKey.Name,
                         GroupName = jobKey.Group,
@@ -101,19 +108,19 @@ namespace AdmBoots.Quartz {
                         RequestUrl = jobDetail.JobDataMap.GetString(QuartzConstant.REQUESTURL),
                         RequestType = (RequestType)int.Parse(jobDetail.JobDataMap.GetString(QuartzConstant.REQUESTTYPE)),
                         Headers = jobDetail.JobDataMap.GetString(QuartzConstant.HEADERS),
-                        RequestParams = jobDetail.JobDataMap.GetString(QuartzConstant.REQUESTPARAMS)
+                        RequestParams = jobDetail.JobDataMap.GetString(QuartzConstant.REQUESTPARAMS),
+                        CreateTime = string.IsNullOrEmpty(createTimeStr) ? DateTime.Now : DateTime.Parse(jobDetail.JobDataMap.GetString(QuartzConstant.CREATETIME))
                     });
                 }
             }
-            return list;
+            return list.OrderByDescending(t => t.CreateTime).ToList();
         }
 
         public async Task<Page<JobLog>> GetJobLogsAsync(GetLogInput input) {
-            if (string.IsNullOrEmpty(input.JobName) || string.IsNullOrEmpty(input.GroupName))
-                throw new BusinessException($"任务名或组名不能为空");
-            var jobKeyStr = JobKey.Create(input.JobName, input.GroupName).ToString();
+            if (string.IsNullOrEmpty(input.JobKey))
+                throw new BusinessException($"JobKey(任务名.组名 不能为空)");
             var dbContext = AdmBootsApp.ServiceProvider.GetService(typeof(AdmDbContext)) as AdmDbContext;
-            var result = dbContext.JobLogs.AsQueryable().Where(t => t.JobName == jobKeyStr);
+            var result = dbContext.JobLogs.AsQueryable().Where(t => t.JobName == input.JobKey);
             var pageResult = result.PageAndOrderBy(input);
             return new Page<JobLog>(input, result.Count(), await pageResult.ToListAsync());
         }
@@ -121,7 +128,18 @@ namespace AdmBoots.Quartz {
         public async Task<bool> Start() {
             //开启调度器
             if (_scheduler.InStandbyMode) {
+                var groups = await _scheduler.GetJobGroupNames();
+                foreach (var groupName in groups) {
+                    foreach (var jobKey in await _scheduler.GetJobKeys(GroupMatcher<JobKey>.GroupEquals(groupName))) {
+                        var triggers = await _scheduler.GetTriggersOfJob(jobKey);
+                        var trigger = triggers.AsEnumerable().FirstOrDefault();
+                        var state = await _scheduler.GetTriggerState(trigger.Key);
+                        if (state == TriggerState.Paused)
+                            await _scheduler.ResumeTrigger(trigger.Key);
+                    }
+                }
                 await _scheduler.Start();
+                ">>>>调度器启动".WriteSuccessLine();
             }
             return _scheduler.InStandbyMode;
         }
@@ -141,9 +159,9 @@ namespace AdmBoots.Quartz {
             var scheduler = _scheduler;
             var jobKey = new JobKey(taskName, groupName);
             var triggerKey = new TriggerKey(taskName, groupName);
-            if (await scheduler.CheckExists(jobKey))
+            if (!await scheduler.CheckExists(jobKey))
                 throw new BusinessException($"未发现任务");
-            if (await scheduler.CheckExists(triggerKey))
+            if (!await scheduler.CheckExists(triggerKey))
                 throw new BusinessException($"未发现触发器");
 
             switch (action) {
@@ -152,24 +170,30 @@ namespace AdmBoots.Quartz {
                     await scheduler.PauseTrigger(triggerKey);
                     await scheduler.UnscheduleJob(triggerKey);// 移除触发器
                     await scheduler.DeleteJob(jobKey);
-                    if (action == JobAction.修改)
+                    if (action == JobAction.修改) {
                         await AddJobAsync(scheduleInput);
+                        $">>>>{triggerKey.ToString()}修改成功".WriteSuccessLine();
+                    }
                     break;
 
                 case JobAction.暂停:
                     await scheduler.PauseTrigger(triggerKey);
+                    $">>>>{triggerKey.ToString()}暂停".WriteSuccessLine();
                     break;
 
                 case JobAction.停止:
                     await scheduler.Shutdown();
+                    $">>>>{triggerKey.ToString()}停止".WriteSuccessLine();
                     break;
 
                 case JobAction.开启:
                     await scheduler.ResumeTrigger(triggerKey);
+                    $">>>>{triggerKey.ToString()}开启".WriteSuccessLine();
                     break;
 
                 case JobAction.立即执行:
                     await scheduler.TriggerJob(jobKey);
+                    $">>>>{triggerKey.ToString()}立即执行".WriteSuccessLine();
                     break;
             }
         }

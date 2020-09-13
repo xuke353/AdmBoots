@@ -53,7 +53,7 @@ namespace AdmBoots.Api.Controllers {
             return Ok(ResponseBody.From("添加成功"));
         }
 
-        [HttpDelete]
+        [HttpPut("remove")]
         public async Task<IActionResult> Remove([FromBody]JobKeyInput input) {
             await _schedulerCenter.DeleteJobAsync(input.JobName, input.GroupName);
             return Ok(ResponseBody.From("删除成功"));
@@ -76,7 +76,7 @@ namespace AdmBoots.Api.Controllers {
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut("pesume")]
+        [HttpPut("resume")]
         public async Task<IActionResult> Resume([FromBody]JobKeyInput input) {
             await _schedulerCenter.ResumeJobAsync(input.JobName, input.GroupName);
             return Ok(ResponseBody.From("启动成功"));

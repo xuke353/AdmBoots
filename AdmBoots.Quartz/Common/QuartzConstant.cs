@@ -32,5 +32,9 @@ namespace AdmBoots.Quartz.Common {
         /// 异常 Exception
         /// </summary>
         public static string EXCEPTION = "Exception";
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public static string CREATETIME = "CreateTime";
     }
 }

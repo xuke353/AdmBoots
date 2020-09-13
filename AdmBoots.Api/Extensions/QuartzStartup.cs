@@ -5,11 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdmBoots.Infrastructure;
 using AdmBoots.Quartz;
+using AdmBoots.Quartz.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.AdoJobStore;
 using Quartz.Impl.AdoJobStore.Common;
+using Quartz.Spi;
 
 namespace AdmBoots.Api.Extensions {
 
@@ -32,6 +35,8 @@ namespace AdmBoots.Api.Extensions {
             StdSchedulerFactory factory = new StdSchedulerFactory(props);
             services.AddSingleton<ISchedulerFactory>(factory);
             services.AddSingleton<ISchedulerCenter, SchedulerCenter>();
+            services.AddSingleton<IJobFactory, IOCJobFactory>();
+            services.AddTransient<HttpJob>();
         }
     }
 }

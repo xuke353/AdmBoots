@@ -26,7 +26,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using AdmBoots.Infrastructure.Framework.Web;
-using AdmBoots.Quartz;
 using AdmBoots.Api.Extensions;
 
 namespace AdmBoots.Api {
@@ -36,12 +35,13 @@ namespace AdmBoots.Api {
         private readonly IWebHostEnvironment _env;
 
         public Startup(IWebHostEnvironment env) {
-            AdmBootsApp.Configuration = new ConfigurationBuilder()
-             .SetBasePath(env.ContentRootPath)
-            //optional: true配置文件不存在时抛异常 ReloadOnChange= true 热更新
-            //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-            .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
-            .Build();
+            var configuration = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+           //optional: true配置文件不存在时抛异常 ReloadOnChange= true 热更新
+           //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+           .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
+           .Build();
+            AdmBootsApp.SetConfiguration(configuration);
             _env = env;
         }
 
@@ -53,6 +53,7 @@ namespace AdmBoots.Api {
             //注册拦截器
             builder.RegisterType<UnitOfWorkInterceptor>().AsSelf();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            //不能用单例
             builder.RegisterType<AdmSession>().As<IAdmSession>();
 
             #region Application层注入
@@ -72,7 +73,7 @@ namespace AdmBoots.Api {
 
             #region Data层注入
 
-            //Data层实现接口得类自动依赖注入
+            //Data层实现接口的类自动依赖注入
             var basePath = AppContext.BaseDirectory;
             var repositoryDllFile = Path.Combine(basePath, "AdmBoots.Data.dll");
             var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
@@ -95,6 +96,7 @@ namespace AdmBoots.Api {
             services.AddDbContext<AdmDbContext>(option => {
                 option.UseMySql(DatabaseConfig.ConnectionString);
                 if (_env.IsDevelopment()) {
+                    //打印sql
                     option.UseLoggerFactory(EFLoggerFactory);
                     option.EnableSensitiveDataLogging(true);//显示sql参数
                 }
@@ -109,8 +111,7 @@ namespace AdmBoots.Api {
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider) {
-            AdmBootsApp.ServiceProvider = app.ApplicationServices;
-
+            AdmBootsApp.SetServiceProvider(app.ApplicationServices);
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
@@ -123,8 +124,6 @@ namespace AdmBoots.Api {
             app.UseAuthentication();
             //授权
             app.UseAuthorization();
-            //开启任务调度
-            //app.ApplicationServices.GetService<ISchedulerCenter>().Start();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
@@ -147,6 +146,9 @@ namespace AdmBoots.Api {
                    .GetManifestResourceStream("AdmBoots.Api.wwwroot.swagger.index.html");
                 c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8082 代替 localhost:8002/swagger
             });
+
+            //开启任务调度
+            //app.ApplicationServices.GetService<ISchedulerCenter>().Start();
         }
     }
 }

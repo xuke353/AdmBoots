@@ -1,4 +1,5 @@
-﻿using AdmBoots.Application.Menus.Dto;
+﻿using AdmBoots.Application.MailSettings.Dto;
+using AdmBoots.Application.Menus.Dto;
 using AdmBoots.Application.Roles.Dto;
 using AdmBoots.Application.Users.Dto;
 using AdmBoots.Domain.Models;
@@ -18,6 +19,10 @@ namespace AdmBoots.Application {
             CreateMap<Menu, GetTreeMenuOutput>();
 
             CreateMap<AddOrUpdateMenuInput, Menu>();
+
+            CreateMap<AddMailSettingInput, MailSetting>();
+            CreateMap<MailSetting, GetMailSettingOutput>();
+
         }
     }
 }

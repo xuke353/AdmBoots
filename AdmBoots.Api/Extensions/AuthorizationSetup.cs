@@ -78,19 +78,20 @@ namespace AdmBoots.Api.Extensions {
                      //    }
                      //    return Task.CompletedTask;
                      //},
-                     OnMessageReceived = context => {
-                         if (!context.HttpContext.Request.Path.HasValue) {
-                             return Task.CompletedTask;
-                         }
-                         var accessToken = context.Request.Query["access_token"];
-                         //判断是Signalr的路径
-                         var path = context.HttpContext.Request.Path;
-                         if (!string.IsNullOrEmpty(accessToken) &&
-                             (path.StartsWithSegments("/api/chatHub"))) {
-                             context.Token = accessToken;
-                         }
-                         return Task.CompletedTask;
-                     }
+                     //signalR
+                     //OnMessageReceived = context => {
+                     //    if (!context.HttpContext.Request.Path.HasValue) {
+                     //        return Task.CompletedTask;
+                     //    }
+                     //    var accessToken = context.Request.Query["access_token"];
+                     //    //判断是Signalr的路径
+                     //    var path = context.HttpContext.Request.Path;
+                     //    if (!string.IsNullOrEmpty(accessToken) &&
+                     //        (path.StartsWithSegments("/api/chatHub"))) {
+                     //        context.Token = accessToken;
+                     //    }
+                     //    return Task.CompletedTask;
+                     //}
                  };
              });
             // 注入权限处理器
