@@ -119,7 +119,7 @@ namespace AdmBoots.Quartz.Common {
                 Level = info.Level
             };
             //知识点：DbContext实例不能在OnConfiguring中使用。原因：任务随系统启动时，是从管道中（Configure）启动的，这里会使OnConfiguring创建第二个DbContext，从而报错
-            //注意此处一定要在IOCJobFactory中创建scoped作用域，因为DbContex的作用域是scoped，否则将无法解析            
+            //注意此处一定要在IOCJobFactory中创建scoped作用域，因为DbContex的作用域是scoped，否则将无法解析
             var unitOfWork = _serviceProvider.GetService(typeof(IAdmUnitOfWork)) as IAdmUnitOfWork;
             var dbContext = unitOfWork.GetDbContext() as AdmDbContext;
             dbContext.JobLogs.Add(log);
@@ -137,7 +137,8 @@ namespace AdmBoots.Quartz.Common {
                         Code = mailSetting.Code,
                         Fr = mailSetting.Fr,
                         FrHost = mailSetting.FrHost,
-                        ToArry = mailSetting.To.Trim().Split(',')
+                        ToArry = mailSetting.To.Trim().Split(','),
+                        CcArray = string.IsNullOrEmpty(mailSetting.Cc) ? Array.Empty<string>() : mailSetting.Cc.Trim().Split(',')
                     };
                     var mail = new MailModel {
                         Title = $"【Job[{log.JobName}]执行出错】",
