@@ -70,7 +70,7 @@ namespace AdmBoots.Infrastructure.Authorization {
                     // 获取权限列表（role-uri）
                     var roleUris = _roleService.GetRoleUriMaps();
                     var permisssionRoles = roleUris.Where(ru => currentUserRoles.Contains(ru.RoleId));
-                    if (!permisssionRoles.Any(pr => currentURI == pr.Uri)) {
+                    if (!permisssionRoles.Any(pr => currentURI.ToLower() == pr.Uri.ToLower())) {
                         context.Fail();
                         return;
                     }

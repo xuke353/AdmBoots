@@ -51,7 +51,7 @@ namespace AdmBoots.Domain.Models {
         /// <summary>
         /// 是否为系统管理员
         /// </summary>
-        public bool IsMaster { get; set; } = false;
+        public bool IsMaster { get; set; }
 
         /// <summary>
         /// 邮箱

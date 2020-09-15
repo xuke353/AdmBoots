@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Domain.Models;
 using AdmBoots.Infrastructure.CustomExceptions;
 using AdmBoots.Infrastructure.Framework.Web;
@@ -43,15 +44,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<User>().HasData(new User() {
-                Id = -1,
-                Name = "阿珂",
-                UserName = "Administrator",
-                Password = "*****",
-                IsMaster = true,
-                CreateTime = DateTime.Now,
-                Email = "***@qq.com",
-            });
+            modelBuilder.GenerateSeedData();
             base.OnModelCreating(modelBuilder);
         }
 

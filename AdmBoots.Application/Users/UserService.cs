@@ -138,6 +138,7 @@ namespace AdmBoots.Application.Users {
                     UserName = input.UserName,
                     Status = input.Status,
                     Email = input.Email,
+                    IsMaster = false,
                     Password = MD5Helper.MD5Encrypt32("123456"),//初始密码
                     CreateTime = DateTime.Now,
                 };
@@ -202,7 +203,7 @@ namespace AdmBoots.Application.Users {
                                   join m in _menuRepository.GetAll()
                                   on rm.MenuId equals m.Id
                                   where r.Status == SysStatus.有效 && m.Status == SysStatus.有效
-                                  && u.Id == AdmSession.UserId
+                                  && u.Id == AdmSession.UserId && m.IsActive == true
                                   select m).ToListAsync();
 
             var authBtn = from m in authMenu

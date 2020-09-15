@@ -48,7 +48,7 @@ namespace AdmBoots.Application.Roles {
                                 on r.Id equals rm.RoleId
                                 join m in _menuRepository.GetAll()
                                 on rm.MenuId equals m.Id
-                                where r.Status == SysStatus.有效 && m.Status == SysStatus.有效 && m.MenuType == MenuType.按钮
+                                where r.Status == SysStatus.有效 && m.Status == SysStatus.有效 && m.MenuType == MenuType.按钮 && m.IsActive
                                 select new GetRoleUriOutput {
                                     RoleId = r.Id,
                                     Uri = m.Uri
