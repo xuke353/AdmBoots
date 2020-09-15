@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using AdmBoots.Infrastructure.Domain;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 
 namespace AdmBoots.Domain.Models {
@@ -12,16 +14,17 @@ namespace AdmBoots.Domain.Models {
         /// <summary>
         /// 开始执行时间
         /// </summary>
-        public string BeginTime { get; set; }
+        public DateTime? BeginTime { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public string EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         /// <summary>
         /// 任务名称 组名.任务名
         /// </summary>
+        [Required, MaxLength(EntityDefault.FieldsLength50)]
         public string JobName { get; set; }
 
         /// <summary>

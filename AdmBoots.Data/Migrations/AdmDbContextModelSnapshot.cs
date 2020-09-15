@@ -17,6 +17,78 @@ namespace AdmBoots.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("AdmBoots.Domain.Models.JobLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("BeginTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ErrorMsg")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("JobName")
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Level")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Result")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<double>("Seconds")
+                        .HasColumnType("double");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobLog");
+                });
+
+            modelBuilder.Entity("AdmBoots.Domain.Models.MailSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Cc")
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
+                        .HasMaxLength(2000);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Fr")
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("FrHost")
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("Notify")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("To")
+                        .IsRequired()
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
+                        .HasMaxLength(2000);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MailSetting");
+                });
+
             modelBuilder.Entity("AdmBoots.Domain.Models.Menu", b =>
                 {
                     b.Property<int>("Id")
@@ -39,7 +111,6 @@ namespace AdmBoots.Data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("varchar(500) CHARACTER SET utf8mb4")
                         .HasMaxLength(500);
 
@@ -47,13 +118,13 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
 
-                    b.Property<int>("IsActive")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MenuType")
                         .HasColumnType("int");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<string>("ModifierName")
@@ -94,7 +165,9 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime?>("CreateTime")
                         .HasColumnType("datetime(6)");
@@ -107,9 +180,10 @@ namespace AdmBoots.Data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(500) CHARACTER SET utf8mb4")
+                        .HasMaxLength(500);
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<string>("ModifierName")
@@ -120,7 +194,9 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -143,6 +219,10 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MenuId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("role_menu");
                 });
@@ -179,9 +259,6 @@ namespace AdmBoots.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnreadCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
@@ -190,6 +267,19 @@ namespace AdmBoots.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("user");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            CreateTime = new DateTime(2020, 9, 15, 15, 47, 5, 167, DateTimeKind.Local).AddTicks(9513),
+                            Email = "***@qq.com",
+                            IsMaster = true,
+                            Name = "阿珂",
+                            Password = "*****",
+                            Status = 1,
+                            UserName = "Administrator"
+                        });
                 });
 
             modelBuilder.Entity("AdmBoots.Domain.Models.UserRole", b =>
@@ -206,7 +296,41 @@ namespace AdmBoots.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("user_role");
+                });
+
+            modelBuilder.Entity("AdmBoots.Domain.Models.RoleMenu", b =>
+                {
+                    b.HasOne("AdmBoots.Domain.Models.Menu", "Menu")
+                        .WithMany("RoleMenuList")
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AdmBoots.Domain.Models.Role", "Role")
+                        .WithMany("RoleMenuList")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AdmBoots.Domain.Models.UserRole", b =>
+                {
+                    b.HasOne("AdmBoots.Domain.Models.Role", "Role")
+                        .WithMany("UserRoleList")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AdmBoots.Domain.Models.User", "User")
+                        .WithMany("UserRoleList")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

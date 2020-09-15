@@ -42,6 +42,19 @@ namespace AdmBoots.Data.EntityFrameworkCore {
             }
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<User>().HasData(new User() {
+                Id = -1,
+                Name = "阿珂",
+                UserName = "Administrator",
+                Password = "*****",
+                IsMaster = true,
+                CreateTime = DateTime.Now,
+                Email = "***@qq.com",
+            });
+            base.OnModelCreating(modelBuilder);
+        }
+
         private void ApplyAdmConcepts() {
             foreach (var entry in ChangeTracker.Entries().ToList()) {
                 switch (entry.State) {

@@ -10,7 +10,9 @@ using IdentityModel;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace AdmBoots.Api.Authorization {
+
     public class AuthenticateResult {
+
         public static AuthenticateInfo Get(LoginUserInfo user, AdmPolicyRequirement requirement, IDistributedCache cache = null) {
             var expirationSeconds = requirement.Expiration.TotalSeconds;
             var subjectId = user.Id.ToString();
@@ -37,25 +39,52 @@ namespace AdmBoots.Api.Authorization {
                 AccessToken = token,
                 TokenType = "Bearer",
                 ExpireInSeconds = expirationSeconds,
-                UserInfo = user
+                UserName = user.UserName,
+                IsMaster = user.IsMaster,
+                Name = user.Name,
+                UserId = user.Id,
+                Roles = user.Roles
             };
         }
     }
 
     public class AuthenticateInfo {
+
         /// <summary>
         /// 认可标志
         /// </summary>
         public string AccessToken { get; set; }
+
         /// <summary>
         /// Token类型
         /// </summary>
         public string TokenType { get; set; } = "Bear";
+
         /// <summary>
         /// 过期时间（单位：秒）
         /// </summary>
         public double ExpireInSeconds { get; set; }
 
-        public LoginUserInfo UserInfo { get; set; }
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public int UserId { get; set; }
+
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 是否为系统管理员
+        /// </summary>
+        public bool IsMaster { get; set; }
+
+        public IList<UserRoles> Roles { get; set; }
     }
 }

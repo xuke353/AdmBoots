@@ -24,31 +24,35 @@ namespace AdmBoots.Api.Controllers {
         }
 
         [HttpGet]
-        [AdmAuthorizeFilter("ABC:DF")]
+        [AdmAuthorizeFilter("Query")]
         public IActionResult GetRoleList([FromQuery]GetRoleInput input) {
             var roles = _roleService.GetRoleList(input);
             return Ok(ResponseBody.From(roles));
         }
 
         [HttpPost]
+        [AdmAuthorizeFilter("Add")]
         public async Task<IActionResult> AddRole([FromBody]AddOrUpdateRoleInput input) {
             await _roleService.AddOrUpdateRole(null, input);
             return Ok(ResponseBody.From("保存成功"));
         }
 
         [HttpPut("{id}")]
+        [AdmAuthorizeFilter("Update")]
         public async Task<IActionResult> UpdateRole(int id, [FromBody]AddOrUpdateRoleInput input) {
             await _roleService.AddOrUpdateRole(id, input);
             return Ok(ResponseBody.From("修改成功"));
         }
 
         [HttpDelete]
+        [AdmAuthorizeFilter("Delete")]
         public async Task<IActionResult> DeleteRole(int[] ids) {
             await _roleService.DeleteRole(ids);
             return Ok(ResponseBody.From("删除成功"));
         }
 
         [HttpGet("transferRoles")]
+        [AllowAnonymous]
         public IActionResult GetTransferRoles() {
             var roles = _roleService.GetTransferRoles();
             return Ok(ResponseBody.From(roles));

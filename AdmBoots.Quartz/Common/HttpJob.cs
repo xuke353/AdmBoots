@@ -46,7 +46,7 @@ namespace AdmBoots.Quartz.Common {
             var response = new HttpResponseMessage();
 
             var loginfo = new JobLog {
-                BeginTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                BeginTime = DateTime.Now,
                 JobName = context.JobDetail.Key.ToString(),
                 Level = "消息"
             };
@@ -72,7 +72,7 @@ namespace AdmBoots.Quartz.Common {
                 var result = await response.Content.ReadAsStringAsync();
                 stopwatch.Stop(); //  停止监视
                 var seconds = stopwatch.Elapsed.TotalSeconds;  //总秒数
-                loginfo.EndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                loginfo.EndTime = DateTime.Now;
                 loginfo.Seconds = seconds;
                 loginfo.Result = result;
                 if (!response.IsSuccessStatusCode) {
