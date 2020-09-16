@@ -1,0 +1,9 @@
+
+//生成迁移文件，其中initDb可以随便起
+add-migration initDb -Context AdmDbContext
+
+//根据迁移文件，迁移到数据库
+update-database -Context AdmDbContext
+
+//导出脚本
+Script-Migration -Output E:\AdmBoots_mysql.sql -Context AdmDbContext

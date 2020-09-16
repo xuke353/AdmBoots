@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using AdmBoots.Infrastructure.Framework.Web;
 using AdmBoots.Api.Extensions;
+using AdmBoots.Data.EntityFrameworkCore.Seed;
 
 namespace AdmBoots.Api {
 
