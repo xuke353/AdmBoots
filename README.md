@@ -1,4 +1,4 @@
-<h1 align="center">DVA Boot Admin</h1>
+<h1 align="center">AdmBoots</h1>
 <h3 align="center">:lemon: :tangerine: :cherries: :cake: :grapes: :watermelon: :strawberry: :corn: :peach: :melon:</h3>
 
 基于.netcore3.1快速开发框架
