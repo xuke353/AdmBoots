@@ -3,8 +3,24 @@
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg">
 </p>
-基于.netcore3.1快速开发框架
+基于.NET Core3.1 + EF Core3.1最成熟技术体系，借鉴众多开源项目的优点，诣在打造前后端分离快速开发框架，让你开发Web管理系统和移动端Api更简单。
 
+## 系统结构
+![](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354%E6%A1%86%E6%9E%B6%E7%BB%93%E6%9E%84%E5%9B%BE.jpg)
+
+## 技术栈
+- **DDD领域驱动思想**
+- **EF Core3.1**  超全的仓储层操作封装
+- **Swagger接口文档** 支持RESTful
+- **AutoMapper DTO映射**
+- **工作单元实现** 自动事务处理
+- **AutoFac** 依赖注入/拦截器
+- **HealthChecks健康监控**
+- **分布式缓存** Memory/Redis
+- **Serilog记录日志**
+- **全局异常处理**
+- **基于JWT策略授权** 实现通用权限管理功能：用户-角色-权限（菜单/按钮）
+- **Quartz.net作业调度**
 ## 工程结构
 ```
 .
