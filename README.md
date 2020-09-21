@@ -6,9 +6,7 @@
 基于.NET Core3.1 + EF Core3.1最成熟技术体系，借鉴众多开源项目的优点，诣在打造前后端分离快速开发框架，让你开发Web管理系统和移动端Api更简单。
 
 ## 系统结构
-![](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354框架结构图.jpg?raw=true)
 ![](https://gitee.com/xuke353/AdminSoa/raw/file/框架结构图.jpg)
-若图片不显示请点击 [这里](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354框架结构图.jpg)
 ## 技术栈
 - **DDD领域驱动思想**
 - **EF Core3.1**  超全的仓储层操作封装
