@@ -2,7 +2,6 @@
 <h3 align="center">:lemon: :tangerine: :cherries: :cake: :grapes: :watermelon: :strawberry: :corn: :peach: :melon:</h3>
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg">
-  [![Language](https://img.shields.io/badge/language-csharp-d.svg)](#)
 </p>
 基于.netcore3.1快速开发框架
 
