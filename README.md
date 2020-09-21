@@ -7,7 +7,7 @@
 
 ## 系统结构
 ![](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354框架结构图.jpg)
-
+若图片不显示请点击 [这里](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354框架结构图.jpg)
 ## 技术栈
 - **DDD领域驱动思想**
 - **EF Core3.1**  超全的仓储层操作封装
