@@ -7,6 +7,7 @@
 
 ## 系统结构
 ![](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354框架结构图.jpg)
+![](https://gitee.com/xuke353/AdminSoa/raw/file/框架结构图.jpg)
 若图片不显示请点击 [这里](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354框架结构图.jpg)
 ## 技术栈
 - **DDD领域驱动思想**
