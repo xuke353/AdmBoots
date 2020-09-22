@@ -7,6 +7,7 @@
 
 ## 系统结构
 ![框架结构图](https://gitee.com/xuke353/my-photo/raw/master/框架结构图.jpg)
+如果图片不显示，可以点击[这里](https://images.cnblogs.com/cnblogs_com/xuke/1851804/o_200921133354%E6%A1%86%E6%9E%B6%E7%BB%93%E6%9E%84%E5%9B%BE.jpg)查看
 ## 技术栈
 - **.Net Core 3.1**
 - **EF Core3.1**  超全的仓储操作封装
