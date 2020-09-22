@@ -15,8 +15,8 @@
 - **AutoMapper DTO映射**
 - **工作单元实现** 自动事务处理
 - **AutoFac** 轻量级IoC和DI依赖注入，支持属性注入
-- **Cors 简单的跨域解决方案
-- **AOP切面编程（拦截器）
+- **简单的跨域解决方案**
+- **AOP**
 - **HealthChecks健康监控**
 - **分布式缓存** Memory/Redis
 - **Serilog记录日志**
