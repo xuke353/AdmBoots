@@ -50,3 +50,6 @@
 ├── AdmBoots.Infrastructure     # 基础设施层-通用技术支持
 ├── AdmBoots.Quartz             # 基于Quartz.NET的任务调度
 ```
+
+后端：<https://github.com/xuke353/AdmBoots>
+前端：<https://github.com/xuke353/AdmBoots-Client>
