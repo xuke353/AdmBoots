@@ -1,5 +1,5 @@
 <h1 align="center">AdmBoots</h1>
-<h3 align="center">:lemon: :tangerine: :cherries: :cake: :grapes: :watermelon: :strawberry: :corn: :peach: :melon:</h3>
+<h3 align="center">:lemon: :tangerine: :cherries: :cake: :grapes: :watermelon: :strawberry: :corn: :peach: :melon: :poop:</h3>
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg">
 </p>
