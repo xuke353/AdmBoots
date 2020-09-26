@@ -25,7 +25,7 @@ namespace AdmBoots.Api.Extensions {
                 setup.SetMinimumSecondsBetweenFailureNotifications(60);
                 //故障通知之间的最短秒数
                 setup.SetEvaluationTimeInSeconds(10);
-            }).AddInMemoryStorage();
+            }).AddInMemoryStorage();//可以使用数据库，避免内存占用，具体参考官网
         }
     }
 }

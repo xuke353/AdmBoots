@@ -210,9 +210,9 @@ namespace AdmBoots.Application.Users {
                           join b in authMenu on m.Id equals b.ParentId
                           where m.MenuType == MenuType.菜单 && b.MenuType == MenuType.按钮
                           select new GetUserAuthorizedOutput {
-                              Uri = m.Uri,
-                              Code = b.Code,
-                              Name = b.Name
+                              PageCode = m.Code,
+                              BtnCode = b.Code,
+                              BtnName = b.Name
                           };
             return authBtn.ToList();
         }

@@ -1,6 +1,7 @@
 ﻿using AdmBoots.Application.MailSettings.Dto;
 using AdmBoots.Application.Menus.Dto;
 using AdmBoots.Application.Roles.Dto;
+using AdmBoots.Application.Tests.Dto;
 using AdmBoots.Application.Users.Dto;
 using AdmBoots.Domain.Models;
 using AutoMapper;
@@ -23,6 +24,8 @@ namespace AdmBoots.Application {
             CreateMap<AddMailSettingInput, MailSetting>();
             CreateMap<MailSetting, GetMailSettingOutput>();
 
+            //
+            CreateMap<Test, GetTestOutput>();
         }
     }
 }

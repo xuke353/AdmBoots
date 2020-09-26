@@ -43,6 +43,14 @@ namespace AdmBoots.Application.Menus {
                 if (menu == null) {
                     throw new BusinessException($"未找到数据");
                 }
+                var hasUri = _menuRepository.GetAll().Any(t => t.Uri == input.Uri.Trim() && input.MenuType == t.MenuType && id != t.Id);
+                if (hasUri) {
+                    throw new BusinessException($"资源标识重复，请修改");
+                }
+                var hasCode = _menuRepository.GetAll().Any(t => t.Code == input.Code && input.MenuType == t.MenuType && id != t.Id);
+                if (hasCode) {
+                    throw new BusinessException($"菜单编号识重复，请修改");
+                }
                 var updateEntity = ObjectMapper.Map(input, menu);
                 updateEntity.IsActive = input.IsActive;
                 updateEntity.ParentId = parentMenu == null || parentMenu.Length < 1 ? null : parentMenu.Last();
@@ -50,9 +58,13 @@ namespace AdmBoots.Application.Menus {
 
                 _cache.Remove(AdmConsts.ROLE_URI_CACHE);
             } else {
-                var menus = _menuRepository.GetAll().Where(t => t.Uri == input.Uri.Trim() && input.MenuType == t.MenuType);
-                if (menus.Any()) {
+                var hasUri = _menuRepository.GetAll().Any(t => t.Uri == input.Uri.Trim() && input.MenuType == t.MenuType);
+                if (hasUri) {
                     throw new BusinessException($"资源标识重复，请修改");
+                }
+                var hasCode = _menuRepository.GetAll().Any(t => t.Code == input.Code && input.MenuType == t.MenuType);
+                if (hasCode) {
+                    throw new BusinessException($"菜单编号识重复，请修改");
                 }
                 var parentMenu = input.ParentIdList;
                 var menu = ObjectMapper.Map<Menu>(input);

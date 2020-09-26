@@ -4,8 +4,8 @@ using System.Text;
 
 namespace AdmBoots.Application.Users.Dto {
     public class GetUserAuthorizedOutput {
-        public string Uri { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
+        public string PageCode { get; set; }
+        public string BtnCode { get; set; }
+        public string BtnName { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace AdmBoots.Api.Authorization {
 
             if (cache != null) {
                 //token白名单  一个用户只有一个token有效
+                //需要启用AuthorizationSetup中代码
                 //30天清理失效得key
                 cache.SetString(subjectId, token, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(30) });
             }

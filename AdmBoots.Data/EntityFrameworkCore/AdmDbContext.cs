@@ -18,7 +18,8 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         public virtual DbSet<RoleMenu> RoleMenus { get; set; }
         public virtual DbSet<JobLog> JobLogs { get; set; }
         public virtual DbSet<MailSetting> MailSettings { get; set; }
-
+        //演示
+        //public virtual DbSet<Test> Tests { get; set; }
         public AdmDbContext(DbContextOptions<AdmDbContext> options)
          : base(options) {
         }

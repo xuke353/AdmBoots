@@ -69,6 +69,7 @@ namespace AdmBoots.Api.Extensions {
                          }
                          return Task.CompletedTask;
                      },
+                     ////token白名单  一个用户只有一个token有效
                      //OnTokenValidated = context => {
                      //    var token = ((JwtSecurityToken)context.SecurityToken).RawData;
                      //    var uid = JwtToken.ReadJwtToken<int>(token);
