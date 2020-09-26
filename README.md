@@ -2,6 +2,7 @@ AdmBoots 基于.NET Core3.1 + EF Core3.1最成熟技术体系，借鉴众多开�
 > 群号：877617006
 ## 系统结构
 系统采用前后端分离模式，前端使用开箱即用的开源脚手架[adv-boot-admin](https://github.com/LANIF-UI/dva-boot-admin)，本篇将重点介绍后端技术体系及使用方法。整体架构如下图
+
 ![AdmBoots.jpg](https://i.loli.net/2020/09/22/JnrW6ONts2mV9hA.jpg)
 
 ## 技术栈
@@ -30,6 +31,7 @@ AdmBoots实现了实现通用权限管理，有了这些基础功能，只需要
 
 ## 工程结构
 采用DDD领域驱动设计，其中任务调度单独一层
+
 ![项目分层.jpg](https://i.loli.net/2020/09/26/sYTRjxXgaJNdzom.jpg)
 
 
@@ -71,7 +73,7 @@ AdmBoots保证了最小系统环境要求，具备以下工具即可运行本系
 2. 打开API层的 <b>appsetting.json</b> 文件，设置系统启动的必要配置
   
   a.数据库配置 -必须
- ```json
+ ```
 //数据库配置
  "Database": {
     "DbProviderName": "MySql", //只能写"Sqlite","SqlServer","MySql","Oracle"其中一个,并修改对应的连接字符串
@@ -83,7 +85,7 @@ AdmBoots保证了最小系统环境要求，具备以下工具即可运行本系
 
  ```
  b.缓存配置 -非必须，如需使用Redis，请配置Redis连接。默认MemoryCache
- ```json
+ ```
 //Redis配置 Configuration=""时，系统使用MemoryCache
  "Redis": {
     "Configuration": "", //127.0.0.1:6379
@@ -91,7 +93,7 @@ AdmBoots保证了最小系统环境要求，具备以下工具即可运行本系
   },
  ```
  c.日志配置 -非必须，如果需要将日志输出到数据库，在Serilog节点需配置对应数据库连接。默认输出到文件
- ```json
+ ```
   //Serilog配置
   "Serilog":
     "WriteTo": [
