@@ -141,3 +141,6 @@ asp.net core的默认（csproj里面没有设置的情况下），是进程外�
 后端：<https://github.com/xuke353/AdmBoots>
 
 前端：<https://github.com/xuke353/AdmBoots-Client>
+
+## 实践
+[.NetCore3.1前后端分离快速开发框架：实践](https://www.cnblogs.com/xuke/p/13736724.html)
