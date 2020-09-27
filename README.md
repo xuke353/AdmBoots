@@ -118,9 +118,13 @@ AdmBoots保证了最小系统环境要求，具备以下工具即可运行本系
     ```
     PM> update-database -Context AdmDbContext
     ```
-至此，我们的准备工作全部做完了，启动项目，出现Swagger页面，项目初始化成功！
+4. 验证
+启动项目，出现Swagger页面，项目初始化成功！
+
+Swagger页面上，如果Controller上有小锁的标志，表示我们需要先登录后才能进行测试验证。点击authorize按钮，输入admin，a123456登陆。
 
 ![swagger.jpg](https://i.loli.net/2020/09/26/UXWdTZv4wJ1MqAl.jpg)
+
 ## 最后
 asp.net core的默认（csproj里面没有设置的情况下），是进程外启动，所以这里推荐使用项目启动方式，项目启动本质上就是执行了 dotnet run AdmBoots.Api.dll。不建议大家更改进程内启动(InProcess)，因为InProcess方式在我们发布项目后，可能会出现一些路径上的问题（相对了托管服务器的路径）
 
