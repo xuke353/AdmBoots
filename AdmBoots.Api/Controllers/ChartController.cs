@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AdmBoots.Infrastructure;
+using AdmBoots.Infrastructure.Extensions;
 using AdmBoots.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Helper;
 using AdmBoots.Infrastructure.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace AdmBoots.Api.Controllers {
 
@@ -29,7 +33,11 @@ namespace AdmBoots.Api.Controllers {
                 Skype = new Random().Next(10, 100),
                 Github = new Random().Next(10, 100),
             };
-            await _hubContext.Clients.All.SendAsync("getCount", num);
+            if (AdmBootsApp.Configuration["Startup:SignalR"].ObjToBool()) {
+                await _hubContext.Clients.All.SendAsync("getCount", num);
+                string.Format("SignalR：method：{0}  arg1：{1} 时间：{2}", "getCount", JsonConvert.SerializeObject(num), DateTime.Now).WriteSuccessLine();
+            }
+
             return Ok(ResponseBody.From(num, "获取成功"));
         }
     }
