@@ -28,6 +28,8 @@ using HealthChecks.UI.Client;
 using AdmBoots.Infrastructure.Framework.Web;
 using AdmBoots.Api.Extensions;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
+using AdmBoots.Infrastructure.SignalR;
+using AdmBoots.Quartz;
 
 namespace AdmBoots.Api {
 
@@ -90,7 +92,7 @@ namespace AdmBoots.Api {
             services.AddSwaggerSetup();
             services.AddCacheSetup();
             services.AddAuthorizationSetup();
-            services.AddHealthChecksSetup();
+            //services.AddHealthChecksSetup();
             services.AddQuartzStartup();
             services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
@@ -109,6 +111,22 @@ namespace AdmBoots.Api {
                 //忽略循环引用
                 option.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
+
+            //Enables the JSON protocol for SignalR
+            services.AddSignalR().AddNewtonsoftJsonProtocol();
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+            builder => {
+                builder.AllowAnyMethod().AllowAnyHeader()
+                       .WithOrigins("http://localhost:3000")
+                       .AllowCredentials();
+            }));
+            //builder => {
+            //    builder.SetIsOriginAllowed(origin => true)
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader()
+            //    .AllowCredentials();
+            //}));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider) {
@@ -125,16 +143,24 @@ namespace AdmBoots.Api {
             app.UseAuthentication();
             //授权
             app.UseAuthorization();
+            //跨域
+            app.UseCors("CorsPolicy");
+            //开启任务调度
+            app.ApplicationServices.GetService<ISchedulerCenter>().Start();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
                 //健康检查 输出描述信息
-                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecksUI();
+                //endpoints.MapHealthChecks("/healthz", new HealthCheckOptions {
+                //    Predicate = _ => true,
+                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                //});
+                //endpoints.MapHealthChecksUI();
+                //Hub
+                endpoints.MapHub<ChatHub>("/api/chatHub");
             });
+
+            #region Swagger
 
             app.UseSwagger();
             app.UseSwaggerUI(c => {
@@ -148,8 +174,7 @@ namespace AdmBoots.Api {
                 c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8082 代替 localhost:8002/swagger
             });
 
-            //开启任务调度
-            //app.ApplicationServices.GetService<ISchedulerCenter>().Start();
+            #endregion Swagger
         }
     }
 }

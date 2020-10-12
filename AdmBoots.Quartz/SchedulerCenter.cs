@@ -172,28 +172,28 @@ namespace AdmBoots.Quartz {
                     await scheduler.DeleteJob(jobKey);
                     if (action == JobAction.修改) {
                         await AddJobAsync(scheduleInput);
-                        $">>>>{triggerKey.ToString()}修改成功".WriteSuccessLine();
+                        $">>>>{triggerKey}修改成功".WriteSuccessLine();
                     }
                     break;
 
                 case JobAction.暂停:
                     await scheduler.PauseTrigger(triggerKey);
-                    $">>>>{triggerKey.ToString()}暂停".WriteSuccessLine();
+                    $">>>>{triggerKey}暂停".WriteSuccessLine();
                     break;
 
                 case JobAction.停止:
                     await scheduler.Shutdown();
-                    $">>>>{triggerKey.ToString()}停止".WriteSuccessLine();
+                    $">>>>{triggerKey}停止".WriteSuccessLine();
                     break;
 
                 case JobAction.开启:
                     await scheduler.ResumeTrigger(triggerKey);
-                    $">>>>{triggerKey.ToString()}开启".WriteSuccessLine();
+                    $">>>>{triggerKey}开启".WriteSuccessLine();
                     break;
 
                 case JobAction.立即执行:
                     await scheduler.TriggerJob(jobKey);
-                    $">>>>{triggerKey.ToString()}立即执行".WriteSuccessLine();
+                    $">>>>{triggerKey}立即执行".WriteSuccessLine();
                     break;
             }
         }
