@@ -30,6 +30,7 @@ using AdmBoots.Api.Extensions;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Infrastructure.SignalR;
 using AdmBoots.Quartz;
+using AdmBoots.Infrastructure.Extensions;
 
 namespace AdmBoots.Api {
 
@@ -93,7 +94,7 @@ namespace AdmBoots.Api {
             services.AddSwaggerSetup();
             services.AddCacheSetup();
             services.AddAuthorizationSetup();
-            //services.AddHealthChecksSetup();
+            services.AddHealthChecksSetup();
             services.AddQuartzStartup();
             services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
@@ -118,22 +119,21 @@ namespace AdmBoots.Api {
 
             services.AddCors(options => options.AddPolicy("CorsPolicy",
             builder => {
-                builder.AllowAnyMethod().AllowAnyHeader()
-                       .WithOrigins("http://localhost:3000")
-                       .AllowCredentials();
+                builder.SetIsOriginAllowed(origin => true)//允许所有 origin 来源
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                //.WithOrigins(AdmBootsApp.Configuration["Startup:Cors"].Split(',')) //允许特定来源
+                .AllowCredentials();
             }));
-            //builder => {
-            //    builder.SetIsOriginAllowed(origin => true)
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader()
-            //    .AllowCredentials();
-            //}));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider) {
             AdmBootsApp.SetServiceProvider(app.ApplicationServices);
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+                Console.WriteLine("任务调度：" + (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool() ? "启动" : "关闭"));
+                Console.WriteLine("实时通讯：" + (AdmBootsApp.Configuration["Startup:SignalR"].ObjToBool() ? "启用" : "关闭"));
+                Console.WriteLine("健康检查：" + (AdmBootsApp.Configuration["Startup:HealthChecks"].ObjToBool() ? "启用" : "关闭"));
             }
             //↓↓↓↓注意以下中间件顺序↓↓↓↓
 
@@ -147,17 +147,13 @@ namespace AdmBoots.Api {
             //跨域
             app.UseCors("CorsPolicy");
             //开启任务调度
-            app.ApplicationServices.GetService<ISchedulerCenter>().Start();
+            if (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool()) {
+                app.ApplicationServices.GetService<ISchedulerCenter>().Start();
+            }
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
-                //健康检查 输出描述信息
-                //endpoints.MapHealthChecks("/healthz", new HealthCheckOptions {
-                //    Predicate = _ => true,
-                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                //});
-                //endpoints.MapHealthChecksUI();
-                //Hub
+                endpoints.UseHealthChecks();
                 endpoints.MapHub<ChatHub>("/api/chatHub");
             });
 

@@ -26,19 +26,21 @@ namespace AdmBoots.Infrastructure.SignalR {
         /// </summary>
         /// <returns></returns>
         public override Task OnConnectedAsync() {
+            "连接到Hub".WriteInfoLine();
             //判断用户登陆过期
             if (Context.User.Identity.IsAuthenticated) {
                 var userName = Context.User.Identity.Name;
                 var userId = Context.UserIdentifier;
+                var userKey = "HUB_" + userId;
                 var connectionId = Context.ConnectionId;
-                var connectionIdList = _cache.GetObject<List<string>>(userId);
+                var connectionIdList = _cache.GetObject<List<string>>(userKey);
                 if (connectionIdList == null) {
-                    _cache.SetObject(userId, new List<string> { connectionId });
+                    _cache.SetObject(userKey, new List<string> { connectionId });
                 } else {
                     //可能会存在同一账号多窗口登陆得情况
                     if (!connectionIdList.Contains(connectionId)) {
                         connectionIdList.Add(connectionId);
-                        _cache.SetObject(userId, connectionIdList);
+                        _cache.SetObject(userKey, connectionIdList);
                     }
                 }
 
@@ -48,14 +50,16 @@ namespace AdmBoots.Infrastructure.SignalR {
         }
 
         public override Task OnDisconnectedAsync(Exception exception) {
+            "Hub断开连接".WriteInfoLine();
             if (Context.User.Identity.IsAuthenticated) {
                 var userId = Context.UserIdentifier;
+                var userKey = "HUB_" + userId;
                 var connectionId = Context.ConnectionId;
-                var connectionIdList = _cache.GetObject<List<string>>(userId);
+                var connectionIdList = _cache.GetObject<List<string>>(userKey);
                 if (connectionIdList != null) {
                     if (connectionIdList.Contains(connectionId)) {
                         connectionIdList.Remove(connectionId);
-                        _cache.SetObject(userId, connectionIdList);
+                        _cache.SetObject(userKey, connectionIdList);
                     }
                 }
                 string.Format("用户: {0},断开  ConnectionId: {1}", Context.User.Identity.Name, Context.ConnectionId).WriteSuccessLine();

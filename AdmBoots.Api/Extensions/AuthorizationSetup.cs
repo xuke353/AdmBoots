@@ -82,6 +82,7 @@ namespace AdmBoots.Api.Extensions {
                      //对连接到集线器的用户进行身份验证 SignalR
                      //https://docs.microsoft.com/zh-cn/aspnet/core/signalr/authn-and-authz?view=aspnetcore-3.1
                      OnMessageReceived = context => {
+
                          if (!context.HttpContext.Request.Path.HasValue) {
                              return Task.CompletedTask;
                          }
