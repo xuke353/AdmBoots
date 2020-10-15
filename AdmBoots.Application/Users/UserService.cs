@@ -16,13 +16,13 @@ using AdmBoots.Infrastructure.Extensions;
 namespace AdmBoots.Application.Users {
 
     internal class UserService : AppServiceBase, IUserService {
-        private readonly IRepository<User, int> _userRepository;
+        private readonly IRepository<User> _userRepository;
         private readonly IRepository<Role, int> _roleRepository;
         private readonly IRepository<UserRole, int> _userRoleRepository;
         private readonly IRepository<Menu, int> _menuRepository;
         private readonly IRepository<RoleMenu, int> _roleMenuRepository;
 
-        public UserService(IRepository<User, int> userRepository,
+        public UserService(IRepository<User> userRepository,
             IRepository<Role, int> roleRepository,
             IRepository<UserRole, int> userRoleRepository,
             IRepository<Menu, int> menuRepository,
