@@ -87,6 +87,7 @@ namespace AdmBoots.Api {
             #endregion Data层注入
 
             builder.RegisterGeneric(typeof(AdmRepositoryBase<,>)).As(typeof(IRepository<,>)).InstancePerDependency();
+            builder.RegisterGeneric(typeof(AdmRepositoryBase<>)).As(typeof(IRepository<>)).InstancePerDependency();
         }
 
         public void ConfigureServices(IServiceCollection services) {

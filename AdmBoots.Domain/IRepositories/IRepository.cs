@@ -424,4 +424,7 @@ namespace AdmBoots.Domain.IRepositories {
         //     Count of entities
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
     }
+
+    public interface IRepository<TEntity> : IRepository<TEntity, int> where TEntity : class {
+    }
 }
