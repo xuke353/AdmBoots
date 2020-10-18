@@ -1,43 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using AdmBoots.Infrastructure.CodeGenerator;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdmBoots.Api.Controllers {
     /// <summary>
     /// 代码生成器
     /// </summary>
+    [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]/[action]")]
+    [Route("api/v{version:apiVersion}/codeGenerators")]
     [AllowAnonymous]
     public class CodeGeneratorController : ControllerBase {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get() {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly IWebHostEnvironment _env;
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id) {
-            return "value";
+        public CodeGeneratorController(IWebHostEnvironment env) {
+            _env = env;
         }
-
-        // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value) {
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value) {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id) {
+        public IActionResult CodeGenerate([FromQuery]CodeGeneratorInput input) {
+            var template = new SingleTableTemplate();
+            var fileConfig = template.GetFileConfig(_env.ContentRootPath, input);
+            var result = new Dictionary<string, string>();
+            //if (input.WriteCotroller) {
+            //    DataTable dt = new DataTable();//DataTableHelper.ListToDataTable(objTable.Data);
+            //    var codeEntity = template.BuildEntity(fileConfig, dt);
+            //    result.Add("实体类", fileConfig.OutputEntity);
+            //}
+            result.Add("实体类", $"{fileConfig.EntityName} -> {fileConfig.OutputEntity}");
+            result.Add("服务类", $"{fileConfig.ServiceName} -> {fileConfig.OutputService}");
+            return Ok(new { Message = "生成成功", Result = result });
         }
     }
 
