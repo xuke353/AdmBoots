@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace AdmBoots.Infrastructure.CodeGenerator {
-    public class FileConfigModel {
 
+    public class FileConfigModel {
         public string ClassPrefix { get; set; }
         public string TableName { get; set; }
         public string ClassDescription { get; set; }
@@ -15,7 +15,8 @@ namespace AdmBoots.Infrastructure.CodeGenerator {
         public string IServiceName { get; set; }
         public string ControllerName { get; set; }
         public string DtoGetInputName { get; set; }
-        public string DtoGetOutName { get; set; }
+        public string DtoGetOutputName { get; set; }
+        public string DtoUpdateInputName { get; set; }
 
         public string OutputEntity { get; set; }
         public string OutputService { get; set; }

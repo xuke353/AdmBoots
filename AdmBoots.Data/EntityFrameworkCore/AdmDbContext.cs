@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Domain.Models;
+using AdmBoots.Infrastructure.CodeGenerator;
 using AdmBoots.Infrastructure.CustomExceptions;
 using AdmBoots.Infrastructure.Framework.Web;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,9 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         public virtual DbSet<MailSetting> MailSettings { get; set; }
         //演示
         //public virtual DbSet<Test> Tests { get; set; }
+
+        public virtual DbSet<TableFieldInfo> Tests { get; set; }
+
         public AdmDbContext(DbContextOptions<AdmDbContext> options)
          : base(options) {
         }
@@ -46,6 +50,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.GenerateSeedData();
+            modelBuilder.Entity<TableFieldInfo>().HasNoKey();
             base.OnModelCreating(modelBuilder);
         }
 
