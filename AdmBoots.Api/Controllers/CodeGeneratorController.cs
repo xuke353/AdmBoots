@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AdmBoots.Domain.IRepositories;
-using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.CodeGenerator;
 using AdmBoots.Infrastructure.Config;
 using AdmBoots.Infrastructure.Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using MySql.Data.MySqlClient;
 
 namespace AdmBoots.Api.Controllers {
 

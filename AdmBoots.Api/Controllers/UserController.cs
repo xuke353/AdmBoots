@@ -15,7 +15,7 @@ namespace AdmBoots.Api.Controllers {
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/users")]
-    [Authorize(AdmConsts.POLICY)]
+    [Authorize]
     public class UserController : ControllerBase {
         private readonly IUserService _userService;
 
@@ -61,7 +61,6 @@ namespace AdmBoots.Api.Controllers {
         }
 
         [HttpGet("permission")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetPermissions() {
             var permissions = await _userService.GetPermissions();
             return Ok(ResponseBody.From(permissions));
