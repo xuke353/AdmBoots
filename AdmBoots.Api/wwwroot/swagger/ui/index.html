@@ -1,4 +1,17 @@
 ﻿<!-- HTML for static distribution bundle build -->
+<script async="async" id="mini-profiler" src="/profiler/includes.min.js?v=4.2.1+b27bea37e9"
+        data-version="4.2.1+b27bea37e9" data-path="/profiler/"
+        data-current-id="142f3c02-c5d7-42e0-be9e-2a45e46d727a"
+        data-ids="64b457a1-275e-4bfa-9b2f-e5bd5385a80f,142f3c02-c5d7-42e0-be9e-2a45e46d727a"
+        data-position="Left"
+        data-scheme="Light"
+        data-authorized="true"
+        data-max-traces="15"
+        data-toggle-shortcut="Alt+P"
+        data-trivial-milliseconds="2.0"
+        data-ignored-duplicate-execute-types="Open,OpenAsync,Close,CloseAsync">
+</script>
+<!--https://github.com/aspnetboilerplate/module-zero-core-template/tree/master/aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Host/wwwroot/swagger/ui-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,8 +79,8 @@
 
     <script src="swagger-ui-bundle.js"></script>
     <script src="swagger-ui-standalone-preset.js"></script>
-    <script src="/swagger/abp.js"></script>
-    <script src="/swagger/abp.swagger.js"></script>
+    <script src="swagger/ui/abp.js"></script>
+    <script src="swagger/ui/abp.swagger.js"></script>
     <script>
         window.onload = function () {
             var configObject = JSON.parse('%(ConfigObject)');

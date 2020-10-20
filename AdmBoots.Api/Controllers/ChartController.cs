@@ -8,9 +8,11 @@ using AdmBoots.Infrastructure.Framework.Abstractions;
 using AdmBoots.Infrastructure.Helper;
 using AdmBoots.Infrastructure.SignalR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using StackExchange.Profiling;
 
 namespace AdmBoots.Api.Controllers {
 
@@ -20,9 +22,11 @@ namespace AdmBoots.Api.Controllers {
     //[Authorize]
     public class ChartController : ControllerBase {
         private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IHttpContextAccessor _accessor;
 
-        public ChartController(IHubContext<ChatHub> hubContext) {
+        public ChartController(IHubContext<ChatHub> hubContext, IHttpContextAccessor accessor) {
             _hubContext = hubContext;
+            _accessor = accessor;
         }
 
         [HttpGet]
@@ -39,6 +43,12 @@ namespace AdmBoots.Api.Controllers {
             }
 
             return Ok(ResponseBody.From(num, "获取成功"));
+        }
+
+        [HttpGet("GetHtmlString")]
+        public IActionResult GetHtmlString() {
+            var htmlString = MiniProfiler.Current.RenderIncludes(_accessor.HttpContext);
+            return Ok(htmlString.Value);
         }
     }
 

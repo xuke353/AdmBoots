@@ -28,6 +28,7 @@ using AdmBoots.Api.Extensions;
 using AdmBoots.Infrastructure.SignalR;
 using AdmBoots.Quartz;
 using AdmBoots.Infrastructure.Extensions;
+using StackExchange.Profiling.Storage;
 
 namespace AdmBoots.Api {
 
@@ -114,6 +115,10 @@ namespace AdmBoots.Api {
             //Enables the JSON protocol for SignalR
             services.AddSignalR().AddNewtonsoftJsonProtocol();
 
+            services.AddMiniProfiler(options => {
+                options.RouteBasePath = "/profiler";
+            }).AddEntityFramework();
+
             services.AddCors(options => options.AddPolicy("CorsPolicy",
             builder => {
                 builder.SetIsOriginAllowed(origin => true)//允许所有 origin 来源
@@ -125,7 +130,12 @@ namespace AdmBoots.Api {
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider) {
+            //开启任务调度
+            if (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool()) {
+                app.ApplicationServices.GetService<ISchedulerCenter>().Start();
+            }
             AdmBootsApp.SetServiceProvider(app.ApplicationServices);
+
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 Console.WriteLine("任务调度：" + (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool() ? "启动" : "关闭"));
@@ -133,26 +143,6 @@ namespace AdmBoots.Api {
                 Console.WriteLine("健康检查：" + (AdmBootsApp.Configuration["Startup:HealthChecks"].ObjToBool() ? "启用" : "关闭"));
             }
             //↓↓↓↓注意以下中间件顺序↓↓↓↓
-
-            app.UseStaticFiles();
-
-            app.UseRouting();
-            //认证
-            app.UseAuthentication();
-            //授权
-            app.UseAuthorization();
-            //跨域
-            app.UseCors("CorsPolicy");
-            //开启任务调度
-            if (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool()) {
-                app.ApplicationServices.GetService<ISchedulerCenter>().Start();
-            }
-
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllers();
-                endpoints.UseHealthChecks();
-                endpoints.MapHub<ChatHub>("/api/chatHub");
-            });
 
             #region Swagger
 
@@ -163,12 +153,30 @@ namespace AdmBoots.Api {
                         $"/swagger/{description.GroupName}/swagger.json",
                         description.GroupName.ToUpperInvariant());
                 }
-                c.IndexStream = () => Assembly.GetExecutingAssembly()
-                   .GetManifestResourceStream("AdmBoots.Api.wwwroot.swagger.index.html");
-                c.RoutePrefix = "";//设置为空，launchSettings.json把launchUrl去掉,localhost:8082 代替 localhost:8002/swagger
+                c.IndexStream = () => GetType().GetTypeInfo().Assembly
+                   .GetManifestResourceStream("AdmBoots.Api.wwwroot.swagger.ui.index.html");
+                c.RoutePrefix = string.Empty;//设置为空，launchSettings.json把launchUrl去掉,localhost:8082 代替 localhost:8002/swagger
             });
 
             #endregion Swagger
+
+            app.UseStaticFiles();
+
+            app.UseRouting();
+            //认证
+            app.UseAuthentication();
+            //授权
+            app.UseAuthorization();
+            //跨域
+            app.UseCors("CorsPolicy");
+            //MiniProfiler
+            app.UseMiniProfiler();
+
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.UseHealthChecks();
+                endpoints.MapHub<ChatHub>("/api/chatHub");
+            });
         }
     }
 }
