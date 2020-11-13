@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using AdmBoots.Infrastructure;
+using AdmBoots.Infrastructure.Config;
 using AdmBoots.Quartz;
 using AdmBoots.Quartz.Common;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,7 @@ namespace AdmBoots.Api.Extensions {
                 { "quartz.jobStore.driverDelegateType",typeof(MySQLDelegate).AssemblyQualifiedName},
                 { "quartz.jobStore.tablePrefix","QRTZ_"},
                 { "quartz.jobStore.dataSource","myDS"},
-                { "quartz.dataSource.myDS.connectionString",AdmBootsApp.Configuration["Database:ConnectionString"] },
+                { "quartz.dataSource.myDS.connectionString", DatabaseConfig.ConnectionString },
                 { "quartz.dataSource.myDS.provider","MySql"},
                 //{ "quartz.jobStore.useProperties","true"}
             };

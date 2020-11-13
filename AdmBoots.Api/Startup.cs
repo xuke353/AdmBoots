@@ -34,7 +34,7 @@ namespace AdmBoots.Api {
 
     public class Startup {
         public static readonly ILoggerFactory EFLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
-        private readonly IWebHostEnvironment _env;
+        public IWebHostEnvironment Environment { get; }
 
         public Startup(IWebHostEnvironment env) {
             var configuration = new ConfigurationBuilder()
@@ -44,7 +44,7 @@ namespace AdmBoots.Api {
            .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
            .Build();
             AdmBootsApp.SetConfiguration(configuration);
-            _env = env;
+            Environment = env;
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace AdmBoots.Api {
             services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
             services.AddDbContext<AdmDbContext>(option => {
-                option.UseMySql(DatabaseConfig.ConnectionString);
-                if (_env.IsDevelopment()) {
+                option.UseMySql(DatabaseConfig.ConnectionString, new MySqlServerVersion(new Version(DatabaseConfig.Version)));
+                if (Environment.IsDevelopment()) {
                     //打印sql
                     option.UseLoggerFactory(EFLoggerFactory);
                     option.EnableSensitiveDataLogging(true);//显示sql参数
