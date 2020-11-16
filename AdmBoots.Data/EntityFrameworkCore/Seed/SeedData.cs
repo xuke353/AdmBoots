@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using AdmBoots.Domain;
 using AdmBoots.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace AdmBoots.Data.EntityFrameworkCore.Seed {
-    /// <summary>
-    /// 系统初始化时生成种子数据
-    /// </summary>
     public static class SeedData {
-        public static void GenerateSeedData(this ModelBuilder modelBuilder) {
-            //不在这里设置默认值，会报错
-            modelBuilder.Entity<User>().Property(p => p.IsMaster).HasDefaultValue(false);
-            modelBuilder.Entity<User>().HasData(
-                //user
+        public static IEnumerable<User> Users =>
+           new User[]
+           {
                 new User {
                     Id = 1,
                     Name = "管理员",
@@ -41,32 +37,38 @@ namespace AdmBoots.Data.EntityFrameworkCore.Seed {
                     IsMaster = false,
                     CreateTime = DateTime.Now,
                     Status = SysStatus.有效
-                });
-            modelBuilder.Entity<Role>().HasData(
-            //role
-            new Role {
-                Id = 1,
-                Name = "系统管理员",
-                Code = "xtgly",
-                Status = SysStatus.有效,
-                CreateTime = DateTime.Now,
-                CreatorId = 1,
-                CreatorName = "管理员",
-                Description = "拥有最高权限"
-            },
-            new Role {
-                Id = 2,
-                Name = "掌门人",
-                Code = "zmr",
-                Status = SysStatus.有效,
-                CreateTime = DateTime.Now,
-                CreatorId = 1,
-                CreatorName = "管理员",
-                Description = "拥有最高权限"
-            });
-            modelBuilder.Entity<Menu>().HasData(
-            //menu
-            new Menu {
+                }
+           };
+
+        public static IEnumerable<Role> Roles =>
+            new Role[]
+            {
+               new Role {
+                   Id = 1,
+                   Name = "系统管理员",
+                   Code = "xtgly",
+                   Status = SysStatus.有效,
+                   CreateTime = DateTime.Now,
+                   CreatorId = 1,
+                   CreatorName = "管理员",
+                   Description = "拥有最高权限"
+               },
+                new Role {
+                    Id = 2,
+                    Name = "掌门人",
+                    Code = "zmr",
+                    Status = SysStatus.有效,
+                    CreateTime = DateTime.Now,
+                    CreatorId = 1,
+                    CreatorName = "管理员",
+
+                }
+            };
+
+        public static IEnumerable<Menu> Menus =>
+            new Menu[]
+            {
+                new Menu {
                 Id = 1,
                 Name = "仪表盘",
                 Code = "yibp",
@@ -268,27 +270,12 @@ namespace AdmBoots.Data.EntityFrameworkCore.Seed {
                 CreatorId = 1,
                 CreatorName = "管理员",
                 CreateTime = DateTime.Now,
-            });
-            modelBuilder.Entity<UserRole>().HasData(
-             //user_role
-             new UserRole {
-                 Id = 1,
-                 UserId = 1,
-                 RoleId = 1,
-             },
-             new UserRole {
-                 Id = 2,
-                 UserId = 2,
-                 RoleId = 2,
-             },
-             new UserRole {
-                 Id = 3,
-                 UserId = 3,
-                 RoleId = 2,
-             });
-            modelBuilder.Entity<RoleMenu>().HasData(
-             //role_menu
-             new RoleMenu {
+            }
+            };
+        public static IEnumerable<RoleMenu> RoleMenus =>
+            new RoleMenu[]
+            {
+                new RoleMenu {
                  Id = 1,
                  RoleId = 1,
                  MenuId = 1,
@@ -358,7 +345,25 @@ namespace AdmBoots.Data.EntityFrameworkCore.Seed {
                  RoleId = 2,
                  MenuId = 1,
              }
-            );
-        }
+            };
+        public static IEnumerable<UserRole> UserRoles =>
+            new UserRole[]
+            {
+                new UserRole {
+                 Id = 1,
+                 UserId = 1,
+                 RoleId = 1,
+             },
+             new UserRole {
+                 Id = 2,
+                 UserId = 2,
+                 RoleId = 2,
+             },
+             new UserRole {
+                 Id = 3,
+                 UserId = 3,
+                 RoleId = 2,
+             }
+            };
     }
 }

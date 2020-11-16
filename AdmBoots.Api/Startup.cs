@@ -29,6 +29,7 @@ using AdmBoots.Infrastructure.SignalR;
 using AdmBoots.Quartz;
 using AdmBoots.Infrastructure.Extensions;
 using StackExchange.Profiling.Storage;
+using AdmBoots.Data.EntityFrameworkCore.Seed;
 
 namespace AdmBoots.Api {
 
@@ -135,7 +136,8 @@ namespace AdmBoots.Api {
                 app.ApplicationServices.GetService<ISchedulerCenter>().Start();
             }
             AdmBootsApp.SetServiceProvider(app.ApplicationServices);
-
+            //程序第一次运行时初始化数据库及种子数据
+            app.InitializeDatabase();
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 Console.WriteLine("任务调度：" + (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool() ? "启动" : "关闭"));
