@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AdmBoots.Domain.Models;
+using AutoMapper;
 
 namespace AdmBoots.Application.MailSettings.Dto {
+    [AutoMap(typeof(MailSetting), ReverseMap = true)]
     public class AddMailSettingInput {
         /// <summary>
         /// 客户端授权码(可存在配置文件中)

@@ -21,8 +21,9 @@ namespace AdmBoots.Application {
 
             CreateMap<AddOrUpdateMenuInput, Menu>();
 
-            CreateMap<AddMailSettingInput, MailSetting>();
-            CreateMap<MailSetting, GetMailSettingOutput>();
+            //以下使用AutoMapAttribute映射，详见Dto
+            //CreateMap<AddMailSettingInput, MailSetting>();
+            //CreateMap<MailSetting, GetMailSettingOutput>();
 
             //
             CreateMap<Test, GetTestOutput>();
