@@ -7,6 +7,7 @@ using AdmBoots.Api.Authorization;
 using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.Authorization;
 using AdmBoots.Infrastructure.Domain;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Distributed;
@@ -27,7 +28,7 @@ namespace AdmBoots.Api.Extensions {
             var audience = AdmBootsApp.Configuration["Authentication:JwtBearer:Audience"];
 
             var admPolicyRequirement = new AdmPolicyRequirement(
-                                ClaimTypes.Role,//基于角色的授权
+                                JwtClaimTypes.Role,//基于角色的授权
                                 issuer,//发行人
                                 audience,//订阅人
                                 new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),//签名凭据

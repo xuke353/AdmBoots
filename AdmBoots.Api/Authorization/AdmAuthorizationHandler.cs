@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AdmBoots.Api.Authorization;
 using AdmBoots.Application.Roles;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -77,7 +78,7 @@ namespace AdmBoots.Infrastructure.Authorization {
 
                     //判断过期时间
                     //这里仅仅是最坏验证原则，你可以不要这个if else的判断，因为我们使用的官方验证，Token过期后上边的result?.Principal 就为 null 了，进不到这里了，因此这里其实可以不用验证过期时间，只是做最后严谨判断
-                    var expirationTime = httpContext.User.Claims.SingleOrDefault(s => s.Type == ClaimTypes.Expiration)?.Value;
+                    var expirationTime = httpContext.User.Claims.SingleOrDefault(s => s.Type == JwtClaimTypes.Expiration)?.Value;
                     if (!string.IsNullOrEmpty(expirationTime) && DateTime.Parse(expirationTime) >= DateTime.Now) {
                         context.Succeed(requirement);
                         return;

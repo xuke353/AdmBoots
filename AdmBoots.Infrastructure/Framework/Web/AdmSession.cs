@@ -9,36 +9,33 @@ using Microsoft.AspNetCore.Http;
 namespace AdmBoots.Infrastructure.Framework.Web {
 
     public class AdmSession : IAdmSession {
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        private readonly ClaimsPrincipal _user;
-
+        private readonly ClaimsIdentity _claimsIdentity;
         private int? _userId;
         private string _name;
 
         public AdmSession(IHttpContextAccessor httpContextAccessor) {
-            _httpContextAccessor = httpContextAccessor;
-            _user = _httpContextAccessor.HttpContext?.User;
+            _claimsIdentity = httpContextAccessor?.HttpContext?.User?.Identity as ClaimsIdentity;
         }
 
         public int? UserId {
             get {
-                var nameIdentifier = _user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                if (nameIdentifier == null)
+                if (_userId != null)
                     return _userId;
-                return _userId = Convert.ToInt32(nameIdentifier.Value);
+                var claim = _claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                return claim == null ? null : (_userId = Convert.ToInt32(claim.Value));
             }
         }
 
-        public bool IsAuthenticated => _user.Identity.IsAuthenticated;
+        public bool IsAuthenticated => _claimsIdentity.IsAuthenticated;
 
-        public string UserName => _user.Identity.Name;
+        public string UserName => _claimsIdentity.Name;
 
         public string Name {
             get {
                 if (!string.IsNullOrEmpty(_name))
                     return _name;
-                return _name = _user.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.Name)?.Value;
+                return _name = _claimsIdentity.FindFirst(JwtClaimTypes.Name)?.Value;
             }
         }
     }

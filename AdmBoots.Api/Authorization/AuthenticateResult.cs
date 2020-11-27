@@ -17,16 +17,18 @@ namespace AdmBoots.Api.Authorization {
             var expirationSeconds = requirement.Expiration.TotalSeconds;
             var subjectId = user.Id.ToString();
             var claims = new List<Claim> {
-                    new Claim(JwtRegisteredClaimNames.Sub, subjectId),
-                    new Claim(ClaimTypes.NameIdentifier, subjectId),
-                    new Claim(JwtRegisteredClaimNames.AuthTime, DateTime.Now.ToString()),//DateTime.UtcNow.ToString("o")
+                    new Claim(ClaimTypes.NameIdentifier, subjectId),//必须提供NameIdentifier值，否则AdmSeesion取不到UserId
+                    new Claim(JwtRegisteredClaimNames.AuthTime, DateTime.UtcNow.ToString("o")),
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Expiration, DateTime.Now.AddSeconds(expirationSeconds).ToString())
+                    new Claim(JwtClaimTypes.Name, user.Name),
+                    new Claim(JwtClaimTypes.Expiration, DateTime.Now.AddSeconds(expirationSeconds).ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, subjectId),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+                    ClaimValueTypes.Integer64)
                 };
-            if (!string.IsNullOrWhiteSpace(user.Name)) {
-                claims.Add(new Claim(JwtClaimTypes.Name, user.Name));
-            }
-            claims.AddRange(user.Roles.Select(s => new Claim(ClaimTypes.Role, s.Id.ToString())));
+
+            claims.AddRange(user.Roles.Select(s => new Claim(JwtClaimTypes.Role, s.Id.ToString())));
 
             var token = JwtToken.IssueToken(claims.ToArray(), requirement);
 
