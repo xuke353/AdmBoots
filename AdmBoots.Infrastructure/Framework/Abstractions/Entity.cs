@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using AdmBoots.Infrastructure.Framework.Interface;
 
 namespace AdmBoots.Infrastructure.Framework.Abstractions {
     [Serializable]
@@ -17,7 +18,7 @@ namespace AdmBoots.Infrastructure.Framework.Abstractions {
         public virtual TPrimaryKey Id { get; set; }
 
         public virtual bool IsTransient() {
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(Id, default(TPrimaryKey))) {
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(Id, default)) {
                 return true;
             }
             if (typeof(TPrimaryKey) == typeof(int)) {

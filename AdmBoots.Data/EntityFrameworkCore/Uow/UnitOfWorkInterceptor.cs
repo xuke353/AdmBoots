@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using AdmBoots.Infrastructure.Extensions;
 using AdmBoots.Infrastructure.Helper;
 using Castle.DynamicProxy;
 
@@ -24,7 +25,7 @@ namespace AdmBoots.Data.EntityFrameworkCore.Uow {
                 method = invocation.GetConcreteMethod();
             }
 
-            var unitOfWorkAttr = GetUnitOfWorkAttributeOrNull(method);
+            var unitOfWorkAttr = method.GetAttribute<UnitOfWorkAttribute>();
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled) {
                 //No need to a uow
                 invocation.Proceed();
@@ -77,19 +78,6 @@ namespace AdmBoots.Data.EntityFrameworkCore.Uow {
                     exception => uow.Dispose()
                 );
             }
-        }
-
-        private UnitOfWorkAttribute GetUnitOfWorkAttributeOrNull(MethodInfo methodInfo) {
-            var attrs = methodInfo.GetCustomAttributes(true).OfType<UnitOfWorkAttribute>().ToArray();
-            if (attrs.Length > 0) {
-                return attrs[0];
-            }
-
-            attrs = methodInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(true).OfType<UnitOfWorkAttribute>().ToArray();
-            if (attrs.Length > 0) {
-                return attrs[0];
-            }
-            return null;
         }
     }
 }

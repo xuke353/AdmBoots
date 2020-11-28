@@ -4,7 +4,7 @@ using AdmBoots.Infrastructure.Domain;
 
 namespace AdmBoots.Infrastructure.Framework.Abstractions {
 
-    public class AuditEntity : CreationEntity<int> {
+    public class AuditEntity : CreationEntity {
         public int? ModifierId { get; set; }
 
         [MaxLength(EntityDefault.LongNameLength)]

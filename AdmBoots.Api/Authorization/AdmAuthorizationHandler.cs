@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AdmBoots.Api.Authorization;
 using AdmBoots.Application.Roles;
+using AdmBoots.Infrastructure.Extensions;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -37,10 +38,11 @@ namespace AdmBoots.Infrastructure.Authorization {
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AdmPolicyRequirement requirement) {
             var httpContext = _accessor.HttpContext;
             var routContext = (context.Resource as RouteEndpoint);
+            //var ss = context.Resource.GetType();
             var descriptor = routContext.Metadata.OfType<ControllerActionDescriptor>().FirstOrDefault();
             var currentURI = string.Empty;
             //如果有自定义资源标识，取自定义的标识。没有自定义的，取默认ControllerName:ActionName
-            var admAuthorizeFilterAttr = GetAdmAuthorizeFilterAttributeOrNull(descriptor.MethodInfo);
+            var admAuthorizeFilterAttr = descriptor.MethodInfo.GetAttribute<AdmAuthorizeFilterAttribute>();
             if (admAuthorizeFilterAttr == null || string.IsNullOrEmpty(admAuthorizeFilterAttr.FilterName)) {
                 if (descriptor != null) {
                     currentURI = $"{descriptor.ControllerName}:{descriptor.ActionName}";
@@ -79,7 +81,7 @@ namespace AdmBoots.Infrastructure.Authorization {
                     //判断过期时间
                     //这里仅仅是最坏验证原则，你可以不要这个if else的判断，因为我们使用的官方验证，Token过期后上边的result?.Principal 就为 null 了，进不到这里了，因此这里其实可以不用验证过期时间，只是做最后严谨判断
                     var expirationTime = httpContext.User.Claims.SingleOrDefault(s => s.Type == JwtClaimTypes.Expiration)?.Value;
-                    if (!string.IsNullOrEmpty(expirationTime) && DateTime.Parse(expirationTime) >= DateTime.Now) {
+                    if (!string.IsNullOrEmpty(expirationTime) && DateTime.Parse(expirationTime) >= DateTime.UtcNow) {
                         context.Succeed(requirement);
                         return;
                     } else {
@@ -93,16 +95,6 @@ namespace AdmBoots.Infrastructure.Authorization {
             }
 
             context.Succeed(requirement);
-        }
-
-        private AdmAuthorizeFilterAttribute GetAdmAuthorizeFilterAttributeOrNull(MethodInfo methodInfo) {
-            var attrs = methodInfo.GetCustomAttributes(true).OfType<AdmAuthorizeFilterAttribute>().ToArray();
-            if (attrs.Length > 0) {
-                return attrs[0];
-            }
-
-            attrs = methodInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(true).OfType<AdmAuthorizeFilterAttribute>().ToArray();
-            return attrs.Length > 0 ? attrs[0] : null;
         }
     }
 }

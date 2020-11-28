@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AdmBoots.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Framework.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Framework.Interface;
 using AdmBoots.Infrastructure.Framework.Web;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,13 +11,11 @@ namespace AdmBoots.Data.EntityFrameworkCore {
 
     public class AdmEntityAuditingHelper {
 
-        public static void SetCreationAuditProperties(object entityAsObj) {
-            var entityWithCreationTime = entityAsObj as CreationEntity<int>;
-            if (entityWithCreationTime == null) {
+        internal static void SetCreationAuditProperties(object entityAsObj, AdmSession admSession) {
+            if (entityAsObj is not CreationEntity entityWithCreationTime) {
                 //Object does not implement CreationEntity
                 return;
             }
-            var admSession = AdmBootsApp.ServiceProvider.GetRequiredService<IAdmSession>();
             var userId = admSession.UserId;
             var userName = admSession.UserName;
             if (entityWithCreationTime.CreateTime.GetValueOrDefault() == default(DateTime)) {
@@ -37,12 +36,10 @@ namespace AdmBoots.Data.EntityFrameworkCore {
             entityWithCreationTime.CreatorName = userName;
         }
 
-        public static void SetModificationAuditProperties(object entityAsObj) {
-            var entityWithAudit = entityAsObj as AuditEntity;
-            if (entityWithAudit == null) {
+        internal static void SetModificationAuditProperties(object entityAsObj, AdmSession admSession) {
+            if (entityAsObj is not AuditEntity entityWithAudit) {
                 return;
             }
-            var admSession = AdmBootsApp.ServiceProvider.GetRequiredService<IAdmSession>();
             var userId = admSession.UserId;
             var userName = admSession.UserName;
             entityWithAudit.ModifyTime = DateTime.Now;
@@ -57,6 +54,20 @@ namespace AdmBoots.Data.EntityFrameworkCore {
             //Finally, set LastModifierUserId!
             entityWithAudit.ModifierId = userId;
             entityWithAudit.ModifierName = userName;
+        }
+
+        internal static void SetDeletionAuditProperties(object entity, AdmSession session) {
+            //var softDelete = entity as ISoftDelete;
+            //if (softDelete == null) {
+            //    return;
+            //}
+            //上面代码和下面代码意思相同
+            if (entity is not ISoftDelete softDelete) {
+                return;
+            }
+
+            softDelete.DeletionTime = DateTime.Now;
+            softDelete.DeleterId = session.UserId;
         }
     }
 }
