@@ -63,18 +63,18 @@ namespace AdmBoots.Infrastructure.Extensions {
         /// <param name="inherit">是否从继承中查找</param>
         /// <returns>存在返回第一个，不存在返回null</returns>
         public static T GetAttribute<T>(this MemberInfo memberInfo, bool inherit = true) where T : Attribute {
-            var descripts = memberInfo.GetCustomAttributes(typeof(T), inherit);
-            return descripts.FirstOrDefault() as T;
-            //var attrs = memberinfo.getcustomattributes(inherit).oftype<t>().toarray();
-            //if (attrs.length > 0) {
-            //    return attrs[0];
-            //}
+            //var descripts = memberInfo.GetCustomAttributes(typeof(T), inherit);
+            //return descripts.FirstOrDefault() as T;
+            var attrs = memberInfo.GetCustomAttributes(inherit).OfType<T>().ToArray();
+            if (attrs.Length > 0) {
+                return attrs[0];
+            }
 
-            //attrs = memberinfo.declaringtype.gettypeinfo().getcustomattributes(inherit).oftype<t>().toarray();
-            //if (attrs.length > 0) {
-            //    return attrs[0];
-            //}
-            //return null;
+            attrs = memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(inherit).OfType<T>().ToArray();
+            if (attrs.Length > 0) {
+                return attrs[0];
+            }
+            return null;
         }
 
         /// <summary>
