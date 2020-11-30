@@ -9,6 +9,7 @@ using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.CustomExceptions;
 using AdmBoots.Infrastructure.Extensions;
 using AdmBoots.Infrastructure.Framework.Abstractions;
+using AdmBoots.Infrastructure.Ioc;
 using AdmBoots.Quartz.Common;
 using AdmBoots.Quartz.Dto;
 using Microsoft.AspNetCore.Http;
@@ -119,7 +120,7 @@ namespace AdmBoots.Quartz {
         public async Task<Page<JobLog>> GetJobLogsAsync(GetLogInput input) {
             if (string.IsNullOrEmpty(input.JobKey))
                 throw new BusinessException($"JobKey(任务名.组名 不能为空)");
-            var dbContext = AdmBootsApp.ServiceProvider.GetService(typeof(AdmDbContext)) as AdmDbContext;
+            var dbContext = IocManager.Current.Resolve<AdmDbContext>();
             var result = dbContext.JobLogs.AsQueryable().Where(t => t.JobName == input.JobKey);
             var pageResult = result.PageAndOrderBy(input);
             return new Page<JobLog>(input, result.Count(), await pageResult.ToListAsync());

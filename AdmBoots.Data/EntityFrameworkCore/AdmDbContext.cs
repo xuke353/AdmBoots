@@ -4,12 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Domain.Models;
+using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.CodeGenerator;
 using AdmBoots.Infrastructure.CustomExceptions;
 using AdmBoots.Infrastructure.Extensions;
 using AdmBoots.Infrastructure.Framework.Interface;
 using AdmBoots.Infrastructure.Framework.Web;
 using AdmBoots.Infrastructure.Helper;
+using AdmBoots.Infrastructure.Ioc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -59,7 +61,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         }
 
         private void ApplyAdmConcepts() {
-            var session = this.GetService<AdmSession>();
+            var session = IocManager.Current.Resolve<IAdmSession>();
             foreach (var entry in ChangeTracker.Entries().ToList()) {
                 switch (entry.State) {
                     case EntityState.Added:
@@ -71,6 +73,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
                         CheckAndSetId(entry);
                         AdmEntityAuditingHelper.SetModificationAuditProperties(entry.Entity, session);
                         break;
+
                     case EntityState.Deleted:
                         CancelDeletionForSoftDelete(entry);
                         AdmEntityAuditingHelper.SetDeletionAuditProperties(entry.Entity, session);

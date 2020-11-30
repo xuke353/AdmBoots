@@ -11,7 +11,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
 
     public class AdmEntityAuditingHelper {
 
-        internal static void SetCreationAuditProperties(object entityAsObj, AdmSession admSession) {
+        internal static void SetCreationAuditProperties(object entityAsObj, IAdmSession admSession) {
             if (entityAsObj is not CreationEntity entityWithCreationTime) {
                 //Object does not implement CreationEntity
                 return;
@@ -36,7 +36,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
             entityWithCreationTime.CreatorName = userName;
         }
 
-        internal static void SetModificationAuditProperties(object entityAsObj, AdmSession admSession) {
+        internal static void SetModificationAuditProperties(object entityAsObj, IAdmSession admSession) {
             if (entityAsObj is not AuditEntity entityWithAudit) {
                 return;
             }
@@ -56,7 +56,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
             entityWithAudit.ModifierName = userName;
         }
 
-        internal static void SetDeletionAuditProperties(object entity, AdmSession session) {
+        internal static void SetDeletionAuditProperties(object entity, IAdmSession session) {
             //var softDelete = entity as ISoftDelete;
             //if (softDelete == null) {
             //    return;

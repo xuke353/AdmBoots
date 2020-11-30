@@ -81,7 +81,7 @@ namespace AdmBoots.Application.Users {
                                  Id = r.Id,
                                  Code = r.Code,
                                  Name = r.Name
-                             }).ToList();
+                             }).AsNoTracking().ToList();
             return userRoles;
         }
 

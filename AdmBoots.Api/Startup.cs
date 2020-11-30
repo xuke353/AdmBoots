@@ -30,6 +30,7 @@ using AdmBoots.Quartz;
 using AdmBoots.Infrastructure.Extensions;
 using StackExchange.Profiling.Storage;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
+using AdmBoots.Infrastructure.Ioc;
 
 namespace AdmBoots.Api {
 
@@ -135,7 +136,8 @@ namespace AdmBoots.Api {
             if (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool()) {
                 app.ApplicationServices.GetService<ISchedulerCenter>().Start();
             }
-            AdmBootsApp.SetServiceProvider(app.ApplicationServices);
+            IocManager.SetProvider(new IocFactory(app.ApplicationServices));
+
             //程序第一次运行时初始化数据库及种子数据
             app.InitializeDatabase();
             if (env.IsDevelopment()) {
