@@ -7,10 +7,10 @@ using AutoMapper;
 
 namespace AdmBoots.Application.Auditings {
 
-    public class AuditingService : AppServiceBase, IAuditingService {
+    public class AuditiLogService : AppServiceBase, IAuditLogService {
         private readonly IRepository<AuditLog, int> _auditLogRepository;
 
-        public AuditingService(IRepository<AuditLog, int> auditLogRepository) {
+        public AuditiLogService(IRepository<AuditLog, int> auditLogRepository) {
             _auditLogRepository = auditLogRepository;
         }
 
