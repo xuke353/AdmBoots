@@ -1,4 +1,5 @@
-﻿using AdmBoots.Application.MailSettings.Dto;
+﻿using AdmBoots.Application.Auditings.Dto;
+using AdmBoots.Application.MailSettings.Dto;
 using AdmBoots.Application.Menus.Dto;
 using AdmBoots.Application.Roles.Dto;
 using AdmBoots.Application.Tests.Dto;
@@ -27,6 +28,10 @@ namespace AdmBoots.Application {
 
             //
             CreateMap<Test, GetTestOutput>();
+
+            CreateMap<AuditInfo, AuditLog>()
+                .ForMember(log => log.Exception,
+                info => info.MapFrom(i => i.Exception != null ? i.Exception.ToString() : string.Empty));
         }
     }
 }

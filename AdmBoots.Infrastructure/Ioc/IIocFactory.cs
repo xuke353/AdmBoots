@@ -14,10 +14,10 @@ namespace AdmBoots.Infrastructure.Ioc {
 
         bool IsRegistered(Type type);
 
-        bool IsRegistered<TType>();
+        bool IsRegistered<T>();
 
-        T ResolveScope<T>();
+        T ResolveFromScope<T>();
 
-        T ResolveScope<T>(Type type);
+        T ResolveFromScope<T>(Type type);
     }
 }

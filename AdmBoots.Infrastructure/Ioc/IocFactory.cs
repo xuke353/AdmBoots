@@ -23,15 +23,15 @@ namespace AdmBoots.Infrastructure.Ioc {
             return _provider.GetServices(type).Any();
         }
 
-        public bool IsRegistered<TType>() {
-            return _provider.GetServices<TType>().Any();
+        public bool IsRegistered<T>() {
+            return _provider.GetServices<T>().Any();
         }
 
-        public T ResolveScope<T>() {
+        public T ResolveFromScope<T>() {
             return _provider.CreateScope().ServiceProvider.GetService<T>();
         }
 
-        public T ResolveScope<T>(Type type) {
+        public T ResolveFromScope<T>(Type type) {
             return (T)_provider.CreateScope().ServiceProvider.GetService(type);
         }
     }
