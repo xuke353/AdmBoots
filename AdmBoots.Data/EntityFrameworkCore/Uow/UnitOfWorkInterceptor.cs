@@ -44,16 +44,22 @@ namespace AdmBoots.Data.EntityFrameworkCore.Uow {
             }
         }
 
+        /// <summary>
+        /// 同步
+        /// </summary>
+        /// <param name="invocation"></param>
         private void PerformSyncUow(IInvocation invocation) {
-            Console.WriteLine("同步方法事务开启");
             using (var uow = _admUnitOfWork.Begin()) {
                 invocation.Proceed();
                 _admUnitOfWork.Complete(uow);
             }
         }
 
+        /// <summary>
+        /// 异步
+        /// </summary>
+        /// <param name="invocation"></param>
         private void PerformAsyncUow(IInvocation invocation) {
-            Console.WriteLine("异步方法事务开启");
             var uow = _admUnitOfWork.Begin();
 
             try {
