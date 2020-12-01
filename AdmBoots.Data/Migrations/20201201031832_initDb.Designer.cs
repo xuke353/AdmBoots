@@ -9,15 +9,71 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdmBoots.Data.Migrations
 {
     [DbContext(typeof(AdmDbContext))]
-    [Migration("20200915143538_Initdb")]
-    partial class Initdb
+    [Migration("20201201031832_initDb")]
+    partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64)
+                .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("AdmBoots.Domain.Models.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("BrowserInfo")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ClientIpAddress")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ClientName")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("CustomData")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Exception")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("ExecutionDuration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExecutionTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("MethodName")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Parameters")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ReturnValue")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ServiceName")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLog");
+                });
 
             modelBuilder.Entity("AdmBoots.Domain.Models.JobLog", b =>
                 {
@@ -36,8 +92,8 @@ namespace AdmBoots.Data.Migrations
 
                     b.Property<string>("JobName")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<string>("Level")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -60,31 +116,31 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Cc")
-                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<string>("Fr")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<string>("FrHost")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<bool>("Notify")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("To")
                         .IsRequired()
-                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -99,8 +155,8 @@ namespace AdmBoots.Data.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("CreateTime")
                         .HasColumnType("datetime(6)");
@@ -109,16 +165,16 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreatorName")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
 
                     b.Property<string>("Description")
-                        .HasColumnType("varchar(500) CHARACTER SET utf8mb4")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500) CHARACTER SET utf8mb4");
 
                     b.Property<string>("Icon")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -130,16 +186,16 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ModifierName")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("ModifyTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
@@ -152,8 +208,8 @@ namespace AdmBoots.Data.Migrations
 
                     b.Property<string>("Uri")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -164,7 +220,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 1,
                             Code = "yibp",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3758),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2650),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -181,7 +237,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 2,
                             Code = "xitgl",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3884),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2721),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -198,7 +254,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 3,
                             Code = "zuoydd",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3889),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2728),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -215,7 +271,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 4,
                             Code = "juesgl",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3894),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2734),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -232,7 +288,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 5,
                             Code = "caidgl",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3898),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2739),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -249,7 +305,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 6,
                             Code = "yonghugl",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3902),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2743),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -266,7 +322,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 7,
                             Code = "renwlb",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3906),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2748),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -283,7 +339,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 8,
                             Code = "youxsz",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3910),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2753),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -300,7 +356,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 9,
                             Code = "add",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3914),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2760),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -316,7 +372,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 10,
                             Code = "query",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3917),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2765),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -332,7 +388,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 11,
                             Code = "update",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3921),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2769),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -348,7 +404,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 12,
                             Code = "delete",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3925),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2774),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -364,7 +420,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 13,
                             Code = "auth",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 7, DateTimeKind.Local).AddTicks(3929),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2778),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -385,8 +441,8 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("CreateTime")
                         .HasColumnType("datetime(6)");
@@ -395,27 +451,27 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreatorName")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
 
                     b.Property<string>("Description")
-                        .HasColumnType("varchar(500) CHARACTER SET utf8mb4")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500) CHARACTER SET utf8mb4");
 
                     b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<string>("ModifierName")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("ModifyTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -429,7 +485,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 1,
                             Code = "xtgly",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 6, DateTimeKind.Local).AddTicks(7227),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 880, DateTimeKind.Local).AddTicks(5278),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "拥有最高权限",
@@ -440,10 +496,9 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 2,
                             Code = "zmr",
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 6, DateTimeKind.Local).AddTicks(8939),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 880, DateTimeKind.Local).AddTicks(9416),
                             CreatorId = 1,
                             CreatorName = "管理员",
-                            Description = "拥有最高权限",
                             Name = "掌门人",
                             Status = 1
                         });
@@ -566,8 +621,8 @@ namespace AdmBoots.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<bool>("IsMaster")
                         .ValueGeneratedOnAdd()
@@ -579,21 +634,21 @@ namespace AdmBoots.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -603,7 +658,7 @@ namespace AdmBoots.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 2, DateTimeKind.Local).AddTicks(3165),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 874, DateTimeKind.Local).AddTicks(4363),
                             IsMaster = true,
                             Name = "管理员",
                             Password = "DC483E80A7A0BD9EF71D8CF973673924",
@@ -613,7 +668,7 @@ namespace AdmBoots.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 4, DateTimeKind.Local).AddTicks(6976),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 877, DateTimeKind.Local).AddTicks(5116),
                             IsMaster = false,
                             Name = "张无忌",
                             Password = "E10ADC3949BA59ABBE56E057F20F883E",
@@ -623,7 +678,7 @@ namespace AdmBoots.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreateTime = new DateTime(2020, 9, 15, 22, 35, 38, 4, DateTimeKind.Local).AddTicks(7032),
+                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 877, DateTimeKind.Local).AddTicks(5161),
                             IsMaster = false,
                             Name = "周芷若",
                             Password = "E10ADC3949BA59ABBE56E057F20F883E",
@@ -686,6 +741,10 @@ namespace AdmBoots.Data.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Menu");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("AdmBoots.Domain.Models.UserRole", b =>
@@ -701,6 +760,27 @@ namespace AdmBoots.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AdmBoots.Domain.Models.Menu", b =>
+                {
+                    b.Navigation("RoleMenuList");
+                });
+
+            modelBuilder.Entity("AdmBoots.Domain.Models.Role", b =>
+                {
+                    b.Navigation("RoleMenuList");
+
+                    b.Navigation("UserRoleList");
+                });
+
+            modelBuilder.Entity("AdmBoots.Domain.Models.User", b =>
+                {
+                    b.Navigation("UserRoleList");
                 });
 #pragma warning restore 612, 618
         }

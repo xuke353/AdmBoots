@@ -31,6 +31,7 @@ using AdmBoots.Infrastructure.Extensions;
 using StackExchange.Profiling.Storage;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Infrastructure.Ioc;
+using AdmBoots.Infrastructure.Auditing;
 
 namespace AdmBoots.Api {
 
@@ -59,6 +60,7 @@ namespace AdmBoots.Api {
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             //不能用单例
             builder.RegisterType<AdmSession>().As<IAdmSession>();
+            builder.RegisterType<HttpContextClientInfoProvider>().As<IClientInfoProvider>();
 
             #region Application层注入
 
@@ -109,6 +111,7 @@ namespace AdmBoots.Api {
 
             services.AddControllers(option => {
                 option.Filters.Add(typeof(GlobalExceptionFilter));
+                option.Filters.Add(typeof(AuditActionFilter));
             }).AddNewtonsoftJson(option => {
                 //忽略循环引用
                 option.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

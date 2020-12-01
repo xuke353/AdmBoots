@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AdmBoots.Application.Auditings;
 using AdmBoots.Application.Auditings.Dto;
 using AdmBoots.Infrastructure.Auditing;
+using AdmBoots.Infrastructure.Domain;
 using AdmBoots.Infrastructure.Extensions;
 using AdmBoots.Infrastructure.Framework.Web;
-using AdmBoots.Infrastructure.Ioc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -17,16 +16,23 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace AdmBoots.Api.Filters {
+
     public class AuditActionFilter : IAsyncActionFilter {
         private readonly IAuditLogService _auditLogService;
         private readonly IAdmSession _admSession;
-        private readonly ILoggerFactory _logger;
+        private readonly ILogger<AuditActionFilter> _logger;
+        private readonly IClientInfoProvider _clientInfoProvider;
 
-        public AuditActionFilter(IAuditLogService auditLogService, IAdmSession admSession, ILoggerFactory logger) {
+        public AuditActionFilter(IAuditLogService auditLogService,
+            IAdmSession admSession,
+            ILogger<AuditActionFilter> logger,
+            IClientInfoProvider clientInfoProvider) {
             _auditLogService = auditLogService;
             _admSession = admSession;
             _logger = logger;
+            _clientInfoProvider = clientInfoProvider;
         }
+
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
             if (!ShouldSaveAudit(context)) {
                 await next();
@@ -41,11 +47,15 @@ namespace AdmBoots.Api.Filters {
             var auditInfo = new AuditInfo {
                 UserId = _admSession?.UserId,
                 ServiceName = type != null
-                    ? type.FullName
+                    ? type.FullName.TruncateWithPostfix(EntityDefault.FieldsLength250)
                     : "",
-                MethodName = method.Name,
-                Parameters = ConvertArgumentsToJson(arguments),
-                ExecutionTime = DateTime.Now
+                //5.0版本以上，varchar(50)，指的是50字符，无论存放的是数字、字母还是UTF8汉字（每个汉字3字节），都可以存放50个。其他数据库要注意下这里
+                MethodName = method.Name.TruncateWithPostfix(EntityDefault.FieldsLength250),
+                Parameters = ConvertArgumentsToJson(arguments).TruncateWithPostfix(EntityDefault.FieldsLength2000),
+                ExecutionTime = DateTime.Now,
+                BrowserInfo = _clientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityDefault.FieldsLength250),
+                ClientIpAddress = _clientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityDefault.FieldsLength50),
+                ClientName = _clientInfoProvider.ComputerName.TruncateWithPostfix(EntityDefault.FieldsLength100),
             };
 
             ActionExecutedContext result = null;
@@ -76,7 +86,8 @@ namespace AdmBoots.Api.Filters {
                             break;
                     }
                 }
-
+                Console.WriteLine(auditInfo.ToString());
+                auditInfo.ReturnValue = auditInfo.ReturnValue.TruncateWithPostfix(EntityDefault.FieldsLength20);
                 await _auditLogService.SaveAsync(auditInfo);
             }
         }
@@ -94,21 +105,21 @@ namespace AdmBoots.Api.Filters {
                 return false;
             }
 
-            if (methodInfo.IsDefined(typeof(AuditedAttribute), true)) {
+            if (methodInfo.HasAttribute<AuditedAttribute>()) {
                 return true;
             }
 
-            if (methodInfo.IsDefined(typeof(DisableAuditingAttribute), true)) {
+            if (methodInfo.HasAttribute<DisableAuditingAttribute>()) {
                 return false;
             }
 
             var classType = methodInfo.DeclaringType;
             if (classType != null) {
-                if (classType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true)) {
+                if (classType.GetTypeInfo().HasAttribute<AuditedAttribute>()) {
                     return true;
                 }
 
-                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true)) {
+                if (classType.GetTypeInfo().HasAttribute<DisableAuditingAttribute>()) {
                     return false;
                 }
             }
@@ -129,7 +140,7 @@ namespace AdmBoots.Api.Filters {
 
                 return JsonConvert.SerializeObject(dictionary);
             } catch (Exception ex) {
-                _logger.CreateLogger<AuditActionFilter>().LogWarning(ex.ToString(), ex);
+                _logger.LogWarning(ex.ToString(), ex);
                 return "{}";
             }
         }

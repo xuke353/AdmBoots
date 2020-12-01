@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AdmBoots.Data.EntityFrameworkCore.Seed {
+
     /// <summary>
     /// 系统初始化时生成种子数据
     /// </summary>
     public static class InitializeData {
+
         /// <summary>
         /// PM> update-database -Context AdmDbContext
         /// </summary>
@@ -26,13 +28,15 @@ namespace AdmBoots.Data.EntityFrameworkCore.Seed {
             modelBuilder.Entity<UserRole>().HasData(SeedData.UserRoles);
             modelBuilder.Entity<RoleMenu>().HasData(SeedData.RoleMenus);
         }
+
         /// <summary>
         /// 初始化种子数据
         /// </summary>
         /// <param name="app"></param>
         public static void InitializeDatabase(this IApplicationBuilder app) {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope()) {
-                var context = serviceScope.ServiceProvider.GetRequiredService<AdmDbContext>();
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<AdmDbContext>();
+            if (context.Database.GetPendingMigrations().Any()) {
                 context.Database.Migrate();
                 if (!context.Users.Any()) {
                     foreach (var user in SeedData.Users) {

@@ -7,14 +7,16 @@ using AdmBoots.Infrastructure.Domain;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 
 namespace AdmBoots.Domain.Models {
+
     /// <summary>
     /// 演示用，无意义
     /// </summary>
-    [Table("Test")]
+    [Table("TestA")]
     public class Test : AuditEntity {
 
         [Required, MaxLength(EntityDefault.FieldsLength50)]
         public string Name { get; set; }
+
         public int Age { get; set; }
     }
 }

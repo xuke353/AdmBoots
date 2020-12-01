@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Domain.Models;
-using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.CodeGenerator;
 using AdmBoots.Infrastructure.CustomExceptions;
 using AdmBoots.Infrastructure.Extensions;
@@ -14,7 +13,6 @@ using AdmBoots.Infrastructure.Helper;
 using AdmBoots.Infrastructure.Ioc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AdmBoots.Data.EntityFrameworkCore {
@@ -27,10 +25,12 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         public virtual DbSet<RoleMenu> RoleMenus { get; set; }
         public virtual DbSet<JobLog> JobLogs { get; set; }
         public virtual DbSet<MailSetting> MailSettings { get; set; }
-        //演示
-        //public virtual DbSet<Test> Tests { get; set; }
 
-        public virtual DbSet<TableFieldInfo> Tests { get; set; }
+        //演示
+        public virtual DbSet<Test> Tests { get; set; }
+
+        public virtual DbSet<TableFieldInfo> TableFieldInfos { get; set; }
+        public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
         public AdmDbContext(DbContextOptions<AdmDbContext> options)
          : base(options) {
@@ -55,8 +55,11 @@ namespace AdmBoots.Data.EntityFrameworkCore {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            //初始化种子数据
             modelBuilder.GenerateSeedData();
             modelBuilder.Entity<TableFieldInfo>().HasNoKey();
+            modelBuilder.Ignore<TableFieldInfo>();
+            modelBuilder.Ignore<Test>();
             base.OnModelCreating(modelBuilder);
         }
 

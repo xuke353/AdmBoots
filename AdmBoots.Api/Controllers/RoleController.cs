@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using AdmBoots.Infrastructure.Domain;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 using AdmBoots.Api.Authorization;
+using AdmBoots.Infrastructure.Auditing;
 
 namespace AdmBoots.Api.Controllers {
 
@@ -16,6 +17,7 @@ namespace AdmBoots.Api.Controllers {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/roles")]
     [Authorize(AdmConsts.POLICY)]
+    [Audited]
     public class RoleController : ControllerBase {
         private readonly IRoleService _roleService;
 
@@ -25,21 +27,22 @@ namespace AdmBoots.Api.Controllers {
 
         [HttpGet]
         [AdmAuthorizeFilter("Role:Query")]
-        public IActionResult GetRoleList([FromQuery]GetRoleInput input) {
+        [DisableAuditing]
+        public IActionResult GetRoleList([FromQuery] GetRoleInput input) {
             var roles = _roleService.GetRoleList(input);
             return Ok(ResponseBody.From(roles));
         }
 
         [HttpPost]
         [AdmAuthorizeFilter("Role:Add")]
-        public async Task<IActionResult> AddRole([FromBody]AddOrUpdateRoleInput input) {
+        public async Task<IActionResult> AddRole([FromBody] AddOrUpdateRoleInput input) {
             await _roleService.AddOrUpdateRole(null, input);
             return Ok(ResponseBody.From("保存成功"));
         }
 
         [HttpPut("{id}")]
         [AdmAuthorizeFilter("Role:Update")]
-        public async Task<IActionResult> UpdateRole(int id, [FromBody]AddOrUpdateRoleInput input) {
+        public async Task<IActionResult> UpdateRole(int id, [FromBody] AddOrUpdateRoleInput input) {
             await _roleService.AddOrUpdateRole(id, input);
             return Ok(ResponseBody.From("修改成功"));
         }
@@ -59,7 +62,7 @@ namespace AdmBoots.Api.Controllers {
         }
 
         [HttpPut("updateRoleMenu")]
-        public async Task<IActionResult> UpdateRoleMenu([FromBody]UpdateRoleMenuInput input) {
+        public async Task<IActionResult> UpdateRoleMenu([FromBody] UpdateRoleMenuInput input) {
             await _roleService.UpdateRoleMenu(input);
             return Ok(new { Status = true, Message = "更新成功" });
         }

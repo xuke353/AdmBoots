@@ -48,7 +48,7 @@ namespace AdmBoots.Application.Users {
                 _userRepository.Update(user);
 
                 var userInfo = ObjectMapper.Map<LoginUserInfo>(user);
-                userInfo.Roles = userInfo.Roles = GetUserRoles(user.Id); ;
+                userInfo.Roles = GetUserRoles(user.Id); ;
                 return userInfo;
             }
             return null;

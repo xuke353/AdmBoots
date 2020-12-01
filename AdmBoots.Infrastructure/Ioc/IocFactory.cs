@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AdmBoots.Infrastructure.Helper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AdmBoots.Infrastructure.Ioc {
@@ -27,12 +28,22 @@ namespace AdmBoots.Infrastructure.Ioc {
             return _provider.GetServices<T>().Any();
         }
 
-        public T ResolveFromScope<T>() {
-            return _provider.CreateScope().ServiceProvider.GetService<T>();
+        public T ResolveFromScope<T>(IServiceScope scope) {
+            Check.NotNull(scope, "scope");
+            return scope.ServiceProvider.GetService<T>();
         }
 
-        public T ResolveFromScope<T>(Type type) {
-            return (T)_provider.CreateScope().ServiceProvider.GetService(type);
+        public T ResolveFromScope<T>(Type type, IServiceScope scope) {
+            Check.NotNull(scope, "scope");
+            return (T)scope.ServiceProvider.GetService(type);
+        }
+
+        /// <summary>
+        /// 使用：using (var serviceScope = IocManager.Current.CreateScope()) {var xx = IocManager.Current.ResolveFromScope<T>(serviceScope)}
+        /// </summary>
+        /// <returns></returns>
+        public IServiceScope CreateScope() {
+            return _provider.GetService<IServiceScopeFactory>().CreateScope();
         }
     }
 }
