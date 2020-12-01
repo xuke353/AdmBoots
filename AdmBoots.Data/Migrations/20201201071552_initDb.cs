@@ -15,6 +15,7 @@ namespace AdmBoots.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: true),
                     ServiceName = table.Column<string>(type: "varchar(250) CHARACTER SET utf8mb4", maxLength: 250, nullable: true),
                     MethodName = table.Column<string>(type: "varchar(250) CHARACTER SET utf8mb4", maxLength: 250, nullable: true),
                     Parameters = table.Column<string>(type: "varchar(2000) CHARACTER SET utf8mb4", maxLength: 2000, nullable: true),
@@ -196,19 +197,19 @@ namespace AdmBoots.Data.Migrations
                 columns: new[] { "Id", "Code", "CreateTime", "CreatorId", "CreatorName", "Description", "Icon", "IsActive", "MenuType", "ModifierId", "ModifierName", "ModifyTime", "Name", "ParentId", "Sort", "Status", "Uri" },
                 values: new object[,]
                 {
-                    { 1, "yibp", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2650), 1, "管理员", "菜单的Uri为路由地址", "AreaChartOutlined", true, 1, null, null, null, "仪表盘", -1, 0, 1, "/dashboard" },
-                    { 13, "auth", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2778), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "权限", 4, 4, 1, "Role:UpdateRoleMenu" },
-                    { 12, "delete", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2774), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "删除", 4, 3, 1, "Role:Delete" },
-                    { 11, "update", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2769), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "修改", 4, 2, 1, "Role:Update" },
-                    { 10, "query", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2765), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "查询", 4, 1, 1, "Role:Query" },
-                    { 8, "youxsz", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2753), 1, "管理员", "菜单的Uri为路由地址", "MailOutlined", true, 1, null, null, null, "邮箱设置", 3, 2, 1, "/mailSetting" },
-                    { 9, "add", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2760), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "添加", 4, 0, 1, "Role:Add" },
-                    { 6, "yonghugl", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2743), 1, "管理员", "菜单的Uri为路由地址", "UserSwitchOutlined", true, 1, null, null, null, "用户管理", 2, 3, 1, "/user" },
-                    { 5, "caidgl", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2739), 1, "管理员", "菜单的Uri为路由地址", "MenuOutlined", true, 1, null, null, null, "菜单管理", 2, 2, 1, "/menu" },
-                    { 4, "juesgl", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2734), 1, "管理员", "菜单的Uri为路由地址", "ClusterOutlined", true, 1, null, null, null, "角色管理", 2, 1, 1, "/role" },
-                    { 3, "zuoydd", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2728), 1, "管理员", "菜单的Uri为路由地址", "ScheduleOutlined", true, 1, null, null, null, "任务调度", -1, 2, 1, "/schedule" },
-                    { 2, "xitgl", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2721), 1, "管理员", "菜单的Uri为路由地址", "ClusterOutlined", true, 1, null, null, null, "系统管理", -1, 1, 1, "/system" },
-                    { 7, "renwlb", new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2748), 1, "管理员", "菜单的Uri为路由地址", "OrderedListOutlined", true, 1, null, null, null, "任务列表", 3, 1, 1, "/job" }
+                    { 1, "yibp", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9309), 1, "管理员", "菜单的Uri为路由地址", "AreaChartOutlined", true, 1, null, null, null, "仪表盘", -1, 0, 1, "/dashboard" },
+                    { 13, "auth", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9458), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "权限", 4, 4, 1, "Role:UpdateRoleMenu" },
+                    { 12, "delete", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9454), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "删除", 4, 3, 1, "Role:Delete" },
+                    { 11, "update", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9450), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "修改", 4, 2, 1, "Role:Update" },
+                    { 10, "query", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9445), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "查询", 4, 1, 1, "Role:Query" },
+                    { 8, "youxsz", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9435), 1, "管理员", "菜单的Uri为路由地址", "MailOutlined", true, 1, null, null, null, "邮箱设置", 3, 2, 1, "/mailSetting" },
+                    { 9, "add", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9442), 1, "管理员", "编号是前端判断权限的key", null, true, 2, null, null, null, "添加", 4, 0, 1, "Role:Add" },
+                    { 6, "yonghugl", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9427), 1, "管理员", "菜单的Uri为路由地址", "UserSwitchOutlined", true, 1, null, null, null, "用户管理", 2, 3, 1, "/user" },
+                    { 5, "caidgl", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9422), 1, "管理员", "菜单的Uri为路由地址", "MenuOutlined", true, 1, null, null, null, "菜单管理", 2, 2, 1, "/menu" },
+                    { 4, "juesgl", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9417), 1, "管理员", "菜单的Uri为路由地址", "ClusterOutlined", true, 1, null, null, null, "角色管理", 2, 1, 1, "/role" },
+                    { 3, "zuoydd", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9412), 1, "管理员", "菜单的Uri为路由地址", "ScheduleOutlined", true, 1, null, null, null, "任务调度", -1, 2, 1, "/schedule" },
+                    { 2, "xitgl", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9406), 1, "管理员", "菜单的Uri为路由地址", "ClusterOutlined", true, 1, null, null, null, "系统管理", -1, 1, 1, "/system" },
+                    { 7, "renwlb", new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9431), 1, "管理员", "菜单的Uri为路由地址", "OrderedListOutlined", true, 1, null, null, null, "任务列表", 3, 1, 1, "/job" }
                 });
 
             migrationBuilder.InsertData(
@@ -216,24 +217,24 @@ namespace AdmBoots.Data.Migrations
                 columns: new[] { "Id", "Code", "CreateTime", "CreatorId", "CreatorName", "Description", "ModifierId", "ModifierName", "ModifyTime", "Name", "Status" },
                 values: new object[,]
                 {
-                    { 1, "xtgly", new DateTime(2020, 12, 1, 11, 18, 31, 880, DateTimeKind.Local).AddTicks(5278), 1, "管理员", "拥有最高权限", null, null, null, "系统管理员", 1 },
-                    { 2, "zmr", new DateTime(2020, 12, 1, 11, 18, 31, 880, DateTimeKind.Local).AddTicks(9416), 1, "管理员", null, null, null, null, "掌门人", 1 }
+                    { 1, "xtgly", new DateTime(2020, 12, 1, 15, 15, 51, 794, DateTimeKind.Local).AddTicks(3310), 1, "管理员", "拥有最高权限", null, null, null, "系统管理员", 1 },
+                    { 2, "zmr", new DateTime(2020, 12, 1, 15, 15, 51, 794, DateTimeKind.Local).AddTicks(7975), 1, "管理员", null, null, null, null, "掌门人", 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "user",
                 columns: new[] { "Id", "CreateTime", "Email", "LastLoginTime", "Name", "Password", "Status", "UserName" },
-                values: new object[] { 2, new DateTime(2020, 12, 1, 11, 18, 31, 877, DateTimeKind.Local).AddTicks(5116), null, null, "张无忌", "E10ADC3949BA59ABBE56E057F20F883E", 1, "zhangwj" });
+                values: new object[] { 2, new DateTime(2020, 12, 1, 15, 15, 51, 791, DateTimeKind.Local).AddTicks(1770), null, null, "张无忌", "E10ADC3949BA59ABBE56E057F20F883E", 1, "zhangwj" });
 
             migrationBuilder.InsertData(
                 table: "user",
                 columns: new[] { "Id", "CreateTime", "Email", "IsMaster", "LastLoginTime", "Name", "Password", "Status", "UserName" },
-                values: new object[] { 1, new DateTime(2020, 12, 1, 11, 18, 31, 874, DateTimeKind.Local).AddTicks(4363), null, true, null, "管理员", "DC483E80A7A0BD9EF71D8CF973673924", 1, "admin" });
+                values: new object[] { 1, new DateTime(2020, 12, 1, 15, 15, 51, 787, DateTimeKind.Local).AddTicks(712), null, true, null, "管理员", "DC483E80A7A0BD9EF71D8CF973673924", 1, "admin" });
 
             migrationBuilder.InsertData(
                 table: "user",
                 columns: new[] { "Id", "CreateTime", "Email", "LastLoginTime", "Name", "Password", "Status", "UserName" },
-                values: new object[] { 3, new DateTime(2020, 12, 1, 11, 18, 31, 877, DateTimeKind.Local).AddTicks(5161), null, null, "周芷若", "E10ADC3949BA59ABBE56E057F20F883E", 1, "zhouzr" });
+                values: new object[] { 3, new DateTime(2020, 12, 1, 15, 15, 51, 791, DateTimeKind.Local).AddTicks(1816), null, null, "周芷若", "E10ADC3949BA59ABBE56E057F20F883E", 1, "zhouzr" });
 
             migrationBuilder.InsertData(
                 table: "role_menu",

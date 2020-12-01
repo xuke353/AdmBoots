@@ -9,6 +9,7 @@ START TRANSACTION;
 CREATE TABLE `AuditLog` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `UserId` int NULL,
+    `UserName` varchar(50) CHARACTER SET utf8mb4 NULL,
     `ServiceName` varchar(250) CHARACTER SET utf8mb4 NULL,
     `MethodName` varchar(250) CHARACTER SET utf8mb4 NULL,
     `Parameters` varchar(2000) CHARACTER SET utf8mb4 NULL,
@@ -114,45 +115,45 @@ CREATE TABLE `user_role` (
 );
 
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (1, 'yibp', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'AreaChartOutlined', TRUE, 1, NULL, NULL, NULL, '仪表盘', -1, 0, 1, '/dashboard');
+VALUES (1, 'yibp', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'AreaChartOutlined', TRUE, 1, NULL, NULL, NULL, '仪表盘', -1, 0, 1, '/dashboard');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (13, 'auth', '2020-12-01 11:18:31', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '权限', 4, 4, 1, 'Role:UpdateRoleMenu');
+VALUES (13, 'auth', '2020-12-01 15:15:51', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '权限', 4, 4, 1, 'Role:UpdateRoleMenu');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (12, 'delete', '2020-12-01 11:18:31', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '删除', 4, 3, 1, 'Role:Delete');
+VALUES (12, 'delete', '2020-12-01 15:15:51', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '删除', 4, 3, 1, 'Role:Delete');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (11, 'update', '2020-12-01 11:18:31', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '修改', 4, 2, 1, 'Role:Update');
+VALUES (11, 'update', '2020-12-01 15:15:51', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '修改', 4, 2, 1, 'Role:Update');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (10, 'query', '2020-12-01 11:18:31', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '查询', 4, 1, 1, 'Role:Query');
+VALUES (10, 'query', '2020-12-01 15:15:51', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '查询', 4, 1, 1, 'Role:Query');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (8, 'youxsz', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'MailOutlined', TRUE, 1, NULL, NULL, NULL, '邮箱设置', 3, 2, 1, '/mailSetting');
+VALUES (8, 'youxsz', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'MailOutlined', TRUE, 1, NULL, NULL, NULL, '邮箱设置', 3, 2, 1, '/mailSetting');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (9, 'add', '2020-12-01 11:18:31', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '添加', 4, 0, 1, 'Role:Add');
+VALUES (9, 'add', '2020-12-01 15:15:51', 1, '管理员', '编号是前端判断权限的key', NULL, TRUE, 2, NULL, NULL, NULL, '添加', 4, 0, 1, 'Role:Add');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (6, 'yonghugl', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'UserSwitchOutlined', TRUE, 1, NULL, NULL, NULL, '用户管理', 2, 3, 1, '/user');
+VALUES (6, 'yonghugl', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'UserSwitchOutlined', TRUE, 1, NULL, NULL, NULL, '用户管理', 2, 3, 1, '/user');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (5, 'caidgl', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'MenuOutlined', TRUE, 1, NULL, NULL, NULL, '菜单管理', 2, 2, 1, '/menu');
+VALUES (5, 'caidgl', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'MenuOutlined', TRUE, 1, NULL, NULL, NULL, '菜单管理', 2, 2, 1, '/menu');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (4, 'juesgl', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'ClusterOutlined', TRUE, 1, NULL, NULL, NULL, '角色管理', 2, 1, 1, '/role');
+VALUES (4, 'juesgl', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'ClusterOutlined', TRUE, 1, NULL, NULL, NULL, '角色管理', 2, 1, 1, '/role');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (3, 'zuoydd', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'ScheduleOutlined', TRUE, 1, NULL, NULL, NULL, '任务调度', -1, 2, 1, '/schedule');
+VALUES (3, 'zuoydd', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'ScheduleOutlined', TRUE, 1, NULL, NULL, NULL, '任务调度', -1, 2, 1, '/schedule');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (2, 'xitgl', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'ClusterOutlined', TRUE, 1, NULL, NULL, NULL, '系统管理', -1, 1, 1, '/system');
+VALUES (2, 'xitgl', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'ClusterOutlined', TRUE, 1, NULL, NULL, NULL, '系统管理', -1, 1, 1, '/system');
 INSERT INTO `menu` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `Icon`, `IsActive`, `MenuType`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `ParentId`, `Sort`, `Status`, `Uri`)
-VALUES (7, 'renwlb', '2020-12-01 11:18:31', 1, '管理员', '菜单的Uri为路由地址', 'OrderedListOutlined', TRUE, 1, NULL, NULL, NULL, '任务列表', 3, 1, 1, '/job');
+VALUES (7, 'renwlb', '2020-12-01 15:15:51', 1, '管理员', '菜单的Uri为路由地址', 'OrderedListOutlined', TRUE, 1, NULL, NULL, NULL, '任务列表', 3, 1, 1, '/job');
 
 INSERT INTO `role` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `Status`)
-VALUES (1, 'xtgly', '2020-12-01 11:18:31', 1, '管理员', '拥有最高权限', NULL, NULL, NULL, '系统管理员', 1);
+VALUES (1, 'xtgly', '2020-12-01 15:15:51', 1, '管理员', '拥有最高权限', NULL, NULL, NULL, '系统管理员', 1);
 INSERT INTO `role` (`Id`, `Code`, `CreateTime`, `CreatorId`, `CreatorName`, `Description`, `ModifierId`, `ModifierName`, `ModifyTime`, `Name`, `Status`)
-VALUES (2, 'zmr', '2020-12-01 11:18:31', 1, '管理员', NULL, NULL, NULL, NULL, '掌门人', 1);
+VALUES (2, 'zmr', '2020-12-01 15:15:51', 1, '管理员', NULL, NULL, NULL, NULL, '掌门人', 1);
 
 INSERT INTO `user` (`Id`, `CreateTime`, `Email`, `LastLoginTime`, `Name`, `Password`, `Status`, `UserName`)
-VALUES (2, '2020-12-01 11:18:31', NULL, NULL, '张无忌', 'E10ADC3949BA59ABBE56E057F20F883E', 1, 'zhangwj');
+VALUES (2, '2020-12-01 15:15:51', NULL, NULL, '张无忌', 'E10ADC3949BA59ABBE56E057F20F883E', 1, 'zhangwj');
 
 INSERT INTO `user` (`Id`, `CreateTime`, `Email`, `IsMaster`, `LastLoginTime`, `Name`, `Password`, `Status`, `UserName`)
-VALUES (1, '2020-12-01 11:18:31', NULL, TRUE, NULL, '管理员', 'DC483E80A7A0BD9EF71D8CF973673924', 1, 'admin');
+VALUES (1, '2020-12-01 15:15:51', NULL, TRUE, NULL, '管理员', 'DC483E80A7A0BD9EF71D8CF973673924', 1, 'admin');
 
 INSERT INTO `user` (`Id`, `CreateTime`, `Email`, `LastLoginTime`, `Name`, `Password`, `Status`, `UserName`)
-VALUES (3, '2020-12-01 11:18:31', NULL, NULL, '周芷若', 'E10ADC3949BA59ABBE56E057F20F883E', 1, 'zhouzr');
+VALUES (3, '2020-12-01 15:15:51', NULL, NULL, '周芷若', 'E10ADC3949BA59ABBE56E057F20F883E', 1, 'zhouzr');
 
 INSERT INTO `role_menu` (`Id`, `MenuId`, `RoleId`)
 VALUES (1, 1, 1);
@@ -199,7 +200,7 @@ CREATE INDEX `IX_user_role_RoleId` ON `user_role` (`RoleId`);
 CREATE INDEX `IX_user_role_UserId` ON `user_role` (`UserId`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20201201031832_initDb', '5.0.0');
+VALUES ('20201201071552_initDb', '5.0.0');
 
 COMMIT;
 

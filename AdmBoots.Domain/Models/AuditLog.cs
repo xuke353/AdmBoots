@@ -19,6 +19,12 @@ namespace AdmBoots.Domain.Models {
         public int? UserId { get; set; }
 
         /// <summary>
+        /// 用户姓名
+        /// </summary>
+        [MaxLength(EntityDefault.FieldsLength50)]
+        public string UserName { get; set; }
+
+        /// <summary>
         /// 服务 (类/接口) 名
         /// </summary>
         [MaxLength(EntityDefault.FieldsLength250)]

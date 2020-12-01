@@ -46,6 +46,7 @@ namespace AdmBoots.Api.Filters {
 
             var auditInfo = new AuditInfo {
                 UserId = _admSession?.UserId,
+                UserName = _admSession?.Name,
                 ServiceName = type != null
                     ? type.FullName.TruncateWithPostfix(EntityDefault.FieldsLength250)
                     : "",

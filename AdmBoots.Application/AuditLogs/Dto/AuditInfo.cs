@@ -13,6 +13,8 @@ namespace AdmBoots.Application.Auditings.Dto {
         /// </summary>
         public int? UserId { get; set; }
 
+        public string UserName { get; set; }
+
         /// <summary>
         /// 服务 (类/接口) 名
         /// </summary>
@@ -70,7 +72,7 @@ namespace AdmBoots.Application.Auditings.Dto {
 
         public override string ToString() {
             var loggedUserId = UserId.HasValue
-                                   ? "user " + UserId.Value
+                                   ? "user " + UserName
                                    : "an anonymous user";
 
             var exceptionOrSuccessMessage = Exception != null

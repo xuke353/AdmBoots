@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdmBoots.Data.Migrations
 {
     [DbContext(typeof(AdmDbContext))]
-    [Migration("20201201031832_initDb")]
+    [Migration("20201201071552_initDb")]
     partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,10 @@ namespace AdmBoots.Data.Migrations
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -220,7 +224,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 1,
                             Code = "yibp",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2650),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9309),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -237,7 +241,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 2,
                             Code = "xitgl",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2721),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9406),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -254,7 +258,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 3,
                             Code = "zuoydd",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2728),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9412),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -271,7 +275,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 4,
                             Code = "juesgl",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2734),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9417),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -288,7 +292,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 5,
                             Code = "caidgl",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2739),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9422),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -305,7 +309,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 6,
                             Code = "yonghugl",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2743),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9427),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -322,7 +326,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 7,
                             Code = "renwlb",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2748),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9431),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -339,7 +343,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 8,
                             Code = "youxsz",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2753),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9435),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "菜单的Uri为路由地址",
@@ -356,7 +360,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 9,
                             Code = "add",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2760),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9442),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -372,7 +376,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 10,
                             Code = "query",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2765),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9445),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -388,7 +392,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 11,
                             Code = "update",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2769),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9450),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -404,7 +408,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 12,
                             Code = "delete",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2774),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9454),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -420,7 +424,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 13,
                             Code = "auth",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 883, DateTimeKind.Local).AddTicks(2778),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 797, DateTimeKind.Local).AddTicks(9458),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "编号是前端判断权限的key",
@@ -485,7 +489,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 1,
                             Code = "xtgly",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 880, DateTimeKind.Local).AddTicks(5278),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 794, DateTimeKind.Local).AddTicks(3310),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Description = "拥有最高权限",
@@ -496,7 +500,7 @@ namespace AdmBoots.Data.Migrations
                         {
                             Id = 2,
                             Code = "zmr",
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 880, DateTimeKind.Local).AddTicks(9416),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 794, DateTimeKind.Local).AddTicks(7975),
                             CreatorId = 1,
                             CreatorName = "管理员",
                             Name = "掌门人",
@@ -658,7 +662,7 @@ namespace AdmBoots.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 874, DateTimeKind.Local).AddTicks(4363),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 787, DateTimeKind.Local).AddTicks(712),
                             IsMaster = true,
                             Name = "管理员",
                             Password = "DC483E80A7A0BD9EF71D8CF973673924",
@@ -668,7 +672,7 @@ namespace AdmBoots.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 877, DateTimeKind.Local).AddTicks(5116),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 791, DateTimeKind.Local).AddTicks(1770),
                             IsMaster = false,
                             Name = "张无忌",
                             Password = "E10ADC3949BA59ABBE56E057F20F883E",
@@ -678,7 +682,7 @@ namespace AdmBoots.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreateTime = new DateTime(2020, 12, 1, 11, 18, 31, 877, DateTimeKind.Local).AddTicks(5161),
+                            CreateTime = new DateTime(2020, 12, 1, 15, 15, 51, 791, DateTimeKind.Local).AddTicks(1816),
                             IsMaster = false,
                             Name = "周芷若",
                             Password = "E10ADC3949BA59ABBE56E057F20F883E",
