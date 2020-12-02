@@ -13,7 +13,7 @@ namespace AdmBoots.Data.EntityFrameworkCore.Seed {
     /// <summary>
     /// 系统初始化时生成种子数据
     /// </summary>
-    public static class InitializeData {
+    public static class EnsureSeedData {
 
         /// <summary>
         /// PM> update-database -Context AdmDbContext
