@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using StackExchange.Profiling;
 
@@ -23,10 +24,12 @@ namespace AdmBoots.Api.Controllers {
     public class ChartController : ControllerBase {
         private readonly IHubContext<ChatHub> _hubContext;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IConfiguration _configuration;
 
-        public ChartController(IHubContext<ChatHub> hubContext, IHttpContextAccessor accessor) {
+        public ChartController(IHubContext<ChatHub> hubContext, IHttpContextAccessor accessor, IConfiguration configuration) {
             _hubContext = hubContext;
             _accessor = accessor;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -37,7 +40,7 @@ namespace AdmBoots.Api.Controllers {
                 Skype = new Random().Next(10, 100),
                 Github = new Random().Next(10, 100),
             };
-            if (AdmBootsApp.Configuration["Startup:SignalR"].ObjToBool()) {
+            if (_configuration.GetValue<bool>("Startup:SignalR")) {
                 await _hubContext.Clients.All.SendAsync("getCount", num);
                 string.Format("SignalR：method：{0}  arg1：{1} 时间：{2}", "getCount", JsonConvert.SerializeObject(num), DateTime.Now).WriteSuccessLine();
             }

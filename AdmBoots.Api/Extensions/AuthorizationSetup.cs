@@ -11,6 +11,7 @@ using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -18,14 +19,13 @@ namespace AdmBoots.Api.Extensions {
 
     public static class AuthorizationSetup {
 
-        public static void AddAuthorizationSetup(this IServiceCollection services) {
+        public static void AddAuthorizationSetup(this IServiceCollection services, IConfiguration configuration) {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            var secretKey = AdmBootsApp.Configuration["Authentication:JwtBearer:SecurityKey"];
-            var keyByteArray = Encoding.ASCII.GetBytes(secretKey);
-            var signingKey = new SymmetricSecurityKey(keyByteArray);
-            var issuer = AdmBootsApp.Configuration["Authentication:JwtBearer:Issuer"];
-            var audience = AdmBootsApp.Configuration["Authentication:JwtBearer:Audience"];
+            var secretKey = configuration["Authentication:JwtBearer:SecurityKey"];
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            var issuer = configuration["Authentication:JwtBearer:Issuer"];
+            var audience = configuration["Authentication:JwtBearer:Audience"];
 
             var admPolicyRequirement = new AdmPolicyRequirement(
                                 ClaimTypes.Role,//基于角色的授权
@@ -83,7 +83,6 @@ namespace AdmBoots.Api.Extensions {
                      //对连接到集线器的用户进行身份验证 SignalR
                      //https://docs.microsoft.com/zh-cn/aspnet/core/signalr/authn-and-authz?view=aspnetcore-3.1
                      OnMessageReceived = context => {
-
                          if (!context.HttpContext.Request.Path.HasValue) {
                              return Task.CompletedTask;
                          }

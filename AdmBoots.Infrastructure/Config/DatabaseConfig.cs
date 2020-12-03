@@ -7,33 +7,38 @@ using Microsoft.Extensions.Configuration;
 namespace AdmBoots.Infrastructure.Config {
 
     public class DatabaseConfig {
-        public static string ConnectionString => InitConn();
-        public static DatabaseType DatabaseType { get; set; } = DatabaseType.SqlServer;
-        public static string Version { get; set; } = "0.0.0";
+        public static string ConnectionString { get; private set; }
+        public static DatabaseType DbType { get; private set; } = DatabaseType.SqlServer;
+        public static string Version { get; private set; }
 
-        private static string InitConn() {
-            var dbTypeStr = AdmBootsApp.Configuration["Database:Dialect"];
-            var connectString = AdmBootsApp.Configuration.GetConnectionString("Default");
-            switch (dbTypeStr) {
-                case "MySql":
-                    DatabaseType = DatabaseType.MySql;
-                    Version = AdmBootsApp.Configuration["Database:Version"];
+        public static void InitConfiguration(IConfiguration configuration) {
+            var dbTypeStr = configuration["DataBase:Dialect"];
+            var connectString = configuration.GetConnectionString("Default");
+            switch (dbTypeStr.ToLower()) {
+                case "mysql":
+                    DbType = DatabaseType.MySql;
+                    Version = configuration["Database:Version"];
                     break;
 
-                case "SqlServer":
-                    DatabaseType = DatabaseType.SqlServer;
+                case "sqlserver":
+                    DbType = DatabaseType.SqlServer;
                     break;
 
-                case "Oracle":
-                    DatabaseType = DatabaseType.Oracle;
+                case "oracle":
+                    DbType = DatabaseType.Oracle;
                     break;
 
-                case "Sqlite":
-                    DatabaseType = DatabaseType.Sqlite;
+                case "sqlite":
+                    DbType = DatabaseType.Sqlite;
                     connectString = $"DataSource=" + Path.Combine(Environment.CurrentDirectory, connectString);
                     break;
+
+                default:
+                    DbType = DatabaseType.Unknown;
+                    break;
             }
-            return connectString;
+
+            ConnectionString = connectString;
         }
     }
 
@@ -42,6 +47,7 @@ namespace AdmBoots.Infrastructure.Config {
         SqlServer,
         Sqlite,
         Oracle,
-        PostgreSQL
+        PostgreSQL,
+        Unknown
     }
 }

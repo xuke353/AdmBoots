@@ -38,6 +38,7 @@ namespace AdmBoots.Api {
     public class Startup {
         public static readonly ILoggerFactory EFLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
         public IWebHostEnvironment Environment { get; }
+        public IConfiguration Configuration { get; }
 
         public Startup(IWebHostEnvironment env) {
             var configuration = new ConfigurationBuilder()
@@ -46,8 +47,9 @@ namespace AdmBoots.Api {
            //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
            .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
            .Build();
-            AdmBootsApp.SetConfiguration(configuration);
+            DatabaseConfig.InitConfiguration(configuration);
             Environment = env;
+            Configuration = configuration;
         }
 
         /// <summary>
@@ -93,10 +95,10 @@ namespace AdmBoots.Api {
         }
 
         public void ConfigureServices(IServiceCollection services) {
-            services.AddSwaggerSetup();
-            services.AddCacheSetup();
-            services.AddAuthorizationSetup();
-            services.AddHealthChecksSetup();
+            services.AddSwaggerSetup(Configuration);
+            services.AddCacheSetup(Configuration);
+            services.AddAuthorizationSetup(Configuration);
+            services.AddHealthChecksSetup(Configuration);
             services.AddQuartzStartup();
             services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
@@ -135,19 +137,19 @@ namespace AdmBoots.Api {
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider) {
+            IocManager.SetProvider(new IocFactory(app.ApplicationServices));
             //开启任务调度
-            if (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool()) {
+            if (Configuration.GetValue<bool>("Startup:Scheduler")) {
                 app.ApplicationServices.GetService<ISchedulerCenter>().Start();
             }
-            IocManager.SetProvider(new IocFactory(app.ApplicationServices));
 
             //程序第一次运行时初始化数据库及种子数据
             app.InitializeDatabase();
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-                Console.WriteLine("任务调度：" + (AdmBootsApp.Configuration["Startup:Scheduler"].ObjToBool() ? "启动" : "关闭"));
-                Console.WriteLine("实时通讯：" + (AdmBootsApp.Configuration["Startup:SignalR"].ObjToBool() ? "启用" : "关闭"));
-                Console.WriteLine("健康检查：" + (AdmBootsApp.Configuration["Startup:HealthChecks"].ObjToBool() ? "启用" : "关闭"));
+                Console.WriteLine("任务调度：" + (Configuration.GetValue<bool>("Startup:Scheduler") ? "启动" : "关闭"));
+                Console.WriteLine("实时通讯：" + (Configuration.GetValue<bool>("Startup:SignalR") ? "启用" : "关闭"));
+                Console.WriteLine("健康检查：" + (Configuration.GetValue<bool>("Startup:HealthChecks") ? "启用" : "关闭"));
             }
             //↓↓↓↓注意以下中间件顺序↓↓↓↓
 

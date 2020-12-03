@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdmBoots.Infrastructure;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
@@ -15,11 +16,12 @@ namespace AdmBoots.Api.Extensions {
         /// 分布式缓存 注入接口IDistributedCache
         /// </summary>
         /// <param name="services"></param>
-        public static void AddCacheSetup(this IServiceCollection services) {
+        /// <param name="configuration"></param>
+        public static void AddCacheSetup(this IServiceCollection services, IConfiguration configuration) {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            var connection = AdmBootsApp.Configuration["Redis:Configuration"];
-            var instanceName = AdmBootsApp.Configuration["Redis:InstanceName"];
+            var connection = configuration["Redis:Configuration"];
+            var instanceName = configuration["Redis:InstanceName"];
 
             if (!string.IsNullOrEmpty(connection)) {
                 var redis = ConnectionMultiplexer.Connect(connection);//建立Redis 连接

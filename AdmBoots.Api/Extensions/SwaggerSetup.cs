@@ -1,5 +1,6 @@
 ﻿using AdmBoots.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -16,11 +17,11 @@ namespace AdmBoots.Api.Extensions {
     /// </summary>
     public static class SwaggerSetup {
 
-        public static void AddSwaggerSetup(this IServiceCollection services) {
+        public static void AddSwaggerSetup(this IServiceCollection services, IConfiguration configuration) {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             var basePath = AppContext.BaseDirectory;
-            var apiName = AdmBootsApp.Configuration["Startup:ApiName"];
+            var apiName = configuration["Startup:ApiName"];
             services.AddSwaggerGen(c => {
                 var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
                 foreach (var description in provider.ApiVersionDescriptions) {
