@@ -27,7 +27,7 @@ namespace AdmBoots.Api.Extensions {
                 foreach (var description in provider.ApiVersionDescriptions) {
                     c.SwaggerDoc(description.GroupName, new OpenApiInfo {
                         Version = description.GroupName,
-                        Title = $"{apiName} For .NET Core 3.1",
+                        Title = $"{apiName} For .NET5",
                         Contact = new OpenApiContact { Name = "健康检查", Url = new Uri("http://localhost:8082/healthchecks-ui") },
                     });
                     c.OrderActionsBy(o => o.RelativePath);

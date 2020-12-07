@@ -5,14 +5,12 @@ using System.Reflection;
 using AdmBoots.Application;
 using AdmBoots.Data.EntityFrameworkCore;
 using AdmBoots.Domain.IRepositories;
-using AdmBoots.Infrastructure;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -27,8 +25,6 @@ using AdmBoots.Infrastructure.Framework.Web;
 using AdmBoots.Api.Extensions;
 using AdmBoots.Infrastructure.SignalR;
 using AdmBoots.Quartz;
-using AdmBoots.Infrastructure.Extensions;
-using StackExchange.Profiling.Storage;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Infrastructure.Ioc;
 using AdmBoots.Infrastructure.Auditing;
@@ -40,16 +36,10 @@ namespace AdmBoots.Api {
         public IWebHostEnvironment Environment { get; }
         public IConfiguration Configuration { get; }
 
-        public Startup(IWebHostEnvironment env) {
-            var configuration = new ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-           //optional: true配置文件不存在时抛异常 ReloadOnChange= true 热更新
-           //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-           .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
-           .Build();
-            DatabaseConfig.InitConfiguration(configuration);
+        public Startup(IWebHostEnvironment env, IConfiguration configuration) {
             Environment = env;
             Configuration = configuration;
+            DatabaseConfig.InitConfiguration(configuration);
         }
 
         /// <summary>
