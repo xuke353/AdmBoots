@@ -38,8 +38,8 @@ namespace AdmBoots.Application.Roles {
         /// </summary>
         /// <returns></returns>
         [UnitOfWork(IsDisabled = true)]
-        public IList<GetRoleUriOutput> GetRoleUriMaps() {
-            var cachObj = _cache.GetObject<List<GetRoleUriOutput>>(AdmConsts.ROLE_URI_CACHE);
+        public IList<PermissionItem> GetRoleUriMaps() {
+            var cachObj = _cache.GetObject<List<PermissionItem>>(AdmConsts.ROLE_URI_CACHE);
             if (cachObj != null) {
                 return cachObj;
             } else {
@@ -49,7 +49,7 @@ namespace AdmBoots.Application.Roles {
                                 join m in _menuRepository.GetAll()
                                 on rm.MenuId equals m.Id
                                 where r.Status == SysStatus.有效 && m.Status == SysStatus.有效 && m.MenuType == MenuType.按钮 && m.IsActive
-                                select new GetRoleUriOutput {
+                                select new PermissionItem {
                                     RoleId = r.Id,
                                     Uri = m.Uri
                                 }).ToList();

@@ -1,12 +1,12 @@
-﻿using AdmBoots.Application.Roles;
+﻿using System.Threading.Tasks;
+using AdmBoots.Application.Roles;
 using AdmBoots.Application.Roles.Dto;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using AdmBoots.Infrastructure.Auditing;
+using AdmBoots.Infrastructure.Authorization;
 using AdmBoots.Infrastructure.Domain;
 using AdmBoots.Infrastructure.Framework.Abstractions;
-using AdmBoots.Api.Authorization;
-using AdmBoots.Infrastructure.Auditing;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdmBoots.Api.Controllers {
 

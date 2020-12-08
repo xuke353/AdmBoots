@@ -6,9 +6,10 @@ using AdmBoots.Application.Roles.Dto;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 
 namespace AdmBoots.Application.Roles {
+
     public interface IRoleService : ITransientDependency {
 
-        IList<GetRoleUriOutput> GetRoleUriMaps();
+        IList<PermissionItem> GetRoleUriMaps();
 
         IEnumerable<GetTransferRoleOutput> GetTransferRoles();
 

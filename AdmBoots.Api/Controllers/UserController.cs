@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AdmBoots.Api.Authorization;
+﻿using System.Threading.Tasks;
 using AdmBoots.Application.Users;
 using AdmBoots.Application.Users.Dto;
-using AdmBoots.Infrastructure.Domain;
+using AdmBoots.Infrastructure.Authorization;
 using AdmBoots.Infrastructure.Framework.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,19 +21,19 @@ namespace AdmBoots.Api.Controllers {
 
         [HttpGet]
         [AdmAuthorizeFilter("User:Query")]
-        public IActionResult GetUserList([FromQuery]GetUserInput input) {
+        public IActionResult GetUserList([FromQuery] GetUserInput input) {
             var users = _userService.GetUserList(input);
             return Ok(ResponseBody.From(users));
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody]AddOrUpdateUserInput input) {
+        public async Task<IActionResult> AddUser([FromBody] AddOrUpdateUserInput input) {
             await _userService.AddOrUpdateUser(null, input);
             return Ok(ResponseBody.From("保存成功"));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody]AddOrUpdateUserInput input) {
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] AddOrUpdateUserInput input) {
             await _userService.AddOrUpdateUser(id, input);
             return Ok(ResponseBody.From("修改成功"));
         }

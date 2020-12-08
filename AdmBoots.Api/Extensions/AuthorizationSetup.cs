@@ -1,16 +1,10 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using AdmBoots.Api.Authorization;
-using AdmBoots.Infrastructure;
 using AdmBoots.Infrastructure.Authorization;
 using AdmBoots.Infrastructure.Domain;
-using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -22,23 +16,10 @@ namespace AdmBoots.Api.Extensions {
         public static void AddAuthorizationSetup(this IServiceCollection services, IConfiguration configuration) {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            var secretKey = configuration["Authentication:JwtBearer:SecurityKey"];
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
-            var issuer = configuration["Authentication:JwtBearer:Issuer"];
-            var audience = configuration["Authentication:JwtBearer:Audience"];
-
-            var admPolicyRequirement = new AdmPolicyRequirement(
-                                ClaimTypes.Role,//基于角色的授权
-                                issuer,//发行人
-                                audience,//订阅人
-                                new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),//签名凭据
-                                expiration: TimeSpan.FromDays(1)//接口的过期时间 总的Token有效时间 = 接口的过期时间 + ClockSkew
-                             );
-
             //复杂的策略授权
             services.AddAuthorization(options => {
                 options.AddPolicy(AdmConsts.POLICY,
-                         policy => policy.Requirements.Add(admPolicyRequirement));
+                         policy => policy.Requirements.Add(new AdmPolicyRequirement(ClaimTypes.Role)));
             });
 
             //官方JWT认证
@@ -53,11 +34,11 @@ namespace AdmBoots.Api.Extensions {
                  //令牌验证参数
                  o.TokenValidationParameters = new TokenValidationParameters {
                      ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = signingKey,
+                     IssuerSigningKey = TokenAuthConfiguration.IssuerSigningKey,
                      ValidateIssuer = true,
-                     ValidIssuer = issuer,//发行人
+                     ValidIssuer = TokenAuthConfiguration.Issuer,//发行人
                      ValidateAudience = true,
-                     ValidAudience = audience,//订阅人
+                     ValidAudience = TokenAuthConfiguration.Audience,//订阅人
                      ValidateLifetime = true,
                      ClockSkew = TimeSpan.Zero,
                      RequireExpirationTime = true,
@@ -99,7 +80,6 @@ namespace AdmBoots.Api.Extensions {
              });
             // 注入权限处理器
             services.AddScoped<IAuthorizationHandler, AdmAuthorizationHandler>();
-            services.AddSingleton(admPolicyRequirement);
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using AdmBoots.Api.Authorization;
 using AdmBoots.Application.Roles;
 using AdmBoots.Infrastructure.Extensions;
+using AdmBoots.Infrastructure.Ioc;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -20,15 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 namespace AdmBoots.Infrastructure.Authorization {
 
     public class AdmAuthorizationHandler : AuthorizationHandler<AdmPolicyRequirement> {
-        private readonly IAuthenticationSchemeProvider _schemes;
-        private readonly IHttpContextAccessor _accessor;
-        private readonly IRoleService _roleService;
-
-        public AdmAuthorizationHandler(IAuthenticationSchemeProvider schemes, IHttpContextAccessor accessor, IRoleService roleService) {
-            _schemes = schemes;
-            _accessor = accessor;
-            _roleService = roleService;
-        }
 
         /// <summary>
         /// 重载异步处理程序
@@ -36,65 +27,44 @@ namespace AdmBoots.Infrastructure.Authorization {
         /// <param name="context"></param>
         /// <param name="requirement"></param>
         /// <returns></returns>
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AdmPolicyRequirement requirement) {
-            var httpContext = _accessor.HttpContext;
-            var endpoint = httpContext.Features.Get<IEndpointFeature>()?.Endpoint;
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AdmPolicyRequirement requirement) {
+            var ctx = IocManager.Current.Resolve<IHttpContextAccessor>().HttpContext;
+            var ctxUri = GetControllerAction(ctx);
+            if (ctx.User.Identity?.IsAuthenticated != true) {
+                context.Fail();
+                return Task.CompletedTask;
+            }
+            var claimsIdentity = ctx.User.Identity.CastTo<ClaimsIdentity>();
+            // 获取当前用户的角色信息
+            var ctxRoleIds = claimsIdentity.FindAll(requirement.ClaimType).Select(claim => claim.Value.ObjToInt());
+            var roleService = IocManager.Current.Resolve<IRoleService>();
+            // 获取权限列表（role-uri）
+            var roleUris = roleService.GetRoleUriMaps();
+            var checkPermisson = roleUris.Where(ru => ctxRoleIds.Contains(ru.RoleId))
+                .Any(ru => ctxUri.ToLower() == ru.Uri.ToLower());
+            if (!checkPermisson) {
+                context.Fail();
+                return Task.CompletedTask;
+            }
+
+            context.Succeed(requirement);
+            return Task.CompletedTask;
+        }
+
+        private static string GetControllerAction(HttpContext ctx) {
+            var endpoint = ctx.Features.Get<IEndpointFeature>()?.Endpoint;
             var descriptor = endpoint.Metadata.OfType<ControllerActionDescriptor>().FirstOrDefault();
-            var currentURI = string.Empty;
+            var controllerAction = string.Empty;
             //如果有自定义资源标识，取自定义的标识。没有自定义的，取默认ControllerName:ActionName
             var admAuthorizeFilterAttr = descriptor?.MethodInfo.GetAttribute<AdmAuthorizeFilterAttribute>();
             if (admAuthorizeFilterAttr == null || string.IsNullOrEmpty(admAuthorizeFilterAttr.FilterName)) {
                 if (descriptor != null) {
-                    currentURI = $"{descriptor.ControllerName}:{descriptor.ActionName}";
+                    controllerAction = $"{descriptor.ControllerName}:{descriptor.ActionName}";
                 }
             } else {
-                currentURI = admAuthorizeFilterAttr.FilterName;
+                controllerAction = admAuthorizeFilterAttr.FilterName;
             }
-            //判断请求是否停止
-            var handlers = httpContext.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
-            foreach (var scheme in await _schemes.GetRequestHandlerSchemesAsync()) {
-                if (await handlers.GetHandlerAsync(httpContext, scheme.Name) is IAuthenticationRequestHandler handler
-                    && await handler.HandleRequestAsync()) {
-                    context.Fail();
-                    return;
-                }
-            }
-
-            var defaultAuthenticate = await _schemes.GetDefaultAuthenticateSchemeAsync();
-            if (defaultAuthenticate != null) {
-                var result = await httpContext.AuthenticateAsync(defaultAuthenticate.Name);
-                //result?.Principal不为空即登录成功
-                if (result?.Principal != null) {
-                    httpContext.User = result.Principal;
-                    // 获取当前用户的角色信息
-                    var currentUserRoles = (from item in httpContext.User.Claims
-                                            where item.Type == requirement.ClaimType
-                                            select Convert.ToInt32(item.Value)).ToList();
-                    // 获取权限列表（role-uri）
-                    var roleUris = _roleService.GetRoleUriMaps();
-                    var permisssionRoles = roleUris.Where(ru => currentUserRoles.Contains(ru.RoleId));
-                    if (!permisssionRoles.Any(pr => currentURI.ToLower() == pr.Uri.ToLower())) {
-                        context.Fail();
-                        return;
-                    }
-
-                    //判断过期时间
-                    //这里仅仅是最坏验证原则，你可以不要这个if else的判断，因为我们使用的官方验证，Token过期后上边的result?.Principal 就为 null 了，进不到这里了，因此这里其实可以不用验证过期时间，只是做最后严谨判断
-                    var expirationTime = httpContext.User.Claims.SingleOrDefault(s => s.Type == ClaimTypes.Expiration)?.Value;
-                    if (!string.IsNullOrEmpty(expirationTime) && DateTime.Parse(expirationTime) >= DateTime.UtcNow) {
-                        context.Succeed(requirement);
-                        return;
-                    } else {
-                        context.Fail();
-                        return;
-                    }
-                } else {
-                    context.Fail();
-                    return;
-                }
-            }
-
-            context.Succeed(requirement);
+            return controllerAction;
         }
     }
 }

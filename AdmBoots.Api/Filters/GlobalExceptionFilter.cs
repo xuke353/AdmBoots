@@ -1,14 +1,11 @@
-﻿using AdmBoots.Infrastructure.CustomExceptions;
+﻿using System;
+using AdmBoots.Infrastructure.CustomExceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AdmBoots.Api.Filters {
 
@@ -28,7 +25,7 @@ namespace AdmBoots.Api.Filters {
             var result = new ContentResult { ContentType = "text/json;charset=utf-8;" };
 
             if (context.Exception.GetType() == typeof(BusinessException)) {
-                result.StatusCode = 200; //业务异常，统一返回200 并返回{message="",  status = false}结构
+                //result.StatusCode = 200; //业务异常，统一返回200 并返回{message="",  status = false}结构
                 context.Result = new JsonResult(new { context.Exception.Message, status = false });
             } else {
                 result.StatusCode = StatusCodes.Status500InternalServerError;
