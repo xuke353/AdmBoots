@@ -28,6 +28,8 @@ using AdmBoots.Quartz;
 using AdmBoots.Data.EntityFrameworkCore.Seed;
 using AdmBoots.Infrastructure.Ioc;
 using AdmBoots.Infrastructure.Auditing;
+using AspNetCoreRateLimit;
+using AdmBoots.Api.Middleware;
 
 namespace AdmBoots.Api {
 
@@ -89,6 +91,7 @@ namespace AdmBoots.Api {
             services.AddCacheSetup(Configuration);
             services.AddAuthorizationSetup(Configuration);
             services.AddHealthChecksSetup(Configuration);
+            services.AddIpRateLimitSetup(Configuration);
             services.AddQuartzStartup();
             services.AddAutoMapper(Assembly.Load("AdmBoots.Application"));
             services.AddApiVersioning(option => option.ReportApiVersions = true);
@@ -159,8 +162,6 @@ namespace AdmBoots.Api {
 
             #endregion Swagger
 
-            app.UseStaticFiles();
-
             app.UseRouting();
             //认证
             app.UseAuthentication();
@@ -170,6 +171,9 @@ namespace AdmBoots.Api {
             app.UseCors("CorsPolicy");
             //MiniProfiler
             app.UseMiniProfiler();
+            //限流
+            //app.UseIpRateLimiting();
+            app.UseMiddleware<IPLimitMiddleware>();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();

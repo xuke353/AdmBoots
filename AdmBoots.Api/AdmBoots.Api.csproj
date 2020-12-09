@@ -23,6 +23,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.0-preview1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.0-preview1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="5.0.0-preview1" />
+    <PackageReference Include="AspNetCoreRateLimit" Version="3.2.2" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />

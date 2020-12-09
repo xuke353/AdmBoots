@@ -37,7 +37,7 @@ namespace AdmBoots.Infrastructure.Authorization {
             var section = CfgManager.Configuration.GetSection("Authentication:JwtBearer");
             Issuer = section["Issuer"];
             Audience = section["Audience"];
-            Expiration = TimeSpan.FromMinutes(1);//TimeSpan.FromHours(section["Expiration"].ObjToMoney(24));
+            Expiration = TimeSpan.FromHours(section["Expiration"].ObjToMoney(24));
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(section["SecurityKey"]));
             SigningCredentials = new SigningCredentials(IssuerSigningKey, SecurityAlgorithms.HmacSha256);
         }
