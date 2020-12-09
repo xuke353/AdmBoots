@@ -52,7 +52,7 @@ namespace AdmBoots.Infrastructure.Authorization {
         }
 
         private static string GetControllerAction(HttpContext ctx) {
-            var endpoint = ctx.Features.Get<IEndpointFeature>()?.Endpoint;
+            var endpoint = ctx.GetEndpoint();//.Features.Get<IEndpointFeature>()?.Endpoint;
             var descriptor = endpoint.Metadata.OfType<ControllerActionDescriptor>().FirstOrDefault();
             var controllerAction = string.Empty;
             //如果有自定义资源标识，取自定义的标识。没有自定义的，取默认ControllerName:ActionName

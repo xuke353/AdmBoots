@@ -5,10 +5,13 @@ using AdmBoots.Infrastructure.Helper;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace AdmBoots.Infrastructure.Extensions {
+
     public static class CacheExtension {
+
         public static void SetObject(this IDistributedCache cache, string key, object value) {
             cache.Set(key, SerializeHelper.Serialize(value));
         }
+
         public static void SetObject(this IDistributedCache cache, string key, object value, DistributedCacheEntryOptions options) {
             cache.Set(key, SerializeHelper.Serialize(value), options);
         }
@@ -23,6 +26,34 @@ namespace AdmBoots.Infrastructure.Extensions {
             } else {
                 return default;
             }
+        }
+
+        public static bool Exists(this IDistributedCache cache, string key) {
+            var isExist = false;
+            var val = cache.Get(key);
+            if (val != null || val.Length > 0) {
+                isExist = true;
+            }
+            return isExist;
+        }
+
+        public static void Modify(this IDistributedCache cache, string key, object value) {
+            if (!key.IsNullOrEmpty()) {
+                if (Remove(cache, key)) {
+                    cache.SetObject(key, value);
+                }
+            }
+        }
+
+        public static bool Remove(this IDistributedCache cache, string key) {
+            var isExist = false;
+            if (!key.IsNullOrEmpty()) {
+                cache.Remove(key);
+                if (!Exists(cache, key)) {
+                    isExist = true;
+                }
+            }
+            return isExist;
         }
     }
 }
