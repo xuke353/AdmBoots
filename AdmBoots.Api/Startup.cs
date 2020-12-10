@@ -143,6 +143,7 @@ namespace AdmBoots.Api {
                 Console.WriteLine("任务调度：" + (Configuration.GetValue<bool>("Startup:Scheduler") ? "启动" : "关闭"));
                 Console.WriteLine("实时通讯：" + (Configuration.GetValue<bool>("Startup:SignalR") ? "启用" : "关闭"));
                 Console.WriteLine("健康检查：" + (Configuration.GetValue<bool>("Startup:HealthChecks") ? "启用" : "关闭"));
+                Console.WriteLine("IP限流：" + (Configuration.GetValue<bool>("Startup:IpRateLimit") ? "启用" : "关闭"));
             }
             //↓↓↓↓注意以下中间件顺序↓↓↓↓
 
@@ -162,6 +163,7 @@ namespace AdmBoots.Api {
 
             #endregion Swagger
 
+            app.UseStaticFiles();
             app.UseRouting();
             //认证
             app.UseAuthentication();
@@ -171,9 +173,12 @@ namespace AdmBoots.Api {
             app.UseCors("CorsPolicy");
             //MiniProfiler
             app.UseMiniProfiler();
-            //限流
-            //app.UseIpRateLimiting();
-            app.UseMiddleware<IPLimitMiddleware>();
+
+            if (Configuration.GetValue("Startup:IpRateLimit", false)) {
+                //限流
+                //app.UseIpRateLimiting();
+                app.UseMiddleware<IPLimitMiddleware>();
+            }
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();

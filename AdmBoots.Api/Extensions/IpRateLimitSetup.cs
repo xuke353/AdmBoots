@@ -12,7 +12,9 @@ namespace AdmBoots.Api.Extensions {
 
         public static void AddIpRateLimitSetup(this IServiceCollection services, IConfiguration configuration) {
             if (services == null) throw new ArgumentNullException(nameof(services));
-
+            if (!configuration.GetValue("Startup:IpRateLimit", false)) {
+                return;
+            }
             //加载配置
             //services.AddOptions();
             //从appsettings.json获取相应配置

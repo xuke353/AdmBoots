@@ -32,7 +32,7 @@ namespace AdmBoots.Api.Extensions {
                  .AddCheck("存活检查", () => HealthCheckResult.Healthy(), tags: new[] { "app", "self" })
                  .AddDbContextCheck<AdmDbContext>(name: "AdmDbContext", tags: new[] { "app", "services" })
                  .AddProcessAllocatedMemoryHealthCheck(2048, "占用内存是否超过阀值(2G)", tags: new[] { "app", "memory" })
-                 .AddMySql(DatabaseConfig.ConnectionString, "yysql", tags: new[] { "db", "mysql" })
+                 .AddMySql(DatabaseConfig.ConnectionString, "mysql", tags: new[] { "db", "mysql" })
                  .AddRedis(configuration["Redis:Configuration"], tags: new[] { "db", "redis" });
                 services.AddHealthChecksUI(setupSettings: setup => {
                     setup.AddHealthCheckEndpoint("endpoint1", "/healthz");

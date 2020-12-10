@@ -12,7 +12,9 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace AdmBoots.Api {
+
     public class Program {
+
         public static int Main(string[] args) {
             Log.Logger = new LoggerConfiguration()
              .ReadFrom.Configuration(new ConfigurationBuilder()
@@ -42,8 +44,9 @@ namespace AdmBoots.Api {
                     serverOptions.AllowSynchronousIO = true;//启用同步 IO
                 })
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:8082");
-
+                .ConfigureAppConfiguration(cfgBuilder => {
+                    cfgBuilder.AddJsonFile("ipratelimit.json", optional: true, reloadOnChange: true);
+                });
             });
     }
 }
