@@ -136,7 +136,7 @@ namespace AdmBoots.Api {
                 app.ApplicationServices.GetService<ISchedulerCenter>().Start();
             }
 
-            //程序第一次运行时初始化数据库及种子数据
+            //程序第一次运行时初始化数据库及种子数据, 初始化完毕后，可注销此处避免每次都做数据库检查
             app.InitializeDatabase();
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();

@@ -23,7 +23,7 @@ namespace AdmBoots.Api.Extensions {
             if (services == null) throw new ArgumentNullException(nameof(services));
             NameValueCollection props = new NameValueCollection
             {
-                { "quartz.serializer.type", "binary" },
+                { "quartz.serializer.type", "json" },
                 //以下配置需要数据库表配合使用，表结构sql地址：https://github.com/quartznet/quartznet/tree/master/database/tables
                 { "quartz.jobStore.type","Quartz.Impl.AdoJobStore.JobStoreTX, Quartz"},
                 { "quartz.jobStore.driverDelegateType",typeof(MySQLDelegate).AssemblyQualifiedName},
@@ -31,7 +31,7 @@ namespace AdmBoots.Api.Extensions {
                 { "quartz.jobStore.dataSource","myDS"},
                 { "quartz.dataSource.myDS.connectionString", DatabaseConfig.ConnectionString },
                 { "quartz.dataSource.myDS.provider","MySql"},
-                //{ "quartz.jobStore.useProperties","true"}
+                { "quartz.jobStore.useProperties","true"}
             };
             StdSchedulerFactory factory = new StdSchedulerFactory(props);
             services.AddSingleton<ISchedulerFactory>(factory);

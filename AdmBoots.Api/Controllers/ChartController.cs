@@ -44,7 +44,6 @@ namespace AdmBoots.Api.Controllers {
                 await _hubContext.Clients.All.SendAsync("getCount", num);
                 string.Format("SignalR：method：{0}  arg1：{1} 时间：{2}", "getCount", JsonConvert.SerializeObject(num), DateTime.Now).WriteSuccessLine();
             }
-            MiniProfiler.Current.CustomTiming("分类", "测试MiniProfiler输出");
             return Ok(ResponseBody.From(num, "获取成功"));
         }
 

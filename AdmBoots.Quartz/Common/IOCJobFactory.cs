@@ -6,11 +6,14 @@ using Quartz;
 using Quartz.Spi;
 
 namespace AdmBoots.Quartz.Common {
+
     public class IOCJobFactory : IJobFactory {
         private readonly IServiceProvider _serviceProvider;
+
         public IOCJobFactory(IServiceProvider serviceProvider) {
             _serviceProvider = serviceProvider;
         }
+
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler) {
             //这里不能使用using var scope = _serviceProvider.CreateScope();
             //原因：此处的作用域释放后，HttpJob中无法解析IAdmUnitOfWork实例
