@@ -124,7 +124,7 @@ namespace AdmBoots.Api {
                 builder.SetIsOriginAllowed(origin => true)//允许所有 origin 来源
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                //.WithOrigins(AdmBootsApp.Configuration["Startup:Cors"].Split(',')) //允许特定来源
+                //.WithOrigins(Configuration["Startup:Cors"].Split(',')) //允许特定来源
                 .AllowCredentials();
             }));
         }

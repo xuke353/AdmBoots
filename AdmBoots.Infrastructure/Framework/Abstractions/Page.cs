@@ -33,7 +33,7 @@ namespace AdmBoots.Infrastructure.Framework.Abstractions {
         /// <summary>
         /// 当前页内容
         /// </summary>
-        public IList<T> Content;
+        public IList<T> Content { get; private set; }
 
         /// <summary>
         /// 获取总页数
