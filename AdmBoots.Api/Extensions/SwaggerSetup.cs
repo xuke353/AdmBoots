@@ -22,13 +22,14 @@ namespace AdmBoots.Api.Extensions {
 
             var basePath = AppContext.BaseDirectory;
             var apiName = configuration["Startup:ApiName"];
+            var desc = @"<b>GitHub</b>：<a target=""_blank"" href=""https://github.com/xuke353/AdmBoots"">https://github.com/xuke353/AdmBoots</a> &nbsp; <b>健康检查</b>：<a target=""_blank"" href=""/healthchecks-ui"">健康检查</a> &nbsp; <code>Powered by .NET5</code>";
             services.AddSwaggerGen(c => {
                 var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
                 foreach (var description in provider.ApiVersionDescriptions) {
                     c.SwaggerDoc(description.GroupName, new OpenApiInfo {
                         Version = description.GroupName,
-                        Title = $"{apiName} For .NET5",
-                        Contact = new OpenApiContact { Name = "健康检查", Url = new Uri("http://localhost:8082/healthchecks-ui") },
+                        Title = $"{apiName}",
+                        Description = desc
                     });
                     c.OrderActionsBy(o => o.RelativePath);
                 }
