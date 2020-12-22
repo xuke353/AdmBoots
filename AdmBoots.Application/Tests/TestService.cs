@@ -22,12 +22,16 @@ namespace AdmBoots.Application.Tests {
         //}
 
         private readonly IRepository<Test, int> _testRepository;
-        public TestService(IRepository<Test, int> testRepository) {
+        private readonly ITestManager _testManager;
+
+        public TestService(IRepository<Test, int> testRepository, ITestManager testManager) {
             _testRepository = testRepository;
+            _testManager = testManager;
         }
         public Task AddOrUpdateTest(int? id, AddOrUpdateTestInput input) {
             var entity = ObjectMapper.Map<Test>(input);
-            throw new System.NotImplementedException();
+            _testManager.InsertTest(entity);
+            return Task.CompletedTask;
         }
 
         public Task DeleteTest(int[] ids) {

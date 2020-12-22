@@ -74,10 +74,12 @@ namespace AdmBoots.Api {
             #region Data层注入
 
             //Data层实现接口的类自动依赖注入
-            var basePath = AppContext.BaseDirectory;
-            var repositoryDllFile = Path.Combine(basePath, "AdmBoots.Data.dll");
-            var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
-            builder.RegisterAssemblyTypes(assemblysRepository)
+            //var basePath = AppContext.BaseDirectory;
+            //var repositoryDllFile = Path.Combine(basePath, "AdmBoots.Data.dll");
+            //var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
+            var assemblysRepository = Assembly.Load("AdmBoots.Data");
+            var assemblysDomain = Assembly.Load("AdmBoots.Domain");
+            builder.RegisterAssemblyTypes(assemblysRepository, assemblysDomain)
                 .AsImplementedInterfaces();
 
             #endregion Data层注入
