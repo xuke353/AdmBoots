@@ -18,19 +18,19 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace AdmBoots.Data.EntityFrameworkCore {
 
     public class AdmDbContext : DbContext {
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Menu> Menus { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<UserRole> UserRoles { get; set; }
-        public virtual DbSet<RoleMenu> RoleMenus { get; set; }
-        public virtual DbSet<JobLog> JobLogs { get; set; }
-        public virtual DbSet<MailSetting> MailSettings { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<RoleMenu> RoleMenus { get; set; }
+        public DbSet<JobLog> JobLogs { get; set; }
+        public DbSet<MailSetting> MailSettings { get; set; }
 
         //演示
-        public virtual DbSet<Test> Tests { get; set; }
+        public DbSet<Test> Tests { get; set; }
 
-        public virtual DbSet<TableFieldInfo> TableFieldInfos { get; set; }
-        public virtual DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<TableFieldInfo> TableFieldInfos { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         public AdmDbContext(DbContextOptions<AdmDbContext> options)
          : base(options) {
@@ -58,7 +58,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
             //初始化种子数据
             modelBuilder.GenerateSeedData();
             modelBuilder.Entity<TableFieldInfo>().HasNoKey();
-            modelBuilder.Ignore<TableFieldInfo>();
+            //modelBuilder.Ignore<TableFieldInfo>();
             modelBuilder.Ignore<Test>();
             base.OnModelCreating(modelBuilder);
         }
@@ -95,7 +95,7 @@ namespace AdmBoots.Data.EntityFrameworkCore {
             entry.Entity.As<ISoftDelete>().IsDeleted = true;
         }
 
-        protected virtual void CheckAndSetId(EntityEntry entry) {
+        protected void CheckAndSetId(EntityEntry entry) {
             //Set GUID Ids
             if (entry.Entity is IEntity<Guid> entity && entity.Id == Guid.Empty) {
                 var idPropertyEntry = entry.Property("Id");

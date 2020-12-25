@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using AdmBoots.Data.EntityFrameworkCore.Uow;
 using AdmBoots.Infrastructure.Framework.Web;
-using AdmBoots.Infrastructure.Ioc;
 using AutoMapper;
 
 namespace AdmBoots.Application {
