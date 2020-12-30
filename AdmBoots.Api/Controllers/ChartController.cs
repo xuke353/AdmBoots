@@ -18,7 +18,7 @@ using StackExchange.Profiling;
 namespace AdmBoots.Api.Controllers {
 
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/charts")]
     //[Authorize]
     public class ChartController : ControllerBase {
