@@ -13,9 +13,13 @@ AdmBoots 基于.NET Core生态系统最成熟技术体系，借鉴众多开源�
 ## 系列教程
 
 [*01*.NetCore(.Net5)快速开发框架一：前言](https://www.cnblogs.com/xuke/p/13573837.html)
+
 [*02*.NetCore(.Net5)快速开发框架二：快速开发](https://www.cnblogs.com/xuke/p/13736724.html)
+
 [*03*.NetCore(.Net5)快速开发框架三：WebAPI性能监控-MiniProfiler与Swagger集成](https://www.cnblogs.com/xuke/p/13847248.html)
+
 [*04*.NetCore(.Net5)快速开发框架四：实现审计日志](https://www.cnblogs.com/xuke/p/14070985.html)
+
 ...
 
 ## 架构设计
@@ -47,6 +51,7 @@ AdmBoots 基于.NET Core生态系统最成熟技术体系，借鉴众多开源�
 ![](https://i.loli.net/2020/12/16/m4OYyQGkWrH1g2R.png)
 
 如果我们我们的业务是单领域的，那么只需要在Domain层创建model，在Data层写上一句DbSet<实体名>，在Application层写上我们的逻辑，在API层公开出去，一个简单的功能开发就完成了。配上代码生成器，我们的编码就更少了，只注重业务本身的开发就可以了。
+
 ![](https://img2020.cnblogs.com/blog/591405/202009/591405-20200926113414883-1093892868.jpg)
 
 ![关系布局图](https://i.loli.net/2020/12/15/8KeSf1VYEWxCHm6.jpg)
@@ -96,7 +101,7 @@ AdmBoots 基于.NET Core生态系统最成熟技术体系，借鉴众多开源�
 
   a.数据库配置 -必须
 
- ```json
+ ```
  //数据库连接字符串
   "ConnectionStrings": {
     "Default": "Server=localhost; Port=3306;Stmt=; Database=admboot; Uid=root; Pwd=root;"
@@ -111,7 +116,7 @@ AdmBoots 基于.NET Core生态系统最成熟技术体系，借鉴众多开源�
 
  b.缓存配置 -非必须，如需使用Redis，请配置Redis连接。默认MemoryCache
 
- ```json
+ ```
 //Redis配置 Configuration=""时，系统使用MemoryCache
  "Redis": {
     "Configuration": "", //127.0.0.1:6379
@@ -121,7 +126,7 @@ AdmBoots 基于.NET Core生态系统最成熟技术体系，借鉴众多开源�
 
  c.日志配置 -非必须，如果需要将日志输出到数据库，在Serilog节点需配置对应数据库连接。默认输出到文件
 
- ```json
+ ```
   //Serilog配置
   "Serilog":
     "WriteTo": [
@@ -158,9 +163,11 @@ AdmBoots 基于.NET Core生态系统最成熟技术体系，借鉴众多开源�
 
    c. sql脚本插入 <b>SQL</b> 文件夹，打开项目根目录下的，将里面的 AdmBoots_mysql.sql
 
-   使用**Quartz.Net定时任务**功能需手动执行sql文件quartz_mysql.sql （其他数据库建表脚本https://github.com/quartznet/quartznet/tree/master/database/tables）
+   使用**Quartz.Net定时任务**功能需手动执行sql文件quartz_mysql.sql 
+   （其他数据库建表脚本https://github.com/quartznet/quartznet/tree/master/database/tables）
 
 4. 验证
+
    启动项目，出现Swagger页面，项目初始化成功！
 
    Swagger页面上，如果Controller上有小锁的标志，表示需要先登录后才能进行测试验证。点击authorize按钮，输入admin，a123456登陆。
