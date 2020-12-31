@@ -1,5 +1,7 @@
 <img style="display: block; margin: 0 auto;" src="https://i.loli.net/2020/12/14/4RfJq7tSGKkH8QU.png" alt="" />
 
+详情-> https://www.cnblogs.com/xuke/p/13573837.html
+
 ## 序言
 
 AdmBoots 基于.NET Core生态系统最成熟技术体系，借鉴众多开源项目的优点，旨在打造前后端分离快速开发框架，让你开发Web管理系统和移动端Api更简单。
