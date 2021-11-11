@@ -169,10 +169,10 @@ namespace AdmBoots.Api {
             app.UseRouting();
             //认证
             app.UseAuthentication();
-            //授权
-            app.UseAuthorization();
             //跨域
             app.UseCors("CorsPolicy");
+            //授权
+            app.UseAuthorization();
             //MiniProfiler
             app.UseMiniProfiler();
 
