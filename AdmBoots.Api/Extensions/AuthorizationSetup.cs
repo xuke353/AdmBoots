@@ -48,6 +48,7 @@ namespace AdmBoots.Api.Extensions {
                          // 如果过期，则把<是否过期>添加到，返回头信息中
                          if (context.Exception.GetType() == typeof(SecurityTokenExpiredException)) {
                              context.Response.Headers.Add("Token-Expired", "true");
+                              context.Response.Headers.Add("Access-Control-Expose-Headers", "Token-Expired");
                          }
                          return Task.CompletedTask;
                      },
